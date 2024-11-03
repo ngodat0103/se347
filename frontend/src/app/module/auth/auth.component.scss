@@ -1,0 +1,33 @@
+.left-item-nav li a {
+    color: var(--white) !important;
+    font-size: 1.2em;
+    font-weight: 700;
+}
+
+.left-item-nav li a:hover {
+    color: var(--gradient-end) !important;
+    width: fit-content;
+    border-bottom: 4px solid var(--gradient-end) !important;
+}
+
+.right-item-nav {
+    li a {
+        color: var(--white);
+        font-size: 1.2em;
+        font-weight: 700;
+    }
+
+    li:first-child a:hover {
+        color: var(--gradient-end) !important;
+        width: fit-content;
+        border-bottom: 4px solid var(--gradient-end);
+    }
+
+    li:last-child a:hover {
+        border-bottom: 4px solid var(--gradient-end);
+    }
+}
+
+.btn-gradient-end{
+    background-color: var(--gradient-end) !important;
+}

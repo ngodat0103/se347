@@ -1,0 +1,36 @@
+<div class="card card-custom card-stretch gutter-b">
+    <form>
+        <div class="card-header border-0 text-center my-auto py-3">
+            <h5 class="text-uppercase fw-bold text-light">List friend request</h5>
+        </div>
+        <div class="card-body pt-0 text-center">
+            <ul class="list-unstyled">
+                <li *ngIf="listRequestFriends.length === 0" class="mt-4">
+                    <i>No more friend request for you.</i>
+                </li>
+                <li *ngFor="let request of listRequestFriends" class="border-bottom border-bottom-2 border-light">
+                    <div class="d-flex py-3 mx-5">
+                        <div class="avatar-image">
+                            <img src="{{request?.fromUser?.avatarUrl}}" alt="" width="50" height="50" class="rounded-circle">
+                        </div>
+                        <div class="ms-3 my-auto text-start">
+                            <p class="m-0">{{request?.fromUser?.fullname}}</p>
+                            <p class="m-0 text-secondary">{{request?.createdAt | date: 'shortTime'}}</p>
+                        </div>
+                        <div class="d-flex justify-content-end flex-grow-1 align-items-center">
+                            <i class="fa-regular fa-square-check icon-accept" (click)="acceptRequest(request)"></i>
+                            <i class="fa-solid fa-rectangle-xmark ms-2 icon-remove text-danger" (click)="rejectRequest(request)"></i>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!-- <div class="card-footer border-0 my-auto py-3 ">
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-danger">
+                    <span class="ms-2" (click)="close($event)">Close</span>
+                </button>
+            </div>
+        </div> -->
+    </form>
+</div>

@@ -1,0 +1,21 @@
+server.port: 5000
+server:
+  forward-headers-strategy: framework
+
+spring:
+  data:
+    mongodb:
+      auto-index-creation: true
+  config:
+    import:
+      - "optional:local-dev.yaml"
+  application:
+    name: se346-backend
+springdoc:
+  api-docs:
+    path: /api/v1/api-docs
+  swagger-ui:
+    path: /api/v1/ui-docs
+    use-root-path: true
+  show-login-endpoint: true
+  show-oauth2-endpoints: true

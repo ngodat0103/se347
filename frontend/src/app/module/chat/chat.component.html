@@ -1,0 +1,12 @@
+<div class="d-flex">
+    <div class="sidebar-chat border-end border-1 border-secondary">
+        <app-sidebar-chat 
+            [listConversations]="listConversations" 
+            [listFriend]="listFriend"
+            (newItemEvent)="createConversation($event)"
+        ></app-sidebar-chat>
+    </div>
+    <div class="content-chat">
+        <app-content-chat [listFriend]="listFriend"></app-content-chat>
+    </div>
+</div>

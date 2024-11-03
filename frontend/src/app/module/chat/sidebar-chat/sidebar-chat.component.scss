@@ -1,0 +1,111 @@
+.search-outer {
+    position: relative;
+
+    & input {
+        background: #E9F2FF;
+        border: none;
+        border-radius: 10 px;
+    }
+
+    & i {
+        position: absolute;
+        right: 20px;
+        top: 10px;
+        color: #4991F9;
+    }
+}
+
+.card-chat-avatar{
+    position: relative;
+    & .online-status{
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background-color: #00C851;
+    }
+}
+
+.card-chat{
+    border: 1px solid var(--gradient-start);
+    border-radius: 15px;
+}
+
+.card-chat:hover{
+    background: linear-gradient(to bottom right, var(--gradient-start) 30%,var(--gradient-end) 100%) !important;
+    color:#E5EFFD !important;
+}
+
+.active{
+    background: linear-gradient(to bottom right, var(--gradient-start) 30%,var(--gradient-end) 100%) !important;
+    color:#E5EFFD !important;
+}
+
+.message-unsend-number{
+    width: 15px;
+    height: 15px;
+    font-size: 0.9em;
+    color: var(--white);
+}
+
+// text one line
+.text-one-line{
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 120px;
+}
+
+::-webkit-input-placeholder {
+    color: #4991F9;
+}
+
+:-ms-input-placeholder {
+    color: #4991F9;
+}
+
+::placeholder {
+    color: #4991F9;
+}
+
+.btn-icon{
+    background-color: transparent;
+    border: none;
+    i {
+        color: #4991F9;
+    }
+}
+.btn-icon:hover{
+    background-color: #E9F2FF;
+    padding: 10px auto;
+    border-radius: 5px;
+    margin: 0 !important;
+}
+
+.list-conversation{
+    height: 80vh;
+    overflow-y: auto;
+}
+.conversation{
+}
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }

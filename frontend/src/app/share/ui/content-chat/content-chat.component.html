@@ -1,0 +1,162 @@
+<div class="bg-content-chat w-100 h-100">
+    <div class="d-flex">
+        <div class="" [ngClass]="isColapse ? 'col-9' : 'col-12'">
+            <div class="header-content-chat d-flex justify-content-between mx-4">
+                <div class="d-flex my-auto">
+                    <div class="card-chat-avatar">
+                        <app-avatar-image-group [listUser]="conversatinSelect?.users"></app-avatar-image-group>
+                    </div>
+                    <div class="ms-4">
+                        <div *ngIf="conversatinSelect?.conversationName === 'one-to-one-codingclub'">
+                            <div *ngFor="let user of conversatinSelect.users">
+                                <h6 class="content-chat-name fw-bolder m-0 mt-2" *ngIf=" user._id !== curentUser._id">
+                                    {{user?.account?.username}}</h6>
+                            </div>
+                        </div>
+                        <span class="status-text text-secondary">Online</span>
+                    </div>
+                </div>
+                <div class="header-group-icon-right flex-row align-items-center justify-content-center my-auto">
+                    <a class="">
+                        <i class="fal fa-phone-alt"></i>
+                    </a>
+                    <a class="">
+                        <i class="fal fa-video"></i>
+                    </a>
+                    <a class="" (click)="isColapse = !isColapse">
+                        <i class="fal fa-ellipsis-v"></i>
+                    </a>
+                </div>
+            </div>
+            <div #scrollChat class="body-content-chat px-4 pt-2">
+                <div *ngFor="let message of listMessage; let i = index">
+
+                    <div class="w-100 d-flex justify-content-end mt-3"
+                        *ngIf="curentUser._id === message.fromUserId && message.type !== 'notification'">
+                        <div class="message-item-curent-user px-4 py-2" *ngIf="message.type === 'text'">
+                            <p>{{message.content[0]}}</p>
+                        </div>
+                        <div *ngIf="message.type === 'image'" class="row w-25"
+                            [ngClass]="message?.content?.length !== 1 ? 'justify-content-end' : 'justify-content-start'">
+                            <div *ngFor="let url of message.content" class="p-0"
+                                [ngClass]="message?.content?.length !== 1 ? 'col-6' : 'col-12'">
+                                <a href="{{url}}">
+                                    <img src="{{url}}" width="100%" height="100%" alt="" class="rounded-2">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="message-item-curent-user" *ngIf="message.type === 'file'">
+                            <div class="py-2 px-4 group-file my-auto ">
+                                <a href="{{message.content[0]}}" class="text-decoration-none text-dark">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa-regular fa-file"></i>
+                                        <p class="m-0 text-one-line ms-3">
+                                            {{message.content[0].split('?')[0].split('/').pop()}}
+                                        </p>
+                                    </div>
+                                    <i class="fa-regular fa-download rounded-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div *ngIf="message.type === 'video'">
+                            <div *ngFor="let url of message.content">
+                                <video width="350" height="250" controls>
+                                    <source src="{{url}}" type="video/mp4">
+                                </video>
+                            </div>
+                        </div>
+                        <div class="avatar-chat-item ms-3 d-flex align-items-end h-100">
+                            <img class="rounded-circle mt-3"
+                                *ngIf="listMessage[i + 1]?.fromUserId !== message?.fromUserId && message.type !== 'notification'"
+                                src="{{message?.user?.avatarUrl}}" alt="" width="40" height="40">
+                        </div>
+                    </div>
+                    <div *ngIf="curentUser._id !== message.fromUserId && message.type !== 'notification'"
+                        class="mt-3 d-flex">
+                        <div class="avatar-chat-item">
+                            <img class="rounded-circle mt-3"
+                                *ngIf="listMessage[i + 1]?.fromUserId !== message?.fromUserId && message.type !== 'notification'"
+                                src="{{message?.user?.avatarUrl}}" alt="" width="40" height="40">
+                        </div>
+                        <div class="message-item-friend px-4 py-2 ms-2" *ngIf="message.type === 'text'">
+                            <b class="m-0"
+                                *ngIf="listMessage[i - 1]?.fromUserId !== message?.fromUserId">{{message.user.account.username}}</b>
+                            <p>{{message.content[0]}}</p>
+                        </div>
+                        <div *ngIf="message.type === 'image'" class="row w-25 ms-2"
+                            [ngClass]="message?.content?.length !== 1 ? 'justify-content-end' : 'justify-content-start'">
+                            <div *ngFor="let url of message.content" class="col-6 p-0"
+                                [ngClass]="message?.content?.length !== 1 ? 'col-6' : 'col-12'">
+                                <a href="{{url}}">
+                                    <img src="{{url}}" width="100%" height="100%" alt="" class="rounded-2">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="message-item-curent-user ms-2" *ngIf="message.type === 'file'">
+                            <div class="py-2 px-4 group-file my-auto ">
+                                <a href="{{message.content[0]}}" class="text-decoration-none text-dark">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa-regular fa-file"></i>
+                                        <p class="m-0 text-one-line ms-3">
+                                            {{message.content.split('?')[0].split('/').pop()}}
+                                        </p>
+                                    </div>
+                                    <i class="fa-regular fa-download rounded-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div *ngIf="message.type === 'video'" class="ms-2">
+                            <div *ngFor="let url of message.content">
+                                <video width="350" height="250" controls>
+                                    <source src="{{url}}" type="video/mp4">
+                                </video>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="message.type === 'notification'" class="text-center mt-3">
+                        <i class="text-secondary">
+                            {{message.content[0]}}
+                        </i>
+                    </div>
+                </div>
+            </div>
+            <form [formGroup]="chatForm">
+                <div class="input-content-chat">
+                    <div class="h-100 d-flex my-auto align-items-center justify-content-center px-5 ">
+                        <div class="group-input-chat d-flex w-100 my-auto p-2 mx-3">
+                            <input type="file" name="" id="uploadFile" class="d-none" formControlName="fileUpload"
+                                multiple (change)="onFileSelected($event)">
+                            <label for="uploadFile" class="btn btn-sm btn-icon btn-icon-only btn-rounded">
+                                <i class="fa-regular fa-paperclip"></i>
+                            </label>
+                            <input type="text" class="form-control" formControlName="contentChat"
+                                placeholder="Write a message...">
+                            <div class="btn-group dropup">
+                                <input id="emoji" type="button"
+                                    class="btn btn-light btn-sm btn-icon btn-icon-only btn-rounded"
+                                    data-bs-toggle="dropdown">
+                                <label for="emoji" class="btn btn-sm btn-icon btn-icon-only btn-rounded">
+                                    <i class="fa-regular fa-face-smile"></i>
+                                </label>
+                                <ul class="dropdown-menu">
+                                    <emoji-mart title="Pick your emoji…" emoji="point_up"
+                                        (emojiClick)="addEmoji($event)"></emoji-mart>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button class="btn btn-primary py-2 backgroup-linear-gradient border-0"
+                                (click)="sendMessage($event)" (keyup.enter)="enterSendMessage($event)">
+                                <i class="fa-regular fa-paper-plane-top"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="option-chat col-3" *ngIf="isColapse">
+            <app-option-chat [conversatinSelect]="conversatinSelect" [listFriend]="listFriend"
+                (newItemEvent)="reload($event)"></app-option-chat>
+        </div>
+    </div>
+</div>

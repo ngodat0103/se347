@@ -1,0 +1,30 @@
+.collapse {
+    li {
+        padding-left: 30px;
+    }
+    li:hover {
+        background-color: #f5f5f5;
+    }
+}
+.fa-trash:hover, .fa-users-medical:hover, .fa-pen-to-square:hover, .fa-right-from-bracket:hover{
+    font-weight: 900;
+}
+.bg-white {
+    background-color: #FFFFFF !important;
+}
+
+.option-chat {
+    background-color: #EFF4FB !important;
+}
+.bg-gray-light {
+    background-color: var(--gray-100);
+}
+.group-add-member-icon {
+    i {
+        background-color: var(--gray-100);
+    }
+    p {
+        font-size: small;
+        color: var(--gray-300);
+    }
+}

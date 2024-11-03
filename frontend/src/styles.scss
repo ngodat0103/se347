@@ -1,0 +1,80 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@ctrl/ngx-emoji-mart/picker';
+:root {
+  --gradient-start: #5CE27F;
+  --gradient-end: #5CABE2;
+  --white: #FFFFFF;
+  --black: #000000;
+  --primary-custom: #5CE27F;
+  --warning-custom: #FFE12D;
+  --danger-custom: #E25C5C;
+  --gray-400: #121212;
+  --gray-300: #313131;
+  --gray-200: #B1B1B1;
+  --gray-100: #EFEFEF;
+  --blue-400: #4991F9;
+  --blue-100: #E9F2FF;
+}
+
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
+.backgroup-linear-gradient {
+  background: linear-gradient(to bottom right, var(--gradient-start) 30%, var(--gradient-end) 100%) !important;
+}
+
+// loader CSS ux class: loader
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 4px solid var(--gradient-end);
+  border-right: 4px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+.loader::after {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border-left: 4px solid var(--gradient-start);
+  border-bottom: 4px solid transparent;
+  animation: rotation 0.5s linear infinite reverse;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// css scroll bar ::root
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

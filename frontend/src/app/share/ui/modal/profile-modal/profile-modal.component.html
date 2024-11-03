@@ -1,0 +1,60 @@
+<div class="card card-custom card-stretch gutter-b">
+    <form [formGroup]="profileForm">
+        <div class="card-header border-0 text-center my-auto py-3">
+            <h5 class="text-uppercase fw-bold">Profile</h5>
+        </div>
+        <div class="card-body pt-0 text-center">
+            <div class="my-3 mx-auto d-flex align-items-center justify-content-center">
+                <img class="rounded-circle" src="{{user.avatarUrl}}" width="100" height="100" alt="">
+            </div>
+            <h4>{{user.fullname}}</h4>
+            <div class="text-start mx-5 mt-4">
+                <h5>Infomation</h5>
+                <table class="mt-4">
+                    <tr class="py-3">
+                        <td class="col-5 py-2">
+                            <Span class="fw-bold">Username:</Span>
+                        </td>
+                        <td>
+                            <span class="ms-2">
+                                <input type="text" class="form-control" formControlName="username"
+                                    [readonly]="isDisabled">
+                            </span>
+                        </td>
+                    </tr>
+                    <tr class="col-5 mt-2">
+                        <td class="py-2">
+                            <Span class="fw-bold">Email:</Span>
+                        </td>
+                        <td>
+                            <span class="ms-2">
+                                <input type="text" class="form-control" formControlName="email" [readonly]="isDisabled">
+                            </span>
+                        </td>
+                    </tr>
+                    <tr class="col-5">
+                        <td class="py-2">
+                            <Span class="fw-bold">Phone:</Span>
+                        </td>
+                        <td>
+                            <span class="ms-2">
+                                <input type="text" class="form-control" formControlName="phone" [readonly]="isDisabled">
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer border-0 my-auto py-3 ">
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-update" *ngIf="isDisabled" (click)="isDisabled = !isDisabled">
+                    <i class="fa-light fa-pen-to-square"></i>
+                    <span class="ms-2">Update Infomation</span>
+                </button>
+                <button class="btn btn-primary" *ngIf="!isDisabled" (click)="updateProfile($event)">
+                    <span class="ms-2">Submit</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,16 @@
+<div class="group-outer p-0 row" *ngIf="listUser && listUser?.length !== 2">
+    <div>
+        <div class="image-item col-6 p-0" *ngFor="let user of listUser">
+            <img class="border border-1 rounded-circle"
+            src="{{user?.avatarUrl}}" alt="" width="100%" height="30">
+        </div>
+    </div>
+</div>
+<div *ngIf="listUser && listUser?.length === 2">
+    <div class="p-0" *ngFor="let user of listUser">
+        <div *ngIf="user?._id !== me?._id" class="p-0">
+            <img class="border border-1 rounded-circle"
+            src="{{user?.avatarUrl}}" alt="" width="50" height="50">
+        </div>
+    </div>
+</div>

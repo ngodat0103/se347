@@ -1,0 +1,52 @@
+<section class="vh-100 backgroup-linear-gradient">
+    <div class="container py-5 h-100">
+        <div class="row d-flex align-items-center justify-content-center h-100">
+            <div class="col-md-8 col-lg-7 col-xl-6 left-bg">
+                <div class="title">
+                    <h1 class="title-landing-page fw-bold">Welcome to our <br> Community</h1>
+                    <i class="text-light">Let's create a strong and modern <br> community with us</i>
+                </div>
+                <img src="../../../assets/images/landing-page-login.png" class="img-fluid img ms-5 mt-5" alt="Phone image">
+            </div>
+            <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+                <form [formGroup]="loginForm" class="bg-light p-5 rounded-4" (ngSubmit)="login()">
+                    <div class="text-center mb-4">
+                        <h1 class="text-uppercase fw-bold text-gradient">
+                            Login
+                        </h1>
+                    </div>
+                    <!-- Email input -->
+                    <div class="form-outline mb-4">
+                        <input type="text" id="form1Example13" class="form-control form-control-lg" formControlName="username"
+                            placeholder="Enter your username" />
+                    </div>
+
+                    <!-- Password input -->
+                    <div class="form-outline mb-4">
+                        <input type="password" id="form1Example23" class="form-control form-control-lg" formControlName="password"
+                            placeholder="Password" />
+                    </div>
+                    
+                    <!-- Submit button -->
+                    <button type="submit" class="btn btn-primary btn-lg btn-block w-100 mt-4 py-2 fw-bold" >Sign in</button>
+
+                    <div class="divider d-flex align-items-center my-4">
+                        <p class="text-center fw-bold mx-3 mb-0 text-muted">CONTACT US</p>
+                    </div>
+                    <div class="d-flex justify-content-center group-button-contact">
+                        <a class="btn btn-lg btn-block col-3 mx-2"  href="#!" role="button">
+                            <i class="fa-brands fa-facebook me-2" style="color: #3558BC;"></i>
+                        </a>
+                        <a class="btn btn-lg btn-block col-3 mx-2" href="#!" role="button">
+                            <i class="fa-brands fa-google" style="color: #E05556;"></i>
+                        </a>
+                        <a class="btn btn-lg btn-block col-3 mx-2" href="#!" role="button">
+                            <i class="fa-brands fa-twitter" style="color: #1D9BF0;"></i>
+                        </a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

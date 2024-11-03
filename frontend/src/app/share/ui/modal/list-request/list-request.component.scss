@@ -1,0 +1,16 @@
+.icon-accept {
+    font-size: 1.5rem;
+    color: #00C851;
+}
+.icon-accept:hover {
+    font-weight: bolder !important;
+}
+.icon-remove {
+    font-size: 1.5rem;
+}
+.icon-remove:hover {
+    opacity: 0.7;
+}
+.card-header, .card-footer{
+    background: linear-gradient(to bottom right, var(--gradient-start) 30%,var(--gradient-end) 100%) !important;
+}

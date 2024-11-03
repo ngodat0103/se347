@@ -1,0 +1,62 @@
+<div class="px-4">
+    <div class="">
+        <h4 class="fw-bolder pt-3">Chats</h4>
+    </div>
+    <div class="mt-4 d-flex">
+        <form action="" class="search-outer d-flex flex-grow-1 me-1">
+            <input type="text" class="form-control py-2" placeholder="Search" (keyup)="searchConversation($event)">
+            <i class="far fa-search"></i>
+        </form>
+        <button class="m-auto btn-icon">
+            <i class="fa-light fa-user-plus"></i>
+        </button>
+        <button class="m-auto btn-icon" (click)="openModalAddMember($event)">
+            <i class="fa-light fa-users-medical"></i>
+        </button>
+    </div>
+    <div class="mt-4">
+        <p class="text-secondary">All chats</p>
+    </div>
+    <div class="list-conversation">
+        <div *ngFor="let conversation of listConversations" class="conversation"
+            (click)="selectConversation(conversation)">
+            <div>
+                <div class="card-chat p-3 mb-3" [ngClass]="conversationSelectId === conversation?._id ? 'active' : ''">
+                    <div class="d-flex">
+                        <div class="card-chat-avatar d-flex align-items-center">
+                            <app-avatar-image-group [listUser]="conversation?.users"></app-avatar-image-group>
+                        </div>
+                        <div class="card-chat-body ms-4 mt-3 flex-grow-1 align-items-center">
+                            <div class="my-auto">
+                                <div class="d-flex justify-content-between">
+                                    <div *ngIf="conversation?.conversationName === 'one-to-one-codingclub'">
+                                        <div *ngFor="let user of conversation.users">
+                                            <p class="title-card fw-bold m-0 pb-1 text-one-line flex-grow-1 me-2"
+                                                *ngIf=" user._id !== currentUser._id">
+                                                {{user?.account?.username}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <p class="title-card fw-bold m-0 pb-1 text-one-line flex-grow-1 me-2"
+                                        *ngIf="conversation?.conversationName !== 'one-to-one-codingclub'">
+                                        {{conversation?.conversationName}}
+                                    </p>
+                                    <p class="m-0 text-secondary">{{conversation?.updatedAt | date: 'shortTime'}}</p>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <p class="content-text-card m-0 text-secondary text-one-line">
+                                        {{conversation?.lastMessage?.content}}
+                                    </p>
+                                    <div
+                                        class="message-unsend-number backgroup-linear-gradient rounded-circle text-center">
+                                        <p></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+<div class="card card-custom card-stretch gutter-b">
+    <div class="card-header border-0 text-center my-auto py-3">
+        <h5 class="text-uppercase fw-bold">List Conversation</h5>
+    </div>
+    <div class="card-body pt-0">
+        <div class="mt-3">
+            <h6>Search conversation</h6>
+            <form class="my-3">
+                <div class="search-outer d-flex flex-grow-1 me-1">
+                    <input type="text" class="form-control input-search-member"
+                        placeholder="Search with phonenumber, name and email..." (keyup)="searchUser($event)">
+                    <i class="far fa-search"></i>
+                </div>
+            </form>
+        </div>
+        <div class="">
+            <h6>List conversations</h6>
+            <ul class="list-friend">
+                <li *ngFor="let conversation of listConversation" class="d-flex my-3">
+                    <div class="form-check my-auto">
+                        <input class="form-check-input rounded-circle border-3" type="checkbox" value="{{conversation._id}}"
+                            id="{{conversation._id}}" (change)="getValueCheckbox($event)">
+                    </div>
+                    <div class="h-100">
+                        <app-avatar-image-group [listUser]="conversation?.users"></app-avatar-image-group>
+                    </div>
+                    <div *ngIf="conversation?.conversationName === 'one-to-one-codingclub'" class="h-100">
+                        <div *ngFor="let user of conversation.users" class="h-100">
+                            <p class="ms-3 mt-3" *ngIf=" user._id !== currentUser._id">
+                                {{user?.account?.username}}
+                            </p>
+                        </div>
+                    </div>
+                    <p class="mt-3 ms-4" *ngIf="conversation?.conversationName !== 'one-to-one-codingclub'">
+                        {{conversation?.conversationName}}
+                    </p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="card-footer border-0 my-auto py-3">
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-danger me-2" (click)="close($event)">Cancel</button>
+            <button type="submit" class="btn btn-primary" (click)="submit($event)">Submit</button>
+        </div>
+    </div>
+</div>

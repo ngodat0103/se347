@@ -1,0 +1,52 @@
+<div class="sidebar flex-column align-items-center justify-content-center border-end border-1 border-secondary">
+    <div class="pt-4 text-center">
+        <img class="w-50 rounded-circle" src="../../../../assets/images/landing-page-login.png" alt="" width="100" (click)="openModalProfile($event)">
+    </div>
+    <div>
+        <ul class="icon-group list-unstyled text-center mt-5">
+            <li routerLink="/home/chat" class="icon-group-item mx-auto align-items-center" (click)="onSelect('chat')" [ngClass]="status === 'chat' ? 'active' : ''">
+                <a class="my-auto">
+                    <i class="my-auto fa-light fa-comment-dots"></i>
+                </a>
+            </li>
+            <li routerLink="/home/list-user" class="icon-group-item mx-auto align-items-center mt-2" (click)="onSelect('users')" [ngClass]="status === 'users' ? 'active' : ''">
+                <a class="my-auto" >
+                    <i class="fal fa-user-friends"></i>
+                </a>
+            </li>
+            <li class="icon-group-item mx-auto align-items-center mt-2" (click)="onSelect('call')" [ngClass]="status === 'call' ? 'active' : ''">
+                <a class="my-auto">
+                    <i class="fal fa-phone"></i>
+                </a>
+            </li>
+        </ul>
+        <hr class="mx-3 text-secondary">
+    </div>
+    <div>
+        <ul class="icon-group list-unstyled text-center mt-4">
+            <li class="icon-group-item mx-auto align-items-center" (click)="onSelect('tag')" [ngClass]="status === 'tag' ? 'active' : ''">
+                <a class="my-auto">
+                    <i class="fal fa-bookmark"></i>
+                </a>
+            </li>
+            <li class="icon-group-item mx-auto align-items-center mt-2" (click)="onSelect('setting')" [ngClass]="status === 'setting' ? 'active' : ''">
+                <a class="my-auto">
+                    <i class="fal fa-cog"></i>
+                </a>
+            </li>
+            <li class="icon-group-item mx-auto align-items-center mt-2" (click)="onSelect('request')" [ngClass]="status === 'request' ? 'active' : ''">
+                <a class="my-auto">
+                    <i class="fal fa-user-plus" ></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="avatar-outer text-center mb-4">
+        <div class="w-100 d-flex justify-content-center">
+            <button (click)="signout($event)" class="btn btn-danger">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
+    </div>
+</div>
+

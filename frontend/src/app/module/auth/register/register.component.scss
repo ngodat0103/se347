@@ -1,0 +1,37 @@
+.divider:after,
+.divider:before {
+content: "";
+flex: 1;
+height: 1px;
+background: black;
+}
+
+.bg-custom{
+    // background: linear-gradient(to right, rgba(255,255,255,1) 0%,#CCE3F5 45%,rgba(255,255,255,1) 100%);
+    background: linear-gradient(to bottom right, var(--gradient-start) 30%,var(--gradient-end) 100%);
+}
+
+.title-landing-page{
+    font-size: 3.4rem;
+    font-weight: 700;
+    color: var(--white);
+}
+.left-bg{
+    position: relative;
+    & .title{
+        top: -80px;
+        left: 20px;
+        position: absolute;
+    }
+}
+.group-button-contact a{
+    background-color: #DCE2F0;
+}
+.group-button-contact a:hover {
+    background-color: #E9EDF9 !important;
+}
+.text-gradient{
+    background: -webkit-linear-gradient(100deg, var(--gradient-start) 30%,var(--gradient-end) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

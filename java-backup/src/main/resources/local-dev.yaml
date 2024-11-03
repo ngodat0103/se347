@@ -1,0 +1,14 @@
+logging:
+  level:
+    com.github.ngodat0103.javabackup.service: DEBUG
+    org.springframework.web: DEBUG
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      database: se347-db
+#      authentication-database: admin
+#      username: dev
+#      password: dev
+      port: 27017

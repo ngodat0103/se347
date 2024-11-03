@@ -1,0 +1,11 @@
+<div class="d-flex">
+    <div class="sidebar-chat border-end border-1 border-secondary">
+        <app-sidebar-list-user 
+        [listFriends]="listFriends"
+        [listRequestFriends]="listRequestFriends"
+        ></app-sidebar-list-user>
+    </div>
+    <div class="content-chat">
+        <router-outlet></router-outlet>
+    </div>
+</div>

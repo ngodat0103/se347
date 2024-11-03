@@ -1,0 +1,24 @@
+<div>
+    <div class="header-suggestion my-auto">
+        <div class="mx-4">
+            <h4 class="title">List suggestion user</h4>
+        </div>
+    </div>
+    <div class="content-suggestion pt-4">
+        <div class="row w-75 justify-content-center mx-auto">
+            <div class="col-3 mt-3 text-center p-0" *ngFor="let user of listUsers">
+                <div>
+                    <div class="card-user mx-2 p-3 rounded-2">
+                        <img src="{{user?.avatarUrl}}" alt="" width="100" height="100" class="rounded-circle">
+                        <p class="card-name mt-3 m-0">{{user?.fullname}}</p>
+                        <div>
+                            <i class="fa-solid fa-circle-info"></i>
+                            <i class="ms-1">friend suggestion</i>
+                        </div>
+                        <button class="btn btn-add-friend mt-2" (click)="addFriend(user)">Add friend</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

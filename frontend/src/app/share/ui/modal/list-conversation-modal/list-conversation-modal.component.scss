@@ -1,0 +1,50 @@
+.input-group-name{
+    border: none;
+    border-bottom: 1px solid var(--blue-400);
+    border-radius: 0;
+}
+.card-header {
+    background: linear-gradient(to bottom right, var(--gradient-start) 30%,var(--gradient-end) 100%) !important;
+}
+
+.input-search-member {
+    border-radius: 50px;
+}
+
+.input-group-name:focus{
+    border: none;
+    border-bottom: 1px solid var(--blue-400);
+    box-shadow: none;
+}
+.search-outer {
+    position: relative;
+
+    & input {
+        background: #E9F2FF;
+        border: none;
+        border-radius: 10 px;
+    }
+
+    & i {
+        position: absolute;
+        right: 20px;
+        top: 10px;
+        color: var(--blue-400);
+    }
+}
+
+::-webkit-input-placeholder {
+    color: var(--blue-400);
+}
+
+:-ms-input-placeholder {
+    color: var(--blue-400);
+}
+
+::placeholder {
+    color: var(--blue-400);
+}
+.list-friend {
+    height: 50vh;
+    overflow-y: auto;
+}

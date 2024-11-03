@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  se347-frontend:
+      container_name: se347-frontend
+      image: ghcr.io/ngodat0103/se347-frontend:0.1.0
+      build:
+        context: .
+        dockerfile: Dockerfile
+        labels:
+            org.opencontainers.image.source: https://github.com/ngodat0103/SE347.E12-frontend.git
+            org.opencontainers.image.description: "This is a frontend service for SE347 course"
+            org.opencontainers.image.license: MIT
+      environment:
+          NODE_ENV: production
+      ports:
+          - 4200:4200

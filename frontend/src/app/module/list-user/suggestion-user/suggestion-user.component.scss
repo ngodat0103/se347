@@ -1,0 +1,35 @@
+.header-suggestion {
+    height: 10vh;
+    .title {
+        font-size: 1.8rem;
+        font-weight: 500;
+        line-height: 10vh;
+    }
+}
+
+.content-suggestion {
+    height: 90vh;
+    background-color: #EFF4FB;
+}
+
+.card-user {
+    background-color: var(--white);
+    & i {
+        font-size: 0.9rem;
+    }
+}
+
+.card-name {
+    font-size: 1.2rem;
+}
+
+.btn-add-friend {
+    border: 2px solid var(--gradient-end);
+    color:  var(--gradient-end);
+}
+
+.btn-add-friend:hover {
+    border: 2px solid var(--gradient-end);
+    background-color:  var(--gradient-end);
+    color: var(--white);
+}

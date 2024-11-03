@@ -1,0 +1,48 @@
+<div class="card card-custom card-stretch gutter-b">
+    <form [formGroup]="formConversation">
+        <div class="card-header border-0 text-center my-auto py-3">
+            <h5 class="text-uppercase fw-bold">{{action === 'create-conversation' ? 'Create Group Chat' : 'Add members'}}</h5>
+        </div>
+        <div class="card-body pt-0">
+          <div *ngIf="action === 'create-conversation'" class="mt-3">
+            <h6>Add member to group</h6>
+            <div>
+                <input type="text" class="form-control input-group-name" placeholder="Group name..." formControlName="conversationName">
+            </div>
+          </div>
+          <div class="mt-3">
+            <h6>Search members</h6>
+            <form class="my-3">
+                <div class="search-outer d-flex flex-grow-1 me-1">
+                    <input type="text" class="form-control input-search-member" placeholder="Search with phonenumber, name and email..." (keyup)="searchUser($event)">
+                    <i class="far fa-search"></i>
+                </div>
+            </form>
+          </div>
+          <div class="">
+            <h6>List friend</h6>
+            <ul class="list-friend">
+                <li *ngFor="let friend of listFriend" class="d-flex my-3">
+                    <div class="form-check my-auto">
+                        <input class="form-check-input rounded-circle border-3" type="checkbox" value="{{friend._id}}" id="{{friend._id}}" (change)="getValueCheckbox($event)">
+                    </div>
+                    <div class="h-100">
+                        <img class="rounded-circle" src="{{friend.avatarUrl}}" width="50" height="50" alt="">
+                    </div>
+                    <span class="my-auto ms-3">
+                        {{friend.account.username}}
+                    </span>
+                </li>
+            </ul>
+          </div>
+        </div>
+        <div class="card-footer border-0 my-auto py-3">
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-danger me-2" (click)="close($event)">Cancel</button>
+                <button type="submit" class="btn btn-primary" (click)="onSubmit($event)" [disabled]="formConversation.invalid" *ngIf="action === 'create-conversation'">Create Group</button>
+                <button type="submit" class="btn btn-primary" (click)="onSubmit($event)" *ngIf="action === 'add-member'">Add</button>
+            </div>
+        </div>
+    </form>
+  </div>
+  

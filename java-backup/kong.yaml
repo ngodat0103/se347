@@ -1,0 +1,8 @@
+_format_version: "3.0"
+services:
+  - name: se347-backend
+    url: http://se347-backend:5000
+    routes:
+      - name: se347-backend-default
+        strip_path: false
+        paths: [ "~/api/v1/*"]
