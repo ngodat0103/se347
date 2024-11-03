@@ -1,7 +1,7 @@
 variable "machine_type" {
   description = "Machine type for instances"
   type        = string
-  default     = "e2-medium"
+  default     = "e2-micro"
 }
 variable "environment" {
   description = "Environment for instances"
@@ -22,11 +22,6 @@ variable "image" {
     description = "Image for instances"
     type        = string
     default     = "ubuntu-2204-jammy-v20240927"
-}
-variable "pub_key_path" {
-    description = "Path to public key"
-    type        = string
-    default     = "./secrets/id_rsa.pub"
 }
 variable boot_disk_size {
   description = "Size of boot disk"
@@ -51,4 +46,10 @@ variable "name" {
 variable "pub_key_path" {
     description = "Path to public key"
     type=string
+    default = "./secrets/id_rsa.pub"
+}
+variable "startup_script" {
+    description = "Startup script for instances"
+    type        = string
+    default     = ""
 }
