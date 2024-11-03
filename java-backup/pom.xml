@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.github.ngodat0103</groupId>
-	<artifactId>java-backup</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>java-backup</name>
+	<artifactId>se347-backend</artifactId>
+	<version>v1</version>
+	<name>se347-backend</name>
 	<description>java-backup</description>
 	<url/>
 	<licenses>

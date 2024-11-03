@@ -12,8 +12,8 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @Setter
 @Document(collection = "users")
 public class User {
-  @MongoId private String id;
-
+  @MongoId
+  private String id;
   @Indexed(unique = true)
   private String username;
 

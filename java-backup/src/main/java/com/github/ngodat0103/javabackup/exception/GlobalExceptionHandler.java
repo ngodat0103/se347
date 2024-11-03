@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -64,6 +65,18 @@ public class GlobalExceptionHandler {
               });
     }
     problemDetails.setProperties(Collections.singletonMap("errors", errors));
+    return problemDetails;
+  }
+
+  @ExceptionHandler(BadCredentialsException.class)
+  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  public ProblemDetail handleBadCredentialsException(
+      BadCredentialsException e, ServerHttpRequest request) {
+    ProblemDetail problemDetails = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
+    problemDetails.setType(URI.create("https://problems-registry.smartbear.com/unauthorized"));
+    problemDetails.setTitle("Unauthorized");
+    problemDetails.setDetail(e.getMessage());
+    problemDetails.setInstance(URI.create(request.getPath().toString()));
     return problemDetails;
   }
 

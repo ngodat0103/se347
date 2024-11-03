@@ -12,10 +12,11 @@ import com.github.ngodat0103.javabackup.persistence.repository.UserRepository;
 import com.github.ngodat0103.javabackup.service.UserService;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
@@ -24,7 +25,6 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -45,21 +45,13 @@ public class UserServiceImpl implements UserService<UserDto> {
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     return userRepository
         .existsByUsername(user.getUsername())
-        .flatMap(
-            exists -> {
-              if (exists) {
-                return Mono.error(
-                    throwConflictException(log, "User", "username", user.getUsername()));
-              }
-              return userRepository.existsByEmail(user.getEmail());
-            })
-        .flatMap(
-            exists -> {
-              if (exists) {
-                return Mono.error(throwConflictException(log, "User", "email", user.getEmail()));
-              }
-              return userRepository.save(user);
-            })
+        .filter(Boolean.TRUE::equals)
+        .switchIfEmpty(
+            Mono.error(throwConflictException(log, "User", "username", user.getUsername())))
+        .then(userRepository.existsByEmail(user.getEmail()))
+        .filter(Boolean.TRUE::equals)
+        .switchIfEmpty(Mono.error(throwConflictException(log, "User", "email", user.getEmail())))
+        .then(userRepository.save(user))
         .map(userMapper::toDto);
   }
 
@@ -104,18 +96,18 @@ public class UserServiceImpl implements UserService<UserDto> {
     String password = credentialDto.getPassword();
     return userRepository
         .findByUsername(username)
+        .filter(user -> passwordEncoder.matches(password, user.getPassword()))
+        .switchIfEmpty(Mono.error(new BadCredentialsException("Invalid username or password.")))
         .flatMap(
             user -> {
-              if (passwordEncoder.matches(password, user.getPassword())) {
-                return Mono.just(user);
-              }
-              return Mono.error(
-                  HttpClientErrorException.Unauthorized.create(
-                      HttpStatus.UNAUTHORIZED, "Unauthorized", null, null, null));
-            })
-        .flatMap(
-            user -> {
-              JwtClaimsSet claims = JwtClaimsSet.builder().subject(user.getUsername()).build();
+              JwtClaimsSet claims =
+                  JwtClaimsSet.builder()
+                      .subject(user.getId())
+                      .issuer("se347-backend")
+                      .issuedAt(LocalDateTime.now().toInstant(ZoneOffset.UTC))
+                      .expiresAt(
+                          LocalDateTime.now().plus(Duration.ofHours(1)).toInstant(ZoneOffset.UTC))
+                      .build();
               JwtEncoderParameters parameters = JwtEncoderParameters.from(claims);
               Jwt jwt = jwtEncoder.encode(parameters);
               String refreshTokenValue = RandomStringUtils.randomAlphanumeric(64);

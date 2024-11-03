@@ -3,8 +3,13 @@ services:
     image: "${KONG_DOCKER_TAG:-kong:latest}"
     container_name: kong
     user: "${KONG_USER:-kong}"
-    extra_hosts:
-      - "se347-backend:172.21.0.1"
+    profiles: [ "infra","all" ]
+    # The following line is only for Linux environments. For a demo or quick test on Windows, please comment out the line below.
+    # This is used to add a host entry and route from Kong gateway container to bridge interfaces with the host machine for easier Docker development.
+    # For more information, check out Docker's networking architecture.
+
+    #    extra_hosts:
+#      - "se347-backend:172.21.0.1"
     environment:
       KONG_DATABASE: "off"
       KONG_ADMIN_ACCESS_LOG: /dev/stdout
@@ -45,11 +50,34 @@ services:
     security_opt:
       - no-new-privileges
   mongodb:
+    profiles: [ "infra","all" ]
     image: mongodb/mongodb-community-server:7.0.2-ubi9
     hostname: mongodb
     networks: [ dev ]
     ports:
       - "27017:27017"
+  se347-backend:
+    profiles: [ "app","all" ]
+    image: "ghcr.io/ngodat0103/se347-backend:dev-latest"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVER_PORT: 5000
+        SERVICE_NAME: se347-backend
+        VERSION: v1
+    container_name: se347-backend
+    networks: [ dev ]
+#    depends_on:
+#      - mongodb
+    ports:
+      - "5000:5000"
+    environment:
+      SPRING_PROFILES_ACTIVE: "local-dev"
+      SPRING_DATA_MONGODB_URI: "mongodb://mongodb:27017/se347"
+      SPRING_DATA_MONGODB_DATABASE: "se347"
+      SPRING_DATA_MONGODB_USERNAME: "dev"
+      SPRING_DATA_MONGODB_PASSWORD: "dev"
 volumes:
   kong_prefix_vol:
     driver_opts:
