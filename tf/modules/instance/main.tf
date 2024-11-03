@@ -1,6 +1,9 @@
 resource "google_compute_address" "ip-public-instance" {
   name = var.name
   region = var.region
+  labels =  {
+    environment = var.environment
+  }
   address_type = "EXTERNAL"
 }
 
@@ -14,6 +17,9 @@ resource "google_compute_instance" "instance" {
   tags         = ["http-server", "https-server"]
   boot_disk {
     initialize_params {
+    labels = {
+        environment = var.environment
+    } 
       image = var.image
       size  = var.boot_disk_size
     }

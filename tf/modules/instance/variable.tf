@@ -46,7 +46,7 @@ variable "name" {
 variable "pub_key_path" {
     description = "Path to public key"
     type=string
-    default = "./secrets/id_rsa.pub"
+    default = "/tmp/secrets/id_rsa.pub"
 }
 variable "startup_script" {
     description = "Startup script for instances"
