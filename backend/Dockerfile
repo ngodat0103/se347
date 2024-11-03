@@ -25,7 +25,6 @@ COPY --from=app-builder --chown=app:app --chmod=500 $LAYER_PATH/spring-boot-load
 EXPOSE ${SERVICE_PORT}
 LABEL org.opencontainers.image.source=https://github.com/ngodat0103/se347
 LABEL  org.opencontainers.image.description="The backend service for SE347 Course"
-LABEL  org.opencontainers.image.source=https://github.com/ngodat0103/se347
 LABEL  org.opencontainers.image.title=se347-backend
 LABEL  org.opencontainers.image.url=https://github.com/ngodat0103/se347
 ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
