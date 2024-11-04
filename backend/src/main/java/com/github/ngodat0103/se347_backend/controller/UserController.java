@@ -7,7 +7,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthentication;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -26,7 +26,7 @@ public class UserController {
   @PreAuthorize("isAuthenticated()")
   @SecurityRequirement(name = "bearerAuth")
   @GetMapping(path = "/me")
-  public Mono<UserDto> getMe(BearerTokenAuthentication authentication) {
-    return userService.findById(authentication.getPrincipal().toString());
+  public Mono<UserDto> getMe(Authentication authentication) {
+    return userService.findByUsername(authentication.getName());
   }
 }

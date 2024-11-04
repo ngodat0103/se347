@@ -1,8 +1,10 @@
 logging:
   level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
     com.github.ngodat0103.javabackup.service: DEBUG
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
+    org.springframework.data.mongodb: DEBUG
 spring:
   data:
     mongodb:

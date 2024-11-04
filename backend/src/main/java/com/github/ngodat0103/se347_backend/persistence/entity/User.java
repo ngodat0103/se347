@@ -6,13 +6,15 @@ import lombok.Setter;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Getter
 @Setter
 @Document(collection = "users")
 public class User {
-  @MongoId private String id;
+  @MongoId(FieldType.OBJECT_ID)
+  private String id;
 
   @Indexed(unique = true)
   private String username;
