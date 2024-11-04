@@ -1,4 +1,4 @@
-package com.github.ngodat0103.javabackup.persistence.entity;
+package com.github.ngodat0103.se347_backend.persistence.entity;
 
 import java.time.LocalDateTime;
 import lombok.Getter;

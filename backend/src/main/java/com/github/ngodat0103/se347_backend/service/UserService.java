@@ -1,6 +1,6 @@
-package com.github.ngodat0103.javabackup.service;
+package com.github.ngodat0103.se347_backend.service;
 
-import com.github.ngodat0103.javabackup.dto.CredentialDto;
+import com.github.ngodat0103.se347_backend.dto.CredentialDto;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
 import reactor.core.publisher.Mono;
 
@@ -11,7 +11,7 @@ public interface UserService<Dto> {
 
   Mono<Dto> delete(Dto dto);
 
-  Mono<Dto> findById(Long id);
+  Mono<Dto> findById(String id);
 
   Mono<Dto> findByUsername(String username);
 

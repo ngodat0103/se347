@@ -1,6 +1,7 @@
-package com.github.ngodat0103.javabackup;
+package com.github.ngodat0103.se347_backend;
 
-import com.github.ngodat0103.javabackup.exception.ConflictException;
+import com.github.ngodat0103.se347_backend.exception.ConflictException;
+import com.github.ngodat0103.se347_backend.exception.NotFoundException;
 import org.slf4j.Logger;
 
 public final class Util {
@@ -17,6 +18,13 @@ public final class Util {
     ConflictException conflictException = new ConflictException(message);
     logging(log, message, conflictException);
     throw conflictException;
+  }
+
+  public static Throwable throwNotFoundException(
+      Logger log, String entity, String attributeName, Object attributeValues) {
+    String message = String.format(TEMPLATE_NOT_FOUND, entity, attributeName, attributeValues);
+    logging(log, message, null);
+    throw new NotFoundException(message);
   }
 
   private static void logging(Logger log, String message, Exception exception) {

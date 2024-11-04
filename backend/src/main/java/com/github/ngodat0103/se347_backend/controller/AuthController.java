@@ -1,8 +1,8 @@
-package com.github.ngodat0103.javabackup.controller;
+package com.github.ngodat0103.se347_backend.controller;
 
-import com.github.ngodat0103.javabackup.dto.CredentialDto;
-import com.github.ngodat0103.javabackup.dto.UserDto;
-import com.github.ngodat0103.javabackup.service.UserService;
+import com.github.ngodat0103.se347_backend.dto.CredentialDto;
+import com.github.ngodat0103.se347_backend.dto.UserDto;
+import com.github.ngodat0103.se347_backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;

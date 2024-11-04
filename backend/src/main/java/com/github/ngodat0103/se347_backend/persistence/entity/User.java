@@ -1,4 +1,4 @@
-package com.github.ngodat0103.javabackup.persistence.entity;
+package com.github.ngodat0103.se347_backend.persistence.entity;
 
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -12,8 +12,8 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @Setter
 @Document(collection = "users")
 public class User {
-  @MongoId
-  private String id;
+  @MongoId private String id;
+
   @Indexed(unique = true)
   private String username;
 

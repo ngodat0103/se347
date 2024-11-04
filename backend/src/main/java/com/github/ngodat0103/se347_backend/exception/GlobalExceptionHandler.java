@@ -1,4 +1,4 @@
-package com.github.ngodat0103.javabackup.exception;
+package com.github.ngodat0103.se347_backend.exception;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.net.URI;

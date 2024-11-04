@@ -1,8 +1,8 @@
 logging:
   level:
     com.github.ngodat0103.javabackup.service: DEBUG
+    org.springframework.security: DEBUG
     org.springframework.web: DEBUG
-
 spring:
   data:
     mongodb:

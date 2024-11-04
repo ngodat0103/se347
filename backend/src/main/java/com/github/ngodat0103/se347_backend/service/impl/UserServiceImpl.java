@@ -1,15 +1,15 @@
-package com.github.ngodat0103.javabackup.service.impl;
+package com.github.ngodat0103.se347_backend.service.impl;
 
-import static com.github.ngodat0103.javabackup.Util.*;
+import static com.github.ngodat0103.se347_backend.Util.*;
 
-import com.github.ngodat0103.javabackup.dto.CredentialDto;
-import com.github.ngodat0103.javabackup.dto.UserDto;
-import com.github.ngodat0103.javabackup.dto.mapper.UserMapper;
-import com.github.ngodat0103.javabackup.persistence.entity.RefreshToken;
-import com.github.ngodat0103.javabackup.persistence.entity.User;
-import com.github.ngodat0103.javabackup.persistence.repository.RefreshTokenRepository;
-import com.github.ngodat0103.javabackup.persistence.repository.UserRepository;
-import com.github.ngodat0103.javabackup.service.UserService;
+import com.github.ngodat0103.se347_backend.dto.CredentialDto;
+import com.github.ngodat0103.se347_backend.dto.UserDto;
+import com.github.ngodat0103.se347_backend.dto.mapper.UserMapper;
+import com.github.ngodat0103.se347_backend.persistence.entity.RefreshToken;
+import com.github.ngodat0103.se347_backend.persistence.entity.User;
+import com.github.ngodat0103.se347_backend.persistence.repository.RefreshTokenRepository;
+import com.github.ngodat0103.se347_backend.persistence.repository.UserRepository;
+import com.github.ngodat0103.se347_backend.service.UserService;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -45,13 +45,21 @@ public class UserServiceImpl implements UserService<UserDto> {
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     return userRepository
         .existsByUsername(user.getUsername())
-        .filter(Boolean.TRUE::equals)
-        .switchIfEmpty(
-            Mono.error(throwConflictException(log, "User", "username", user.getUsername())))
-        .then(userRepository.existsByEmail(user.getEmail()))
-        .filter(Boolean.TRUE::equals)
-        .switchIfEmpty(Mono.error(throwConflictException(log, "User", "email", user.getEmail())))
-        .then(userRepository.save(user))
+        .flatMap(
+            exists -> {
+              if (exists) {
+                return Mono.error(
+                    throwConflictException(log, "User", "username", user.getUsername()));
+              }
+              return userRepository.existsByEmail(user.getEmail());
+            })
+        .flatMap(
+            exists -> {
+              if (exists) {
+                return Mono.error(throwConflictException(log, "User", "email", user.getEmail()));
+              }
+              return userRepository.save(user);
+            })
         .map(userMapper::toDto);
   }
 
@@ -66,8 +74,11 @@ public class UserServiceImpl implements UserService<UserDto> {
   }
 
   @Override
-  public Mono<UserDto> findById(Long id) {
-    return null;
+  public Mono<UserDto> findById(String id) {
+    return userRepository
+        .findById(id)
+        .switchIfEmpty(Mono.error(throwNotFoundException(log, "User", "id", id)))
+        .map(userMapper::toDto);
   }
 
   @Override
