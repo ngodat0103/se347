@@ -4,8 +4,7 @@ ARG SERVICE_NAME
 ENV JAR_PATH=/build/target/${SERVICE_NAME}-${VERSION}.jar
 WORKDIR /build
 COPY . .
-RUN ls -la /build
-RUN mvn clean install -N
+RUN mvn clean install -q -DskipTests
 RUN mvn clean package -q -DskipTests
 RUN java -Djarmode=tools -jar $JAR_PATH extract --layers --launcher --destination target/layers
 
