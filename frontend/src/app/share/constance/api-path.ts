@@ -7,8 +7,8 @@ export const apiPath = {
     USER: 'user'
   },
   auth: {
-    login: 'api/auth/login',
-    register: 'api/auth/register',
+    login: '/api/v1/auth/login',
+    register: '/api/v1/users',
     refreshToken: 'api/auth/refreshToken',
     changePassword: 'api/auth/changePassword'
   },

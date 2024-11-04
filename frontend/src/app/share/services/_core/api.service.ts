@@ -98,12 +98,12 @@ export class ApiService {
 
 
   // tslint:disable-next-line:typedef
-  private errorHandler(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
+  private errorHandler(httpErrorResponse: HttpErrorResponse) {
+    if (httpErrorResponse.error instanceof ErrorEvent) {
       // Client-side or network error occurred.
-      console.error('An error occurred: ', error.error.message);
+      console.error('An error occurred: ', httpErrorResponse.error.message);
     } else {
-      return throwError(error);
+      return throwError(httpErrorResponse);
     }
     return throwError('Something went wrong!');
   }
@@ -133,13 +133,11 @@ export class ApiService {
         catchError(this.errorHandler)
       );
   }
-  public postNoHeader(path: string, body: any, customHeader?: any): Observable<HttpResponse<any>> {
+  public postNoHeader(path: string, body: any): Observable<HttpResponse<any>> {
     return this.httpClient.post<any>(
       path, body,
       {
-        headers: this.setHeadersNoToken(customHeader),
         withCredentials: false,
-        observe: 'response'
       })
       .pipe(
         catchError(this.errorHandler)
