@@ -14,3 +14,4 @@ spring:
 #      username: dev
 #      password: dev
       port: 27017
+      uuid-representation: java_legacy

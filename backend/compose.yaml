@@ -7,9 +7,8 @@ services:
     # The following line is only for Linux environments. For a demo or quick test on Windows, please comment out the line below.
     # This is used to add a host entry and route from Kong gateway container to bridge interfaces with the host machine for easier Docker development.
     # For more information, check out Docker's networking architecture.
-
-#    extra_hosts:
-#      - "se347-backend:172.21.0.1"
+    extra_hosts:
+      - "se347-backend:172.21.0.1"
     environment:
       KONG_DATABASE: "off"
       KONG_ADMIN_ACCESS_LOG: /dev/stdout

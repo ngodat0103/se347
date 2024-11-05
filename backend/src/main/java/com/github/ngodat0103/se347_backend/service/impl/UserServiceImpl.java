@@ -13,10 +13,11 @@ import com.github.ngodat0103.se347_backend.service.UserService;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
@@ -75,15 +76,18 @@ public class UserServiceImpl implements UserService<UserDto> {
 
   @Override
   public Mono<UserDto> findById(String id) {
-    return null;
+    return userRepository
+        .findById(id)
+        .switchIfEmpty(Mono.defer(() -> Mono.error(throwNotFoundException(log, "User", "id", id))))
+        .map(userMapper::toDto);
   }
 
   @Override
-  public Mono<UserDto> findByUsername(String username) {
-    return userRepository
-        .findByUsername(username)
-        .map(userMapper::toDto)
-        .switchIfEmpty(Mono.error(new NoSuchElementException("User not found.")));
+  public Mono<UserDto> getMe() {
+    return ReactiveSecurityContextHolder.getContext()
+        .map(securityContext -> securityContext.getAuthentication().getName())
+        .flatMap(userId -> userRepository.findById(userId))
+        .map(userMapper::toDto);
   }
 
   @Override
@@ -108,11 +112,14 @@ public class UserServiceImpl implements UserService<UserDto> {
     return userRepository
         .findByUsername(username)
         .filter(user -> passwordEncoder.matches(password, user.getPassword()))
+        .switchIfEmpty(
+            Mono.defer(
+                () -> Mono.error(new BadCredentialsException("Invalid username or password"))))
         .flatMap(
             user -> {
               JwtClaimsSet claims =
                   JwtClaimsSet.builder()
-                      .subject(user.getUsername())
+                      .subject(user.getId())
                       .issuer("se347-backend")
                       .issuedAt(LocalDateTime.now().toInstant(ZoneOffset.UTC))
                       .expiresAt(

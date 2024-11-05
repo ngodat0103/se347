@@ -1,24 +1,28 @@
 package com.github.ngodat0103.se347_backend.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Getter
 @Setter
-@Document(collection = "users")
+@Document
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
-  @MongoId(FieldType.OBJECT_ID)
-  private String id;
+  @Id private String id;
 
   @Indexed(unique = true)
   private String username;
 
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
 
   @Indexed(unique = true)

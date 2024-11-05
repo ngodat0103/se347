@@ -28,7 +28,6 @@ import { ModalModule } from 'ngb-modal';
   providers: [
     TokenStorageService, 
     CookieService,
-    
   ],
   bootstrap: [AppComponent]
 })

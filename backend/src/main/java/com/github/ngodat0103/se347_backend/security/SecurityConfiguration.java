@@ -7,6 +7,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.gen.RSAKeyGenerator;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.proc.SecurityContext;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -24,6 +25,8 @@ import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.HttpStatusServerEntryPoint;
 import org.springframework.security.web.server.authorization.HttpStatusServerAccessDeniedHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -38,7 +41,16 @@ public class SecurityConfiguration {
   @Profile("local-dev")
   SecurityWebFilterChain httpSecurity(ServerHttpSecurity http) {
     http.csrf(ServerHttpSecurity.CsrfSpec::disable);
-    http.cors(ServerHttpSecurity.CorsSpec::disable);
+    http.cors(
+        cors -> {
+          UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+          CorsConfiguration config = new CorsConfiguration();
+          config.addAllowedOrigin("http://localhost:4200");
+          config.addAllowedMethod("*");
+          config.addAllowedHeader("*");
+          source.registerCorsConfiguration("/**", config);
+          cors.configurationSource(source);
+        });
     http.authorizeExchange(exchange -> exchange.anyExchange().permitAll());
     http.oauth2ResourceServer(
         resource -> {
@@ -55,10 +67,17 @@ public class SecurityConfiguration {
   }
 
   @Bean
-  RSAKey rsaKey() throws JOSEException {
+  @ConditionalOnMissingBean
+  RSAKey rsaKeyAutoGenerate() throws JOSEException {
     RSAKeyGenerator rsaKeyGenerator = new RSAKeyGenerator(4096);
     return rsaKeyGenerator.generate();
   }
+
+  //  @Bean
+  //  @ConditionalOnProperty(name = "jwk.rsa.key-value")
+  //  RSAKey rsaKey(String keyValue) throws JOSEException {
+  //     RSAKey rsaKey = RSAKey.parse()
+  //  }
 
   @Bean
   JwtEncoder jwtEncoder(JWK jwk) {

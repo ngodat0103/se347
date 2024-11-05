@@ -4,15 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @AllArgsConstructor
 @Getter
-@Builder
-public class UserDto {
+@Setter
+@NoArgsConstructor
+public class UserDto implements Serializable {
   @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   private String id;
 
@@ -37,6 +38,7 @@ public class UserDto {
   private String phoneNumber;
 
   @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+  @DateTimeFormat
   private LocalDateTime createdAt;
 
   @JsonProperty(access = JsonProperty.Access.READ_ONLY)

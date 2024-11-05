@@ -13,7 +13,7 @@ public interface UserService<Dto> {
 
   Mono<Dto> findById(String id);
 
-  Mono<Dto> findByUsername(String username);
+  Mono<Dto> getMe();
 
   Mono<Dto> findByEmail(String email);
 
