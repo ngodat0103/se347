@@ -1,3 +1,4 @@
+import Image from "next/image"
 export const LoginComponent = () => {
     return (
         <>
@@ -9,14 +10,17 @@ export const LoginComponent = () => {
             <body class="h-full">
             ```
           */}
-          <div className="flex min-h-screen items-center justify-center px-6 py-12 lg:px-8 bg-sky-100 bg-[url('/images/login-jira.jpg')] bg-cover bg-center">
+          <div className="flex min-h-screen items-center justify-center px-6 py-12 lg:px-8 bg-sky-100 bg-[url('/images/2.png')] bg-cover bg-center">
             <div className = "bg-gray-500 bg-opacity-45 backdrop-blur-lg p-10 rounded-lg shadow-lg w-1/4 mb-9">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                <img
+                {/* <img
                     alt="Your Company"
                       src="/images/atlassian_jira.png"
                     className="mx-auto h-10 w-auto"
-                />
+                /> */}
+               <Image alt="Your Company" src="/images/atlassian_jira.png" width={40} height={40} className="mx-auto h-10 w-auto"
+/>
+
                 <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
                     Sign in
                 </h2>
