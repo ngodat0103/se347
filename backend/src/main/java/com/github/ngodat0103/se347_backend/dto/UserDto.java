@@ -5,10 +5,8 @@ import jakarta.validation.constraints.*;
 
 import lombok.*;
 
-@AllArgsConstructor
 @Getter
-@Setter
-@NoArgsConstructor
+@Builder
 public class UserDto  {
   @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   private Long id;

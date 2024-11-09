@@ -17,12 +17,15 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
@@ -38,6 +41,7 @@ public class SecurityConfiguration {
   @Bean
   @Profile("local-dev")
   SecurityFilterChain httpSecurity(HttpSecurity http) throws Exception {
+    http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     http.csrf(AbstractHttpConfigurer::disable);
     http.cors(
         cors -> {
@@ -63,7 +67,7 @@ public class SecurityConfiguration {
         });
 
 
-    http.anonymous(anonymousSpec -> anonymousSpec.principal("6729eab6fc8989612b718e44"));
+//    http.anonymous(anonymousSpec -> anonymousSpec.principal("6729eab6fc8989612b718e44"));
     return http.build();
   }
 
