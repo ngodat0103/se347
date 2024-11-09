@@ -1,12 +1,26 @@
 services:
   postgresql:
+    container_name: se347-postgresql
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     profiles: ["infra","dev","all"]
     image: "bitnami/postgresql:16.4.0-debian-12-r23"
+    networks: [dev]
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        cat <<EOF > /docker-entrypoint-initdb.d/init-user.sql
+        create role "dev" with password 'dev' ;
+        create database "user-management" with owner  "dev";
+        grant connect to "dev";
+        alter role "dev" with login;
+        EOF
+        /opt/bitnami/scripts/postgresql/entrypoint.sh /opt/bitnami/scripts/postgresql/run.sh
     ports:
       - "5432:5432"
     volumes:
+#      - ./src/main/resources/sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - bitnami_postgresql:/bitnami/postgresql
   se347-backend:
     profiles: [ "app","all" ]
@@ -20,18 +34,18 @@ services:
         VERSION: v1
     container_name: se347-backend
     networks: [ dev ]
-    healthcheck:
-     test: ["CMD","curl","http://localhost:5000/actuator/health","|","grep","UP"]
-     interval: 10s
-     timeout: 3s
-     retries: 3
+#    healthcheck:
+#     test: ["CMD","curl","http://localhost:5000/actuator/health","|","grep","UP"]
+#     interval: 10s
+#     timeout: 3s
+#     retries: 3
     depends_on:
       - postgresql
     ports:
       - "5000:5000"
     environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://se347-postgresql:5432/user-management"
       SPRING_PROFILES_ACTIVE: "local-dev"
-      SPRING_DATA_MONGODB_DATABASE: "se347-db"
 volumes:
   bitnami_postgresql:
     name: bitnami_postgresql
