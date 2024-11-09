@@ -1,17 +1,15 @@
 package com.github.ngodat0103.se347_backend.persistence.repository;
 
 import com.github.ngodat0103.se347_backend.persistence.entity.User;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends ReactiveMongoRepository<User, String> {
+import java.util.Optional;
 
-  Mono<Boolean> existsByUsername(String username);
 
-  Mono<Boolean> existsByEmail(String email);
+public interface UserRepository extends JpaRepository<User, Long > {
+    Boolean existsByUserName(String userName);
+    Boolean existsByEmailAddress(String emailAddress);
+    User findByUserName(String username);
+    User findByEmailAddress(String emailAddress);
 
-  Mono<User> findByUsername(String username);
-
-  Flux<User> findByIdIn(Iterable<String> ids);
 }

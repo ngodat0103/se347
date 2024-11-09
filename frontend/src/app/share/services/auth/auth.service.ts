@@ -9,7 +9,6 @@ import { apiPath } from "../../constance/api-path";
 import { environment } from "../../../../environments/environment.prod";
 import { HttpResponse } from "@angular/common/http";
 import { map } from "rxjs/operators";
-
 const apiUrl = environment.apiUrl;
 const path = apiPath.auth;
 
@@ -42,6 +41,14 @@ export class AuthService {
         })
       );
   }
+
+
+  // notifyUser(message: string) {
+  //   // Use Angular Material SnackBar, Toastr, or a custom alert here
+  //   this.snackBar.open(message, 'Close', { duration: 3000 });
+  // }
+
+
 
   checkLogin(): boolean {
     return this.tokenStorageService.getToken() ? true : false;

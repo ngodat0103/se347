@@ -13,24 +13,22 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
-import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
-import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.authentication.HttpStatusServerEntryPoint;
-import org.springframework.security.web.server.authorization.HttpStatusServerAccessDeniedHandler;
+import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
-@EnableWebFluxSecurity
-@EnableReactiveMethodSecurity
+@EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfiguration {
   @Bean
   PasswordEncoder passwordEncoder() {
@@ -39,30 +37,33 @@ public class SecurityConfiguration {
 
   @Bean
   @Profile("local-dev")
-  SecurityWebFilterChain httpSecurity(ServerHttpSecurity http) {
-    http.csrf(ServerHttpSecurity.CsrfSpec::disable);
+  SecurityFilterChain httpSecurity(HttpSecurity http) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable);
     http.cors(
         cors -> {
           UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-          CorsConfiguration config = new CorsConfiguration();
-          config.addAllowedOrigin("http://localhost:4200");
-          config.addAllowedMethod("*");
-          config.addAllowedHeader("*");
-          source.registerCorsConfiguration("/**", config);
+          CorsConfiguration corsConfiguration = new CorsConfiguration();
+            corsConfiguration.addAllowedOrigin("http://localhost:4200");
+            corsConfiguration.addAllowedHeader("*");
+            corsConfiguration.addAllowedMethod("*");
+            source.registerCorsConfiguration("/**", corsConfiguration);
           cors.configurationSource(source);
         });
-    http.authorizeExchange(exchange -> exchange.anyExchange().permitAll());
-    http.oauth2ResourceServer(
-        resource -> {
-          resource.jwt(Customizer.withDefaults());
-        });
+    http.authorizeHttpRequests(req -> req.anyRequest().permitAll());
+//    http.oauth2ResourceServer(
+//        resource -> {
+//          resource.jwt(Customizer.withDefaults());
+//        });
     http.exceptionHandling(
         exceptionhandlingSpec -> {
           exceptionhandlingSpec.authenticationEntryPoint(
-              new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED));
+              new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
           exceptionhandlingSpec.accessDeniedHandler(
-              new HttpStatusServerAccessDeniedHandler(HttpStatus.FORBIDDEN));
+              new AccessDeniedHandlerImpl());
         });
+
+
+    http.anonymous(anonymousSpec -> anonymousSpec.principal("6729eab6fc8989612b718e44"));
     return http.build();
   }
 
@@ -86,13 +87,13 @@ public class SecurityConfiguration {
     return new NimbusJwtEncoder(immutableJWKSet);
   }
 
-  @Bean
-  ReactiveJwtDecoder reactiveJwtDecoder(JWK jwk) throws JOSEException {
-    if (jwk instanceof RSAKey rsaKey) {
-      return new NimbusReactiveJwtDecoder(rsaKey.toRSAPublicKey());
-    }
-    throw new IllegalArgumentException(
-        "JWK is not an RSA key,Currently only RSA keys are supported, the key provided is of type: "
-            + jwk.getKeyType());
-  }
+//  @Bean
+//  JwtDecoder passwordEncoder(JWK jwk) throws JOSEException {
+//    if (jwk instanceof RSAKey rsaKey) {
+//      return new NimbusJwtDecoder(rsaKey.toRSAPublicKey());
+//    }
+//    throw new IllegalArgumentException(
+//        "JWK is not an RSA key,Currently only RSA keys are supported, the key provided is of type: "
+//            + jwk.getKeyType());
+//  }
 }

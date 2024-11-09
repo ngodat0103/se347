@@ -17,6 +17,7 @@ ENV PATH="$JAVA_HOME/bin:$PATH"
 COPY --from=jre-builder /jre $JAVA_HOME
 ARG SERVICE_PORT
 WORKDIR /opt/app
+RUN apk add curl
 RUN adduser -D -s /bin/bash app
 ENV LAYER_PATH=/build/target/layers
 COPY --from=app-builder --chown=app:app --chmod=500 $LAYER_PATH/dependencies/ ./

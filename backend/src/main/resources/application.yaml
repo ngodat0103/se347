@@ -1,11 +1,17 @@
+
+
+
 server.port: 5000
 server:
   forward-headers-strategy: framework
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
 spring:
-  data:
-    mongodb:
-      auto-index-creation: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
   config:
     import:
       - "optional:local-dev.yaml"

@@ -12,7 +12,7 @@ public final class Util {
     throw new IllegalStateException("Utility class");
   }
 
-  public static Throwable throwConflictException(
+  public static void throwConflictException(
       Logger log, String entity, String attributeName, Object attributeValues) {
     String message = String.format(TEMPLATE_CONFLICT, entity, attributeName, attributeValues);
     ConflictException conflictException = new ConflictException(message);
@@ -20,12 +20,13 @@ public final class Util {
     throw conflictException;
   }
 
-  public static Throwable throwNotFoundException(
+  public static void throwNotFoundException(
       Logger log, String entity, String attributeName, Object attributeValues) {
     String message = String.format(TEMPLATE_NOT_FOUND, entity, attributeName, attributeValues);
     logging(log, message, null);
     throw new NotFoundException(message);
   }
+
 
   private static void logging(Logger log, String message, Exception exception) {
     if (log.isTraceEnabled()) {

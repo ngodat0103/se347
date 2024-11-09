@@ -1,40 +1,62 @@
 package com.github.ngodat0103.se347_backend.persistence.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
+@Entity
 @Getter
 @Setter
-@Document
-@AllArgsConstructor
-@NoArgsConstructor
-public class User {
-  @Id private String id;
+@Table(name = "cwd_user", schema = "public")
+public class User  extends BaseEntity  {
 
-  @Indexed(unique = true)
-  private String username;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(nullable = false, precision = 18)
+  private Long id;
 
-  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-  private String password;
+  @Column(name = "directory_id", precision = 18)
+  private Long directoryId;
 
-  @Indexed(unique = true)
-  @Field
-  private String email;
+  @Column(name = "user_name", unique = true)
+  private String userName;
 
-  @Field private String fullName;
-  @Field private String phoneNumber;
+  @Column(name = "lower_user_name", unique = true)
+  private String lowerUserName;
 
-  @Field(name = "created_at")
-  private LocalDateTime createdAt;
+  @Column(name = "active", precision = 9)
+  private Integer active;
 
-  @Field(name = "updated_at")
-  private LocalDateTime updatedAt;
+  @Column(name = "first_name")
+  private String firstName;
+
+  @Column(name = "lower_first_name")
+  private String lowerFirstName;
+
+  @Column(name = "last_name")
+  private String lastName;
+
+  @Column(name = "lower_last_name")
+  private String lowerLastName;
+
+  @Column(name = "display_name")
+  private String displayName;
+
+  @Column(name = "lower_display_name")
+  private String lowerDisplayName;
+
+  @Column(name = "email_address", unique = true)
+  private String emailAddress;
+
+  @Column(name = "lower_email_address")
+  private String lowerEmailAddress;
+
+  @Column(name = "credential")
+  private String credential;
+
+  @Column(name = "deleted_externally", precision = 9)
+  private Integer deletedExternally;
+
+  @Column(name = "external_id")
+  private String externalId;
+
 }

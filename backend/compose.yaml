@@ -1,90 +1,13 @@
 services:
-  kong-dev:
-    image: "${KONG_DOCKER_TAG:-kong:latest}"
-    container_name: kong-dev
-    user: "${KONG_USER:-kong}"
-    profiles: [ "infra-dev"]
-    # The following line is only for Linux environments. For a demo or quick test on Windows, please comment out the line below.
-    # This is used to add a host entry and route from Kong gateway container to bridge interfaces with the host machine for easier Docker development.
-    # For more information, check out Docker's networking architecture.
-    extra_hosts:
-      - "se347-backend:172.21.0.1"
+  postgresql:
     environment:
-      KONG_DATABASE: "off"
-      KONG_ADMIN_ACCESS_LOG: /dev/stdout
-      KONG_ADMIN_ERROR_LOG: /dev/stderr
-      KONG_PROXY_LISTEN: "${KONG_PROXY_LISTEN:-0.0.0.0:80}"
-      KONG_ADMIN_LISTEN: "${KONG_ADMIN_LISTEN:-0.0.0.0:9001}"
-      KONG_ADMIN_GUI_LISTEN: "${KONG_ADMIN_GUI_LISTEN:-0.0.0.0:9002}"
-      KONG_PROXY_ACCESS_LOG: /dev/stdout
-      KONG_PROXY_ERROR_LOG: /dev/stderr
-      KONG_PREFIX: ${KONG_PREFIX:-/var/run/kong}
-      KONG_DECLARATIVE_CONFIG: "/etc/kong/kong.yaml"
-    networks: [ dev ]
+      - ALLOW_EMPTY_PASSWORD=yes
+    profiles: ["infra","dev","all"]
+    image: "bitnami/postgresql:16.4.0-debian-12-r23"
     ports:
-      - "${KONG_INBOUND_PROXY_LISTEN:-0.0.0.0}:80:80/tcp"
-      - "${KONG_INBOUND_SSL_PROXY_LISTEN:-0.0.0.0}:8443:8443/tcp"
-      - "9001:9001/tcp" # Admin API
-      - "9444:9444/tcp" # Admin API over HTTPS
-      - "9002:9002/tcp" # Admin GUI
-    healthcheck:
-      test: [ "CMD", "kong", "health" ]
-      interval: 10s
-      timeout: 10s
-      retries: 10
-    restart: on-failure
-    read_only: true
+      - "5432:5432"
     volumes:
-      - kong_prefix_vol:${KONG_PREFIX:-/var/run/kong}
-      - kong_tmp_vol:/tmp
-      - ./kong.yaml:/etc/kong/kong.yaml:ro
-#      - ./kong.conf.default:/etc/kong/kong.conf.default:ro
-    security_opt:
-      - no-new-privileges
-  kong:
-    image: "${KONG_DOCKER_TAG:-kong:latest}"
-    container_name: kong
-    user: "${KONG_USER:-kong}"
-    profiles: [ "all" ]
-    environment:
-      KONG_DATABASE: "off"
-      KONG_ADMIN_ACCESS_LOG: /dev/stdout
-      KONG_ADMIN_ERROR_LOG: /dev/stderr
-      KONG_PROXY_LISTEN: "${KONG_PROXY_LISTEN:-0.0.0.0:80}"
-      KONG_ADMIN_LISTEN: "${KONG_ADMIN_LISTEN:-0.0.0.0:9001}"
-      KONG_ADMIN_GUI_LISTEN: "${KONG_ADMIN_GUI_LISTEN:-0.0.0.0:9002}"
-      KONG_PROXY_ACCESS_LOG: /dev/stdout
-      KONG_PROXY_ERROR_LOG: /dev/stderr
-      KONG_PREFIX: ${KONG_PREFIX:-/var/run/kong}
-      KONG_DECLARATIVE_CONFIG: "/etc/kong/kong.yaml"
-    networks: [ dev ]
-    ports:
-      - "${KONG_INBOUND_PROXY_LISTEN:-0.0.0.0}:80:80/tcp"
-      - "${KONG_INBOUND_SSL_PROXY_LISTEN:-0.0.0.0}:8443:8443/tcp"
-      - "9001:9001/tcp" # Admin API
-      - "9444:9444/tcp" # Admin API over HTTPS
-      - "9002:9002/tcp" # Admin GUI
-    healthcheck:
-      test: [ "CMD", "kong", "health" ]
-      interval: 10s
-      timeout: 10s
-      retries: 10
-    restart: on-failure
-    read_only: true
-    volumes:
-      - kong_prefix_vol:${KONG_PREFIX:-/var/run/kong}
-      - kong_tmp_vol:/tmp
-      - ./kong.yaml:/etc/kong/kong.yaml:ro
-    #      - ./kong.conf.default:/etc/kong/kong.conf.default:ro
-    security_opt:
-      - no-new-privileges
-  mongodb:
-    profiles: [ "infra-dev","all" ]
-    image: mongodb/mongodb-community-server:7.0.2-ubi9
-    hostname: mongodb
-    networks: [ dev ]
-    ports:
-      - "27017:27017"
+      - bitnami_postgresql:/bitnami/postgresql
   se347-backend:
     profiles: [ "app","all" ]
     image: "ghcr.io/ngodat0103/se347-backend:dev-latest"
@@ -97,22 +20,21 @@ services:
         VERSION: v1
     container_name: se347-backend
     networks: [ dev ]
-#    depends_on:
-#      - mongodb
+    healthcheck:
+     test: ["CMD","curl","http://localhost:5000/actuator/health","|","grep","UP"]
+     interval: 10s
+     timeout: 3s
+     retries: 3
+    depends_on:
+      - postgresql
     ports:
       - "5000:5000"
     environment:
       SPRING_PROFILES_ACTIVE: "local-dev"
       SPRING_DATA_MONGODB_DATABASE: "se347-db"
 volumes:
-  kong_prefix_vol:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-  kong_tmp_vol:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
+  bitnami_postgresql:
+    name: bitnami_postgresql
 networks:
   dev:
     name: dev

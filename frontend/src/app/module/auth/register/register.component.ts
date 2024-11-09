@@ -4,6 +4,7 @@ import { AccountModel } from './../../../share/models/account.model';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserModel } from 'src/app/share/models/user.model';
+import { catchError, pipe } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -29,6 +30,8 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  
+
   register(event: any) {
     this.formRegister
     const account = new AccountModel();
@@ -39,9 +42,7 @@ export class RegisterComponent implements OnInit {
     user.email = this.formRegister.getRawValue().email;
     user.phone = this.formRegister.getRawValue().phone;
     user.account = account;
-    this.authServive.register(user).subscribe((data: any) => {
-      this.formRegister.reset();
-      this.router.navigate(['/auth/login']);
-    });
+    this.authServive.register(user)
+    pipe(catchError(error -> ))
   }
 }
