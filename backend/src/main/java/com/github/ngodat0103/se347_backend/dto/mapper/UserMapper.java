@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring",unmappedSourcePolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
   @Mapping(target = "password", source = "credential")
   UserDto toDto(User user);
@@ -15,6 +15,6 @@ public interface UserMapper {
   @Mapping(target = "lowerFirstName", expression = "java(dto.getFirstName().toLowerCase())")
   @Mapping(target = "lowerLastName", expression = "java(dto.getLastName().toLowerCase())")
   @Mapping(target = "lowerEmailAddress", expression = "java(dto.getEmailAddress().toLowerCase())")
-  @Mapping(target = "credential",source = "password")
+  @Mapping(target = "credential", source = "password")
   User toEntity(UserDto dto);
 }

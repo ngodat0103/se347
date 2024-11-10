@@ -3,11 +3,12 @@ package com.github.ngodat0103.se347_backend.persistence.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
 @Entity
 @Getter
 @Setter
 @Table(name = "cwd_user", schema = "public")
-public class User  extends BaseEntity  {
+public class User extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,5 +59,4 @@ public class User  extends BaseEntity  {
 
   @Column(name = "external_id")
   private String externalId;
-
 }

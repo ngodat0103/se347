@@ -2,14 +2,14 @@ package com.github.ngodat0103.se347_backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
-
 import lombok.*;
 
 @Getter
 @Builder
-public class UserDto  {
+public class UserDto {
   @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   private Long id;
+
   @NotBlank
   @Size(max = 255)
   private String userName;

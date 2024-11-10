@@ -1,5 +1,9 @@
 package com.github.ngodat0103.se347_backend.service.impl;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
 import com.github.ngodat0103.se347_backend.dto.UserDto;
@@ -8,6 +12,7 @@ import com.github.ngodat0103.se347_backend.dto.mapper.UserMapperImpl;
 import com.github.ngodat0103.se347_backend.exception.ConflictException;
 import com.github.ngodat0103.se347_backend.persistence.entity.User;
 import com.github.ngodat0103.se347_backend.persistence.repository.UserRepository;
+import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,67 +21,63 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
-import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 public class UserServiceImplTest {
-    private UserRepository userRepository;
-    private UserServiceImpl userService;
-    private final Faker faker = new Faker();
-    private final UserMapper userMapper = new UserMapperImpl();
+  private UserRepository userRepository;
+  private UserServiceImpl userService;
+  private final Faker faker = new Faker();
+  private final UserMapper userMapper = new UserMapperImpl();
 
-    private  UserDto userDtoFake;
-    @BeforeEach
-    void setUp() {
+  private UserDto userDtoFake;
 
-        Name user = faker.name();
-        userDtoFake = UserDto.builder()
-                .userName(user.username())
-                .firstName(user.firstName())
-                .lastName(user.lastName())
-                .emailAddress(faker.internet().emailAddress())
-                .password(faker.internet().password())
-                .build();
+  @BeforeEach
+  void setUp() {
 
-        userRepository = Mockito.mock(UserRepository.class);
-        JwtEncoder jwtEncoder = Mockito.mock(NimbusJwtEncoder.class);
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        this.userService = new UserServiceImpl(userRepository,userMapper,passwordEncoder, jwtEncoder);
-    }
+    Name user = faker.name();
+    userDtoFake =
+        UserDto.builder()
+            .userName(user.username())
+            .firstName(user.firstName())
+            .lastName(user.lastName())
+            .emailAddress(faker.internet().emailAddress())
+            .password(faker.internet().password())
+            .build();
 
-    @Test
-    void createUserWhenNotExistsThenReturnSuccessful() {
-        User user = userMapper.toEntity(userDtoFake);
-        user.setId(new Random().nextLong());
+    userRepository = Mockito.mock(UserRepository.class);
+    JwtEncoder jwtEncoder = Mockito.mock(NimbusJwtEncoder.class);
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    this.userService = new UserServiceImpl(userRepository, userMapper, passwordEncoder, jwtEncoder);
+  }
 
-        when(userRepository.existsByUserName(user.getUserName())).thenReturn(false);
-        when(userRepository.existsByEmailAddress(userDtoFake.getEmailAddress())).thenReturn(false);
-        when(userRepository.save(any(User.class))).thenReturn(user);
-        UserDto result = userService.create(userDtoFake);
+  @Test
+  void createUserWhenNotExistsThenReturnSuccessful() {
+    User user = userMapper.toEntity(userDtoFake);
+    user.setId(new Random().nextLong());
 
-        assertEquals(result.getUserName(),userDtoFake.getUserName());
-        assertEquals(result.getFirstName(),userDtoFake.getFirstName());
-        assertEquals(result.getLastName(),userDtoFake.getLastName());
-        assertEquals(result.getEmailAddress(),userDtoFake.getEmailAddress());
-        assertNotNull(result.getId()) ;
-    }
+    when(userRepository.existsByUserName(user.getUserName())).thenReturn(false);
+    when(userRepository.existsByEmailAddress(userDtoFake.getEmailAddress())).thenReturn(false);
+    when(userRepository.save(any(User.class))).thenReturn(user);
+    UserDto result = userService.create(userDtoFake);
 
-    @Test
-    void createUserWhenExistingUsernameThenThrowConflictException() {
+    assertEquals(result.getUserName(), userDtoFake.getUserName());
+    assertEquals(result.getFirstName(), userDtoFake.getFirstName());
+    assertEquals(result.getLastName(), userDtoFake.getLastName());
+    assertEquals(result.getEmailAddress(), userDtoFake.getEmailAddress());
+    assertNotNull(result.getId());
+  }
 
-        when(userRepository.existsByUserName(userDtoFake.getUserName())).thenReturn(true);
+  @Test
+  void createUserWhenExistingUsernameThenThrowConflictException() {
 
-        assertThrows(ConflictException.class, () -> userService.create(userDtoFake));
-    }
+    when(userRepository.existsByUserName(userDtoFake.getUserName())).thenReturn(true);
 
-    @Test
-    void CreateUserWhenExistingEmailThenThrowConflictException() {
-        when(userRepository.existsByUserName(userDtoFake.getUserName())).thenReturn(false);
-        when(userRepository.existsByEmailAddress(userDtoFake.getEmailAddress())).thenReturn(true);
+    assertThrows(ConflictException.class, () -> userService.create(userDtoFake));
+  }
 
-        assertThrows(ConflictException.class, () -> userService.create(userDtoFake));
-    }
+  @Test
+  void CreateUserWhenExistingEmailThenThrowConflictException() {
+    when(userRepository.existsByUserName(userDtoFake.getUserName())).thenReturn(false);
+    when(userRepository.existsByEmailAddress(userDtoFake.getEmailAddress())).thenReturn(true);
+
+    assertThrows(ConflictException.class, () -> userService.create(userDtoFake));
+  }
 }

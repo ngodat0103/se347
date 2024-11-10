@@ -12,7 +12,7 @@ public interface UserService<Dto> {
 
   Dto findById(String id);
 
-  Dto getMe();
+  Dto getMe() throws Throwable;
 
   Dto findByEmail(String email);
 

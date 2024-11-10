@@ -1,16 +1,13 @@
 package com.github.ngodat0103.se347_backend.exception;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.bind.support.WebExchangeBindException;
 
 @RestControllerAdvice
 @Slf4j

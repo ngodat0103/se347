@@ -19,9 +19,9 @@ spring:
     name: se346-backend
 springdoc:
   api-docs:
-    path: /api/v1/api-docs
+    path: /api/v1/users/api-docs
   swagger-ui:
-    path: /api/v1/ui-docs
+    path: /api/v1/users/ui-docs
     use-root-path: true
   show-login-endpoint: true
   show-oauth2-endpoints: true

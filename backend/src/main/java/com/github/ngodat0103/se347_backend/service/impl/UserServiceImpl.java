@@ -1,12 +1,16 @@
 package com.github.ngodat0103.se347_backend.service.impl;
 
+import static com.github.ngodat0103.se347_backend.exception.Util.*;
+
 import com.github.ngodat0103.se347_backend.dto.CredentialDto;
 import com.github.ngodat0103.se347_backend.dto.UserDto;
 import com.github.ngodat0103.se347_backend.dto.mapper.UserMapper;
 import com.github.ngodat0103.se347_backend.persistence.entity.User;
 import com.github.ngodat0103.se347_backend.persistence.repository.UserRepository;
 import com.github.ngodat0103.se347_backend.service.UserService;
-
+import java.time.Instant;
+import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,12 +23,6 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.Set;
-
-import static com.github.ngodat0103.se347_backend.Util.*;
-
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -34,19 +32,18 @@ public class UserServiceImpl implements UserService<UserDto> {
   private PasswordEncoder passwordEncoder;
   private JwtEncoder jwtEncoder;
 
-
   @Override
   public UserDto create(UserDto userDto) {
     String username = userDto.getUserName();
     String email = userDto.getEmailAddress();
-    if(userRepository.existsByUserName(username)) {
-      if(log.isDebugEnabled()){
+    if (userRepository.existsByUserName(username)) {
+      if (log.isDebugEnabled()) {
         log.debug("Username already exists");
       }
       throwConflictException(log, "User", "username", username);
     }
-    if(userRepository.existsByEmailAddress(email)) {
-      if(log.isDebugEnabled()){
+    if (userRepository.existsByEmailAddress(email)) {
+      if (log.isDebugEnabled()) {
         log.debug("Email already exists");
       }
       throwConflictException(log, "User", "email", email);
@@ -72,8 +69,12 @@ public class UserServiceImpl implements UserService<UserDto> {
   }
 
   @Override
-  public UserDto getMe() {
-    return null;
+  public UserDto getMe() throws Throwable {
+    Long id = Long.valueOf(getUserIdfromAuthentication());
+    return userRepository
+        .findById(id)
+        .map(userMapper::toDto)
+        .orElseThrow(() -> throwNotFoundException(log, "User", "id", id));
   }
 
   @Override
@@ -95,34 +96,32 @@ public class UserServiceImpl implements UserService<UserDto> {
   public OAuth2AccessTokenResponse login(CredentialDto credentialDto) {
     String username = credentialDto.getUsername();
     String password = credentialDto.getPassword();
-    var user = userRepository.findByUserName(username);
-    if(user == null) {
-      if(log.isDebugEnabled()){
-        log.debug("User not found");
-      }
-      throw new BadCredentialsException("Username or password is incorrect");
-    }
-    if(!passwordEncoder.matches(password, user.getCredential())) {
-      if(log.isDebugEnabled()){
-        log.debug("Password not match");
-      }
-        throw new BadCredentialsException("Username or password is incorrect");
-    }
 
-    JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
-            .subject(user.getId().toString())
-            .expiresAt(Instant.now().plusSeconds(3600))
-            .audience(List.of("se347"))
-            .issuedAt(Instant.now())
-            .issuer("se347")
-            .build();
+    return userRepository
+        .findByUserName(username)
+        .map(
+            user -> {
+              if (passwordEncoder.matches(password, user.getCredential())) {
+                JwtClaimsSet jwtClaimsSet =
+                    JwtClaimsSet.builder()
+                        .subject(user.getId().toString())
+                        .expiresAt(Instant.now().plusSeconds(3600))
+                        .audience(List.of("se347"))
+                        .issuedAt(Instant.now())
+                        .issuer("se347")
+                        .build();
 
-    JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(jwtClaimsSet);
-    Jwt jwt = jwtEncoder.encode(jwtEncoderParameters);
-      return OAuth2AccessTokenResponse.withToken(jwt.getTokenValue())
-              .tokenType(OAuth2AccessToken.TokenType.BEARER)
-              .scopes(Set.of("se347"))
-              .expiresIn(jwtClaimsSet.getExpiresAt().getEpochSecond())
-              .build();
+                JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(jwtClaimsSet);
+                Jwt jwt = jwtEncoder.encode(jwtEncoderParameters);
+                return OAuth2AccessTokenResponse.withToken(jwt.getTokenValue())
+                    .tokenType(OAuth2AccessToken.TokenType.BEARER)
+                    .scopes(Set.of("se347"))
+                    .expiresIn(jwtClaimsSet.getExpiresAt().getEpochSecond())
+                    .build();
+              } else {
+                throw new BadCredentialsException("Username or password is incorrect");
+              }
+            })
+        .orElseThrow(() -> new BadCredentialsException("Username or password is incorrect"));
   }
 }
