@@ -5,7 +5,7 @@ ENV JAR_PATH=/build/target/${SERVICE_NAME}-${VERSION}.jar
 WORKDIR /build
 COPY . .
 RUN mvn clean install -q -DskipTests
-RUN mvn clean package -q -DskipTests
+RUN mvn clean package -q -DskipTests -Drevision=${VERSION}
 RUN java -Djarmode=tools -jar $JAR_PATH extract --layers --launcher --destination target/layers
 
 FROM eclipse-temurin:17-jdk-alpine AS jre-builder

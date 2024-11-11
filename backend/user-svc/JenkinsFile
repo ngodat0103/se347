@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    stages {
+        stage("Checkout"){
+            steps {
+                checkout scmGit(
+                    branches: [[name: 'datnvm/jenkins-config']],
+                    userRemoteConfigs: [[url: 'https://github.com/ngodat0103/se347.git']]
+                )
+            }
+        }
+        stage("test") {
+            steps {
+                sh "echo 'Testing the project'"
+                sh "sleep 10"
+            }
+        }
+        stage("Build") {
+            steps {
+                sh "echo 'Build the project'"
+            }
+        }
+        stage("Deploy") {
+            steps {
+                sh "echo 'Deploy the project'"
+            }
+        }
+    }
+}

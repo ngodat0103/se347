@@ -24,14 +24,14 @@ services:
       - bitnami_postgresql:/bitnami/postgresql
   se347-backend:
     profiles: [ "app","all" ]
-    image: "ghcr.io/ngodat0103/se347-backend:dev-latest"
+    image: "ghcr.io/ngodat0103/se347-backend:${TAG:-dev-latest}"
     build:
       context: .
       dockerfile: Dockerfile
       args:
         SERVER_PORT: 5000
         SERVICE_NAME: se347-backend
-        VERSION: v1
+        VERSION: ${TAG:-dev-latest}
     container_name: se347-backend
     networks: [ dev ]
     healthcheck:
