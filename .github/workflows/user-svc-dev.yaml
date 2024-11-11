@@ -1,0 +1,31 @@
+name: user-svc-dev webhook
+on:
+ workflow_dispatch:    
+ push:
+    branches:
+      - main
+      - develop
+      - feature/*
+      - hotfix/*
+      - release/*
+      - bugfix/*
+      - refactor/*
+      - chore/*
+      - docs/*
+      - style/*
+      - test/*
+    paths:
+      - 'backend/user-svc/src/**'
+      - 'backend/user-svc/Dockerfile'
+      - 'backend/user-svc/pom.xml'
+jobs:
+  send-webhook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send webhook to Jenkins
+        uses: distributhor/workflow-webhook@v3.0.7
+        with:
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
+          webhook_auth_type: 'bearer'
+          webhook_type: 'json'
+          webhook_auth: ${{ secrets.WEBHOOK_USER_SVC_DEV_TOKEN}}
