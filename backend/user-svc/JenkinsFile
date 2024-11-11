@@ -1,7 +1,12 @@
 pipeline {
     agent any
+    environment {
+        DOCKER_USERNAME = credentials('DOCKER_USERNAME')
+        DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
+        REGISTRY_URL = 'ghcr.io'
+    }
     stages {
-        stage("Checkout"){
+        stage('Checkout') {
             steps {
                 checkout scmGit(
                     branches: [[name: 'datnvm/jenkins-config']],
@@ -9,18 +14,31 @@ pipeline {
                 )
             }
         }
-        stage("test") {
+        stage('test') {
             steps {
-                sh "echo 'Testing the project'"
-                sh "sleep 10"
+                sh "echo 'Testing'"
+                sh 'sleep 2'
             }
         }
-        stage("Build") {
+        stage('Build') {
             steps {
-                sh "echo 'Build the project'"
+                dir('backend/user-svc') {
+                    sh '''
+                        if [ -z $REF ]; then
+                            echo 'TAG=dev-latest-mannual' > .env
+                        else
+                            BRANCH_NAME=$(echo $REF | cut -d '/' -f 3)
+                            echo "TAG=$BRANCH_NAME-$GITHUB_SHA" > .env
+                        fi
+                    ''' 
+                    sh 'docker compose --profile all build'
+                    sh 'docker login $REGISTRY_URL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+                    sh 'docker compose --profile all push'
+                    sh 'docker logout $REGISTRY_URL'
+                }
             }
         }
-        stage("Deploy") {
+        stage('Deploying to the dev cluster') {
             steps {
                 sh "echo 'Deploy the project'"
             }
