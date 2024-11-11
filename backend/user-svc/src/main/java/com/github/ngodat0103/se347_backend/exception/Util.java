@@ -15,7 +15,7 @@ public final class Util {
     return SecurityContextHolder.getContext().getAuthentication().getName();
   }
 
-  public static Throwable throwConflictException(
+  public static ConflictException createConflictException(
       Logger log, String entity, String attributeName, Object attributeValues) {
     String message = String.format(TEMPLATE_CONFLICT, entity, attributeName, attributeValues);
     ConflictException conflictException = new ConflictException(message);
@@ -23,7 +23,7 @@ public final class Util {
     throw conflictException;
   }
 
-  public static Throwable throwNotFoundException(
+  public static NotFoundException createNotFoundException(
       Logger log, String entity, String attributeName, Object attributeValues) {
     String message = String.format(TEMPLATE_NOT_FOUND, entity, attributeName, attributeValues);
     logging(log, message, null);

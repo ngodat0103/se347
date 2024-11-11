@@ -92,8 +92,10 @@ volumeMounts: []
 #   readOnly: true
 configMap:
   value:
-    SPRING_DATASOURCE_URL: jdbc:postgresql://share-db:5432/user-management
+    SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql.database:5432/user-management
     SPRING_PROFILES_ACTIVE: local-dev
+    SPRING_DATASOURCE_USERNAME: dev
+    SPRING_DATASOURCE_PASSWORD: dev
 commonConfig: {}
 secretRef: {}
 nodeSelector: {}

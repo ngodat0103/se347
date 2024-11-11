@@ -49,7 +49,7 @@ public class UserServiceImplTest {
   }
 
   @Test
-  void createUserWhenNotExistsThenReturnSuccessful() {
+  void createUserWhenNotExistsThenReturnSuccessful() throws Throwable {
     User user = userMapper.toEntity(userDtoFake);
     user.setId(new Random().nextLong());
 

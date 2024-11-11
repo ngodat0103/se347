@@ -32,66 +32,65 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
+  @Bean
+  PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    @Profile("local-dev")
-    SecurityFilterChain httpSecurity(HttpSecurity http) throws Exception {
-        http.sessionManagement(
-                session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.cors(
-                cors -> {
-                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                    CorsConfiguration corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.addAllowedOrigin("http://localhost:4200");
-                    corsConfiguration.addAllowedHeader("*");
-                    corsConfiguration.addAllowedMethod("*");
-                    source.registerCorsConfiguration("/**", corsConfiguration);
-                    cors.configurationSource(source);
-                });
-        http.authorizeHttpRequests(req -> req.anyRequest().permitAll());
-        http.oauth2ResourceServer(resource -> {
-            resource.jwt(Customizer.withDefaults());
+  @Bean
+  @Profile("local-dev")
+  SecurityFilterChain httpSecurity(HttpSecurity http) throws Exception {
+    http.sessionManagement(
+        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+    http.csrf(AbstractHttpConfigurer::disable);
+    http.cors(
+        cors -> {
+          UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+          CorsConfiguration corsConfiguration = new CorsConfiguration();
+          corsConfiguration.addAllowedOrigin("http://localhost:4200");
+          corsConfiguration.addAllowedHeader("*");
+          corsConfiguration.addAllowedMethod("*");
+          source.registerCorsConfiguration("/**", corsConfiguration);
+          cors.configurationSource(source);
         });
-        http.exceptionHandling(
-                exceptionhandlingSpec -> {
-                    exceptionhandlingSpec.authenticationEntryPoint(
-                            new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
-                    exceptionhandlingSpec.accessDeniedHandler(new AccessDeniedHandlerImpl());
-                });
+    http.authorizeHttpRequests(req -> req.anyRequest().permitAll());
+    http.oauth2ResourceServer(
+        resource -> {
+          resource.jwt(Customizer.withDefaults());
+        });
+    http.exceptionHandling(
+        exceptionhandlingSpec -> {
+          exceptionhandlingSpec.authenticationEntryPoint(
+              new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+          exceptionhandlingSpec.accessDeniedHandler(new AccessDeniedHandlerImpl());
+        });
 
-        //    http.anonymous(anonymousSpec -> anonymousSpec.principal("6729eab6fc8989612b718e44"));
-        return http.build();
-    }
+    //    http.anonymous(anonymousSpec -> anonymousSpec.principal("6729eab6fc8989612b718e44"));
+    return http.build();
+  }
 
-    @Bean
-    @ConditionalOnMissingBean
-    RSAKey rsaKeyAutoGenerate() throws JOSEException {
-        RSAKeyGenerator rsaKeyGenerator = new RSAKeyGenerator(4096);
-        return rsaKeyGenerator.generate();
-    }
+  @Bean
+  @ConditionalOnMissingBean
+  RSAKey rsaKeyAutoGenerate() throws JOSEException {
+    RSAKeyGenerator rsaKeyGenerator = new RSAKeyGenerator(4096);
+    return rsaKeyGenerator.generate();
+  }
 
-    //  @Bean
-    //  @ConditionalOnProperty(name = "jwk.rsa.key-value")
-    //  RSAKey rsaKey(String keyValue) throws JOSEException {
-    //     RSAKey rsaKey = RSAKey.parse()
-    //  }
+  //  @Bean
+  //  @ConditionalOnProperty(name = "jwk.rsa.key-value")
+  //  RSAKey rsaKey(String keyValue) throws JOSEException {
+  //     RSAKey rsaKey = RSAKey.parse()
+  //  }
 
-    @Bean
-    JwtEncoder jwtEncoder(JWK jwk) {
-        JWKSet jwkSet = new JWKSet(jwk);
-        ImmutableJWKSet<SecurityContext> immutableJWKSet = new ImmutableJWKSet<>(jwkSet);
-        return new NimbusJwtEncoder(immutableJWKSet);
-    }
+  @Bean
+  JwtEncoder jwtEncoder(JWK jwk) {
+    JWKSet jwkSet = new JWKSet(jwk);
+    ImmutableJWKSet<SecurityContext> immutableJWKSet = new ImmutableJWKSet<>(jwkSet);
+    return new NimbusJwtEncoder(immutableJWKSet);
+  }
 
-   @Bean
-   JwtDecoder jwtDecoder(RSAKey rsaKey) throws JOSEException {
-   return  NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey())
-           .build();
-   }
+  @Bean
+  JwtDecoder jwtDecoder(RSAKey rsaKey) throws JOSEException {
+    return NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey()).build();
+  }
 }

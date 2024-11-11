@@ -5,6 +5,7 @@ import static com.github.ngodat0103.se347_backend.exception.Util.*;
 import com.github.ngodat0103.se347_backend.dto.CredentialDto;
 import com.github.ngodat0103.se347_backend.dto.UserDto;
 import com.github.ngodat0103.se347_backend.dto.mapper.UserMapper;
+import com.github.ngodat0103.se347_backend.exception.ConflictException;
 import com.github.ngodat0103.se347_backend.persistence.entity.User;
 import com.github.ngodat0103.se347_backend.persistence.repository.UserRepository;
 import com.github.ngodat0103.se347_backend.service.UserService;
@@ -33,21 +34,23 @@ public class UserServiceImpl implements UserService<UserDto> {
   private JwtEncoder jwtEncoder;
 
   @Override
-  public UserDto create(UserDto userDto) {
+  public UserDto create(UserDto userDto) throws ConflictException {
     String username = userDto.getUserName();
     String email = userDto.getEmailAddress();
-    if (userRepository.existsByUserName(username)) {
-      if (log.isDebugEnabled()) {
-        log.debug("Username already exists");
-      }
-      throwConflictException(log, "User", "username", username);
-    }
-    if (userRepository.existsByEmailAddress(email)) {
-      if (log.isDebugEnabled()) {
-        log.debug("Email already exists");
-      }
-      throwConflictException(log, "User", "email", email);
-    }
+
+    userRepository
+        .findByUserName(username)
+        .ifPresent(
+            user -> {
+              throw createConflictException(log, "User", "username", username);
+            });
+
+    userRepository
+        .findByEmailAddress(email)
+        .ifPresent(
+            user -> {
+              throw createConflictException(log, "User", "email", email);
+            });
     User user = userMapper.toEntity(userDto);
     user.setCredential(passwordEncoder.encode(user.getCredential()));
     return userMapper.toDto(userRepository.save(user));
@@ -74,7 +77,7 @@ public class UserServiceImpl implements UserService<UserDto> {
     return userRepository
         .findById(id)
         .map(userMapper::toDto)
-        .orElseThrow(() -> throwNotFoundException(log, "User", "id", id));
+        .orElseThrow(() -> createNotFoundException(log, "User", "id", id));
   }
 
   @Override

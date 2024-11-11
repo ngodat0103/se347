@@ -1,10 +1,11 @@
 package com.github.ngodat0103.se347_backend.service;
 
 import com.github.ngodat0103.se347_backend.dto.CredentialDto;
+import com.github.ngodat0103.se347_backend.exception.ConflictException;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
 
 public interface UserService<Dto> {
-  Dto create(Dto dto);
+  Dto create(Dto dto) throws ConflictException;
 
   Dto update(Dto dto);
 

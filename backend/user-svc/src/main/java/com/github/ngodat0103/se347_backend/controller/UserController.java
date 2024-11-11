@@ -1,6 +1,7 @@
 package com.github.ngodat0103.se347_backend.controller;
 
 import com.github.ngodat0103.se347_backend.dto.UserDto;
+import com.github.ngodat0103.se347_backend.exception.ConflictException;
 import com.github.ngodat0103.se347_backend.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -17,7 +18,7 @@ public class UserController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public UserDto createUser(@Valid @RequestBody UserDto userDto) {
+  public UserDto createUser(@Valid @RequestBody UserDto userDto) throws ConflictException {
     return userService.create(userDto);
   }
 

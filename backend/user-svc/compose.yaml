@@ -49,7 +49,6 @@ services:
 volumes:
   bitnami_postgresql:
     name: bitnami_postgresql
-    external: true
 networks:
   dev:
     name: dev
