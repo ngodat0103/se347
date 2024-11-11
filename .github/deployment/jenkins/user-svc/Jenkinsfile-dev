@@ -4,12 +4,15 @@ pipeline {
         DOCKER_USERNAME = credentials('DOCKER_USERNAME')
         DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
         REGISTRY_URL = 'ghcr.io'
+        NAMESPACE = 'se347-dev'
+        BRANCH_NAME = 'dev'
+        TAG = "${BRANCH_NAME}-${GITHUB_SHA}"
     }
     stages {
         stage('Checkout') {
             steps {
                 checkout scmGit(
-                    branches: [[name: 'datnvm/jenkins-config']],
+                    branches: [[name: "${BRANCH_NAME}"]],
                     userRemoteConfigs: [[url: 'https://github.com/ngodat0103/se347.git']]
                 )
             }
@@ -23,14 +26,7 @@ pipeline {
         stage('Build') {
             steps {
                 dir('backend/user-svc') {
-                    sh '''
-                        if [ -z $REF ]; then
-                            echo 'TAG=dev-latest-mannual' > .env
-                        else
-                            BRANCH_NAME=$(echo $REF | cut -d '/' -f 3)
-                            echo "TAG=$BRANCH_NAME-$GITHUB_SHA" > .env
-                        fi
-                    ''' 
+                    sh 'echo "TAG=$TAG" > .env'
                     sh 'docker compose --profile all build'
                     sh 'docker login $REGISTRY_URL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
                     sh 'docker compose --profile all push'
@@ -39,8 +35,21 @@ pipeline {
             }
         }
         stage('Deploying to the dev cluster') {
+            agent {
+                node {
+                    label 'k8s-dev'
+                }
+            }
             steps {
-                sh "echo 'Deploy the project'"
+                checkout scmGit(
+                    branches: [[name: 'datnvm/jenkins-config']],
+                    userRemoteConfigs: [[url: 'https://github.com/ngodat0103/se347.git']]
+                )
+                dir(".github/deployment/kubernetes/helm/sub-charts/user-svc") {
+                    withKubeConfig([credentialsId: 'KUBE_CONFIG_DEV']) {
+                        sh 'helm upgrade --install --namespace=$NAMESPACE --create-namespace --set image.tag=$TAG --values=values.yaml user-svc .'
+                    }
+                } 
             }
         }
     }
