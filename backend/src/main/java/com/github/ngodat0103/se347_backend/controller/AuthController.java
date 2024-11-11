@@ -3,23 +3,27 @@ package com.github.ngodat0103.se347_backend.controller;
 import com.github.ngodat0103.se347_backend.dto.CredentialDto;
 import com.github.ngodat0103.se347_backend.dto.UserDto;
 import com.github.ngodat0103.se347_backend.service.UserService;
+import com.nimbusds.jose.jwk.JWK;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/auth")
 @AllArgsConstructor
+@RequestMapping(path = "/api/v1/users/auth")
 public class AuthController {
+
+  private final JWK jwk;
   private final UserService<UserDto> userService;
 
-  @PostMapping
-  public Mono<OAuth2AccessTokenResponse> login(@Valid @RequestBody CredentialDto credentialDto) {
+  @GetMapping(path = "/jwk", produces = "application/json")
+  public String getJwk() {
+    return jwk.toString();
+  }
+
+  @PostMapping(path = "/login")
+  public OAuth2AccessTokenResponse login(@RequestBody @Valid CredentialDto credentialDto) {
     return userService.login(credentialDto);
   }
 }

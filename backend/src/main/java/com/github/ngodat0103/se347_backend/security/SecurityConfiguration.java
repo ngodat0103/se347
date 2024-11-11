@@ -7,73 +7,91 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.gen.RSAKeyGenerator;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.proc.SecurityContext;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
-import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
-import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.authentication.HttpStatusServerEntryPoint;
-import org.springframework.security.web.server.authorization.HttpStatusServerAccessDeniedHandler;
+import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
-@EnableWebFluxSecurity
-@EnableReactiveMethodSecurity
+@EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfiguration {
-  @Bean
-  PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
 
-  @Bean
-  @Profile("local-dev")
-  SecurityWebFilterChain httpSecurity(ServerHttpSecurity http) {
-    http.csrf(ServerHttpSecurity.CsrfSpec::disable);
-    http.cors(ServerHttpSecurity.CorsSpec::disable);
-    http.authorizeExchange(exchange -> exchange.anyExchange().permitAll());
-    http.oauth2ResourceServer(
-        resource -> {
-          resource.jwt(Customizer.withDefaults());
-        });
-    http.exceptionHandling(
-        exceptionhandlingSpec -> {
-          exceptionhandlingSpec.authenticationEntryPoint(
-              new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED));
-          exceptionhandlingSpec.accessDeniedHandler(
-              new HttpStatusServerAccessDeniedHandler(HttpStatus.FORBIDDEN));
-        });
-    return http.build();
-  }
 
-  @Bean
-  RSAKey rsaKey() throws JOSEException {
-    RSAKeyGenerator rsaKeyGenerator = new RSAKeyGenerator(4096);
-    return rsaKeyGenerator.generate();
-  }
-
-  @Bean
-  JwtEncoder jwtEncoder(JWK jwk) {
-    JWKSet jwkSet = new JWKSet(jwk);
-    ImmutableJWKSet<SecurityContext> immutableJWKSet = new ImmutableJWKSet<>(jwkSet);
-    return new NimbusJwtEncoder(immutableJWKSet);
-  }
-
-  @Bean
-  ReactiveJwtDecoder reactiveJwtDecoder(JWK jwk) throws JOSEException {
-    if (jwk instanceof RSAKey rsaKey) {
-      return new NimbusReactiveJwtDecoder(rsaKey.toRSAPublicKey());
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
-    throw new IllegalArgumentException(
-        "JWK is not an RSA key,Currently only RSA keys are supported, the key provided is of type: "
-            + jwk.getKeyType());
-  }
+
+    @Bean
+    @Profile("local-dev")
+    SecurityFilterChain httpSecurity(HttpSecurity http) throws Exception {
+        http.sessionManagement(
+                session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.csrf(AbstractHttpConfigurer::disable);
+        http.cors(
+                cors -> {
+                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                    CorsConfiguration corsConfiguration = new CorsConfiguration();
+                    corsConfiguration.addAllowedOrigin("http://localhost:4200");
+                    corsConfiguration.addAllowedHeader("*");
+                    corsConfiguration.addAllowedMethod("*");
+                    source.registerCorsConfiguration("/**", corsConfiguration);
+                    cors.configurationSource(source);
+                });
+        http.authorizeHttpRequests(req -> req.anyRequest().permitAll());
+        http.oauth2ResourceServer(resource -> {
+            resource.jwt(Customizer.withDefaults());
+        });
+        http.exceptionHandling(
+                exceptionhandlingSpec -> {
+                    exceptionhandlingSpec.authenticationEntryPoint(
+                            new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+                    exceptionhandlingSpec.accessDeniedHandler(new AccessDeniedHandlerImpl());
+                });
+
+        //    http.anonymous(anonymousSpec -> anonymousSpec.principal("6729eab6fc8989612b718e44"));
+        return http.build();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    RSAKey rsaKeyAutoGenerate() throws JOSEException {
+        RSAKeyGenerator rsaKeyGenerator = new RSAKeyGenerator(4096);
+        return rsaKeyGenerator.generate();
+    }
+
+    //  @Bean
+    //  @ConditionalOnProperty(name = "jwk.rsa.key-value")
+    //  RSAKey rsaKey(String keyValue) throws JOSEException {
+    //     RSAKey rsaKey = RSAKey.parse()
+    //  }
+
+    @Bean
+    JwtEncoder jwtEncoder(JWK jwk) {
+        JWKSet jwkSet = new JWKSet(jwk);
+        ImmutableJWKSet<SecurityContext> immutableJWKSet = new ImmutableJWKSet<>(jwkSet);
+        return new NimbusJwtEncoder(immutableJWKSet);
+    }
+
+   @Bean
+   JwtDecoder jwtDecoder(RSAKey rsaKey) throws JOSEException {
+   return  NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey())
+           .build();
+   }
 }

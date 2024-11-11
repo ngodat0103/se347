@@ -1,0 +1,28 @@
+{
+  "properties": [
+    {
+      "name": "vertx.pg.host",
+      "type": "java.lang.String",
+      "description": "Description for vertx.pg.host."
+    },
+    {
+      "name": "vertx.pg.port",
+      "type": "java.lang.String",
+      "description": "Description for vertx.pg.port."
+    },
+    {
+      "name": "vertx.pg.database",
+      "type": "java.lang.String",
+      "description": "Description for vertx.pg.database."
+    },
+    {
+      "name": "vertx.pg.user",
+      "type": "java.lang.String",
+      "description": "Description for vertx.pg.user."
+    },
+    {
+      "name": "vertx.pg.password",
+      "type": "java.lang.String",
+      "description": "Description for vertx.pg.password."
+    }
+  ] }

@@ -1,0 +1,20 @@
+CREATE TABLE public.cwd_user (
+     id NUMERIC(18, 0) PRIMARY KEY NOT NULL,
+     directory_id NUMERIC(18, 0),
+     user_name VARCHAR(255),
+     lower_user_name VARCHAR(255),
+     active NUMERIC(9, 0),
+     created_date TIMESTAMPTZ,
+     last_modified_date TIMESTAMPTZ,
+     first_name VARCHAR(255),
+     lower_first_name VARCHAR(255),
+     last_name VARCHAR(255),
+     lower_last_name VARCHAR(255),
+     display_name VARCHAR(255),
+     lower_display_name VARCHAR(255),
+     email_address VARCHAR(255),
+     lower_email_address VARCHAR(255),
+     credential VARCHAR(255),
+     deleted_externally NUMERIC(9, 0),
+     external_id VARCHAR(255)
+);

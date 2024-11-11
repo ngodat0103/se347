@@ -7,9 +7,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -19,14 +17,19 @@ public class UserController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Mono<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
+  public UserDto createUser(@Valid @RequestBody UserDto userDto) {
     return userService.create(userDto);
   }
+
+  //  @GetMapping(path = "/{id}")
+  //  public UserDto getUser(@PathVariable(value = "id") String id) {
+  //    return userService.findById(id);
+  //  }
 
   @PreAuthorize("isAuthenticated()")
   @SecurityRequirement(name = "bearerAuth")
   @GetMapping(path = "/me")
-  public Mono<UserDto> getMe(Authentication authentication) {
-    return userService.findByUsername(authentication.getName());
+  public UserDto getMe() throws Throwable {
+    return userService.getMe();
   }
 }

@@ -1,14 +1,15 @@
 package com.github.ngodat0103.se347_backend.persistence.repository;
 
 import com.github.ngodat0103.se347_backend.persistence.entity.User;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import reactor.core.publisher.Mono;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends ReactiveMongoRepository<User, String> {
+public interface UserRepository extends JpaRepository<User, Long> {
+  Boolean existsByUserName(String userName);
 
-  Mono<Boolean> existsByUsername(String username);
+  Boolean existsByEmailAddress(String emailAddress);
 
-  Mono<Boolean> existsByEmail(String email);
+  Optional<User> findByUserName(String username);
 
-  Mono<User> findByUsername(String username);
+  User findByEmailAddress(String emailAddress);
 }
