@@ -3,12 +3,24 @@ import React, { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Container, Form, Row, Col, Alert } from 'react-bootstrap';
 
+import './hardcoded.tsx';
+import { backendUrl } from './hardcoded.tsx';
+
 interface RegisterForm {
-    username: string;
+    userName: string;
     password: string;
-    email: string;
+    emailAddress: string;
     firstName: string;
     lastName: string;
+}
+
+interface ConflictError {
+    type: string
+    title: string
+    status: number
+    detail: string
+    instance: string
+    properties: any
 }
 
 export default function Register() {
@@ -21,8 +33,9 @@ export default function Register() {
 
         // Disable submit event
         event.preventDefault();
-        
+
         const form = event.currentTarget;
+        console.debug(form);
 
         setValidated(true); // Make Bootstrap display validation check
         setIsDifferent(false); // Set password check to default
@@ -35,18 +48,52 @@ export default function Register() {
 
             // Check if two password are the same
             if (password1.value !== password2.value) {
+                console.debug("Password 1: ", password1.value, ". Password 2: ", password2.value);
+
                 setIsDifferent(true);
                 setValidated(false);
                 setAlertMess("Retype your password")
             } else {
                 // API request
                 let register_form: RegisterForm = {
-                    username: form["username"].value,
+                    userName: form["username"].value,
                     password: form["password1"].value,
-                    email: form["email"].value,
+                    emailAddress: form["email"].value,
                     firstName: form["firstname"].value,
                     lastName: form["lastname"].value,
                 }
+
+                console.debug(register_form);
+
+                const register_json = JSON.stringify(register_form);
+
+                console.info("Sending register request");
+
+                const response = await fetch(`${backendUrl}/api/v1/users`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: register_json
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.debug(data);
+
+                    // TODO: Add redirect to login page
+                } else if (response.status === 409) {
+                    const data: ConflictError = await response.json();
+                    console.debug(data);
+
+                    setAlertMess(data.detail);
+                } else {
+                    const data = await response.json();
+                    console.debug(data);
+
+                    setAlertMess("Server error");
+                }
+                console.debug(response);
             }
         }
     };
