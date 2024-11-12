@@ -1,6 +1,5 @@
 import { ImageCard } from "@/components/ImageCard";
-import { ChangeSlider } from "@/components/changeslider";
-
+import { ThreeDCardDemo } from "@/components/card";
 export function Body() {
   return (
     <div className="grotesk max-w-8xl mx-auto">
@@ -10,6 +9,7 @@ export function Body() {
       <div className="flex justify-center items-center">
         <ImageCard />
       </div>
+      <ThreeDCardDemo />
     </div>
   );
 }
