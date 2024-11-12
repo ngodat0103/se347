@@ -1,5 +1,6 @@
 import { ImageCard } from "@/components/ImageCard";
 import { ChangeSlider } from "@/components/changeslider";
+
 export function Body() {
   return (
     <div className="grotesk max-w-8xl mx-auto">
