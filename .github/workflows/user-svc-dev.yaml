@@ -3,17 +3,7 @@ on:
  workflow_dispatch:    
  push:
     branches:
-      - main
-      - develop
-      - feature/*
-      - hotfix/*
-      - release/*
-      - bugfix/*
-      - refactor/*
-      - chore/*
-      - docs/*
-      - style/*
-      - test/*
+      - dev
     paths:
       - 'backend/user-svc/src/**'
       - 'backend/user-svc/Dockerfile'
