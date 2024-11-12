@@ -22,6 +22,7 @@ export function Body() {
         </p>
         <ThreeDCardDemo />
       </div>
+      <ThreeDCardDemo />
     </div>
   );
 }
