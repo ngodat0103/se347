@@ -16,7 +16,7 @@ export function Header() {
   };
   return (
     <>
-      <div className="grotesk mb-0 flex items-center justify-between py-4 px-4 sm:mx-0 sm:mb-20 sm:px-0 md:px-6 ">
+      <div className="grotesk mb-0 flex items-center justify-between py-4 px-4 sm:mx-0 sm:mb-0 sm:px-0 md:px-6 ">
         <div className="mt-4 inline-block pb-4 pl-8">
           <a href="/" className="align-middle text-3xl font-bold text-black">
             Jira
