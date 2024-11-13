@@ -7,6 +7,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -87,6 +88,13 @@ export const SignInCard = () => {
               <Button disabled={false} size="lg" className="w-full">
                 Login
               </Button>
+              <p className="text-center mt-4">
+                You already have an account!{" "}
+                <Link href="/sign-up" className="text-blue-600 hover:underline">
+                  Log in
+                </Link>{" "}
+                now
+              </p>
             </form>
           </Form>
         </CardContent>
