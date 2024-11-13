@@ -11,8 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/users")
 @AllArgsConstructor
+@RequestMapping("/users")
 public class UserController {
   private UserService<UserDto> userService;
 

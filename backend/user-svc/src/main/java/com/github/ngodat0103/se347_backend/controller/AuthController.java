@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(path = "/api/v1/users/auth")
+@RequestMapping(path = "/users/auth")
 public class AuthController {
 
   private final JWK jwk;
