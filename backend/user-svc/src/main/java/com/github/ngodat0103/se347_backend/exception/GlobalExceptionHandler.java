@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,11 +44,11 @@ public class GlobalExceptionHandler {
     return problemDetails;
   }
 
-  @ExceptionHandler({MethodArgumentNotValidException.class})
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
+  @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
   public ProblemDetail handleMethodArgumentNotValidException(
       Exception e, HttpServletRequest request) {
-    ProblemDetail problemDetails = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+    ProblemDetail problemDetails = ProblemDetail.forStatus(HttpStatus.UNPROCESSABLE_ENTITY);
     problemDetails.setType(
         URI.create("https://problems-registry.smartbear.com/invalid-body-property-value/"));
     problemDetails.setDetail("The request body contains an invalid body property value.");
