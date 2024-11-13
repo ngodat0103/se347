@@ -1,21 +1,33 @@
 server.port: 5000
 server:
   forward-headers-strategy: framework
+  servlet:
+    context-path: /api/v1
 management:
   endpoints:
     web:
       exposure:
         include: health
 spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
   config:
     import:
-      - "optional:dev.yaml"
+      - "optional:local-dev.yaml"
   application:
-    name: user-svc
+    name: se346-backend
 springdoc:
+  open-api:
+    info:
+      version: ${APP_VERSION}
+      title: 'User service management'
+      description: 'User service management'
+      contact:
+        url: 'https://github.com/ngodat0103'
+        email: 'ngovuminhdat@gmail.com'
+        name: 'datnvm'
   api-docs:
-    path: /api/v1/users/api-docs
+    path: /users/api-docs
   swagger-ui:
-    path: /api/v1/users/ui-docs
+    path: /users/ui-docs
     use-root-path: true
-  show-actuator: true
