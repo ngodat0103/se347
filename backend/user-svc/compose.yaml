@@ -44,6 +44,7 @@ services:
     ports:
       - "5000:5000"
     environment:
+      APP_VERSION: "$TAG:-dev-latest"
       SPRING_DATASOURCE_URL: "jdbc:postgresql://se347-postgresql:5432/user-management"
       SPRING_PROFILES_ACTIVE: "local-dev"
 volumes:
