@@ -17,35 +17,29 @@ export function AppleCardsCarouselDemo() {
   );
 }
 
-const DummyContent = () => {
+interface DummyContentProps {
+  text: string;
+  imageSrc: string;
+}
+
+const DummyContent = ({ text, imageSrc }: DummyContentProps) => {
   return (
-    <>
-      {[...new Array(3).fill(1)].map((_, index) => {
-        return (
-          <div
-            key={"dummy-content" + index}
-            className="bg-[#F5F5F7] dark:bg-neutral-800 p-8 md:p-14 rounded-3xl mb-4"
-          >
-            <p className="text-neutral-600 dark:text-neutral-400 text-base md:text-2xl font-sans max-w-3xl mx-auto">
-              <span className="font-bold text-neutral-700 dark:text-neutral-200">
-                The first rule of Apple club is that you boast about Apple club.
-              </span>{" "}
-              Keep a journal, quickly jot down a grocery list, and take amazing
-              class notes. Want to convert those notes to text? No problem.
-              Langotiya jeetu ka mara hua yaar is ready to capture every
-              thought.
-            </p>
-            <Image
-              src="/images/2.png"
-              alt="Macbook mockup from Aceternity UI"
-              height="500"
-              width="500"
-              className="md:w-1/2 md:h-1/2 h-full w-full mx-auto object-contain"
-            />
-          </div>
-        );
-      })}
-    </>
+    <div className="bg-[#F5F5F7] dark:bg-neutral-800 p-8 md:p-14 rounded-3xl mb-10">
+      <div className="mb-10">
+        <p className="text-neutral-600 dark:text-neutral-400 text-base md:text-2xl font-sans max-w-3xl mx-auto">
+          <span className="font-bold text-neutral-700 dark:text-neutral-200 ">
+            {text}
+          </span>
+        </p>
+      </div>
+      <Image
+        src={imageSrc} // Sử dụng imageSrc từ props
+        alt="Macbook mockup from Aceternity UI"
+        height="500"
+        width="500"
+        className="md:w-1/2 md:h-1/2 h-full w-full mx-auto object-contain"
+      />
+    </div>
   );
 };
 
@@ -54,31 +48,55 @@ const data = [
     category: "PRODUCT AND ISSUA TRACKING",
     title: "Software Development",
     src: "/images/landingpage/deve.jpg",
-    content: <DummyContent />,
+    content: (
+      <DummyContent
+        text="Plan, track, release and support world-class software. Jira is the single source of truth for your entire development lifecycle."
+        imageSrc="/images/landingpage/soft_list.png"
+      />
+    ),
   },
   {
     category: "PLAN AND LAUNCH CAMPAIGNS",
     title: "Marketing and Sales",
     src: "/images/landingpage/marketing.jpg",
-    content: <DummyContent />,
+    content: (
+      <DummyContent
+        text="Make launching viral marketing campaigns a breeze. Break down complex campaigns into actionable steps, easily collect requests, and stay aligned with cross-functional teams."
+        imageSrc="/images/landingpage/market_list.png"
+      />
+    ),
   },
   {
     category: "MANAGE AND TRACK REQUESTS",
     title: "IT support services",
     src: "/images/landingpage/it.jpg",
-    content: <DummyContent />,
+    content: (
+      <DummyContent
+        text="Easily build custom forms, track requests, and fully automate your intake process. Communicate progress and collaborate directly on requests with internal stakeholders in one place."
+        imageSrc="/images/landingpage/it_list.png"
+      />
+    ),
   },
-
   {
     category: "BUILD CREATIVE WORKFLOWS",
     title: "Design",
     src: "/images/landingpage/design.jpg",
-    content: <DummyContent />,
+    content: (
+      <DummyContent
+        text="Collaborate on, organize, and deliver creative requests with ease. Give real-time visibility into designs with Jira’s Figma integration and accelerate approvals."
+        imageSrc="/images/landingpage/design_list.png"
+      />
+    ),
   },
   {
     category: "CREATE INTAKE PROCESS",
     title: "Operations",
     src: "/images/landingpage/ope.jpg",
-    content: <DummyContent />,
+    content: (
+      <DummyContent
+        text="Manage procurement, office, and new vendor requests, craft new operational processes, monitor operational risks and more. Keep your company running at maximum efficiency with Jira."
+        imageSrc="/images/landingpage/ope_list.png"
+      />
+    ),
   },
 ];
