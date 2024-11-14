@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { DottedSeparator } from "@/components/dotted-separator";
 import {
   Card,
@@ -21,32 +21,32 @@ import {
   Form,
   FormControl,
   FormMessage,
-  FormLabel,
-  FormField,
   FormItem,
+  FormField,
 } from "@/components/ui/form";
 
-//Dinh nghia schema cho form
+// Định nghĩa schema cho form
 const formSchema = z.object({
-  name: z.string().trim().min(1, "Required"),
+  username: z.string().trim().min(1, "Required"),
+  firstname: z.string().trim().min(1, "Required"),
+  lastname: z.string().trim().min(1, "Required"),
   email: z.string().email(),
   password: z.string().min(8, "Minimum 8 characters").max(256),
 });
 
 export const SignUpCard = () => {
-  //useForm quan ly trang thai form va valdation
-  //zodResolver tich hop zod de xu ly val
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      username: "",
+      firstname: "",
+      lastname: "",
       email: "",
       password: "",
     },
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    "onSubmit";
     console.log(values);
   };
 
@@ -57,7 +57,7 @@ export const SignUpCard = () => {
           <CardTitle className="text-2xl">Sign Up</CardTitle>
           <CardDescription>
             By signing up, you agree to our{" "}
-            <Link href="/privacy">
+            <Link href="#">
               <span className="text-blue-700">Privacy Policy</span>
             </Link>
           </CardDescription>
@@ -69,12 +69,48 @@ export const SignUpCard = () => {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
-                name="name"
+                name="username"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input {...field} type="name" placeholder="Enter name" />
+                      <Input
+                        {...field}
+                        type="text"
+                        placeholder="Enter username"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="firstname"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="text"
+                        placeholder="Enter first name"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="lastname"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="text"
+                        placeholder="Enter last name"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -115,6 +151,13 @@ export const SignUpCard = () => {
               <Button disabled={false} size="lg" className="w-full">
                 Sign up
               </Button>
+              <p className="text-center mt-4">
+                You already have an account!{" "}
+                <Link href="/sign-in" className="text-blue-600 hover:underline">
+                  Log in
+                </Link>{" "}
+                now
+              </p>
             </form>
           </Form>
         </CardContent>
