@@ -1,29 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Container, Form, Row, Col, Alert } from 'react-bootstrap';
 
-import './hardcoded.tsx';
-import { backendUrl } from './hardcoded.tsx';
+import { register } from '../services/user_api';
+import { RegisterForm } from '../types/user';
 
-interface RegisterForm {
-    userName: string;
-    password: string;
-    emailAddress: string;
-    firstName: string;
-    lastName: string;
-}
-
-interface ConflictError {
-    type: string
-    title: string
-    status: number
-    detail: string
-    instance: string
-    properties: any
-}
-
-export default function Register() {
+export default function Register({changePage}: {changePage: (page: string) => void}) {
     const [validated, setValidated] = useState(false);
     const [isDifferent, setIsDifferent] = useState(false);
     const [alertMess, setAlertMess] = useState("");
@@ -55,45 +37,23 @@ export default function Register() {
                 setAlertMess("Retype your password")
             } else {
                 // API request
-                let register_form: RegisterForm = {
+                const register_form: RegisterForm = {
                     userName: form["username"].value,
                     password: form["password1"].value,
                     emailAddress: form["email"].value,
                     firstName: form["firstname"].value,
-                    lastName: form["lastname"].value,
+                    lastName: form["lastname"].value
                 }
 
-                console.debug(register_form);
-
-                const register_json = JSON.stringify(register_form);
-
-                console.info("Sending register request");
-
-                const response = await fetch(`${backendUrl}/api/v1/users`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: register_json
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    console.debug(data);
-
-                    // TODO: Add redirect to login page
-                } else if (response.status === 409) {
-                    const data: ConflictError = await response.json();
-                    console.debug(data);
-
-                    setAlertMess(data.detail);
-                } else {
-                    const data = await response.json();
-                    console.debug(data);
-
-                    setAlertMess("Server error");
+                try {
+                    await register(register_form);
+                    changePage("login");
+                    // TODO: Add alert for successful registration
+                } catch (error) {
+                    if (error instanceof Error) {
+                        setAlertMess(error.message);
+                    } // Should not return any other type of error
                 }
-                console.debug(response);
             }
         }
     };
@@ -156,6 +116,9 @@ export default function Register() {
                             </Row>
                             <Row>
                                 <Button type="submit" className="my-3">Register</Button>
+                            </Row>
+                            <Row className="text-center">
+                                <Col>or <a href="" onClick={(e) => {e.preventDefault(); changePage("login")}}>Login</a></Col>
                             </Row>
                         </Container>
                     </Form>

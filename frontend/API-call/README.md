@@ -1,3 +1,6 @@
+# Environment Variables
+VITE_BACKEND_URL: The URL of the backend server.
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
