@@ -33,6 +33,7 @@ const formSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8, "Minimum 8 characters").max(256),
 });
+import { register } from "@/services/user_api";
 
 export const SignUpCard = () => {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -48,6 +49,14 @@ export const SignUpCard = () => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     console.log(values);
+    var result = register({
+      userName: values.username,
+      firstName: values.firstname,
+      lastName: values.lastname,
+      emailAddress: values.email,
+      password: values.password,
+    });
+
   };
 
   return (

@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { login } from "@/services/user_api";
 import {
   Form,
   FormControl,
@@ -37,7 +38,10 @@ export const SignInCard = () => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     "onSubmit";
-    console.log(values);
+    login({
+      email: values.email,
+      password: values.password,
+    })
   };
 
   return (
