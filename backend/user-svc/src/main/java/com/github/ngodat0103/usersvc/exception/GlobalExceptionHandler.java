@@ -11,10 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.support.WebExchangeBindException;
 
 @RestControllerAdvice
 @Slf4j
@@ -43,18 +43,18 @@ public class GlobalExceptionHandler {
     return problemDetails;
   }
 
-  @ExceptionHandler({MethodArgumentNotValidException.class})
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler({WebExchangeBindException.class})
+  @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
   public ProblemDetail handleMethodArgumentNotValidException(
       Exception e, ServerHttpRequest request) {
-    ProblemDetail problemDetails = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+    ProblemDetail problemDetails = ProblemDetail.forStatus(HttpStatus.UNPROCESSABLE_ENTITY);
     problemDetails.setType(
         URI.create("https://problems-registry.smartbear.com/invalid-body-property-value/"));
     problemDetails.setDetail("The request body contains an invalid body property value.");
     problemDetails.setTitle("Validation Error.");
     problemDetails.setInstance(URI.create(request.getPath().toString()));
     Set<Error> errors = new HashSet<>();
-    if (e instanceof MethodArgumentNotValidException exception) {
+    if (e instanceof WebExchangeBindException exception) {
       exception
           .getFieldErrors()
           .forEach(

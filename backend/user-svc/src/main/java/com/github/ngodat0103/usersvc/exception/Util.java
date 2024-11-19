@@ -1,7 +1,11 @@
 package com.github.ngodat0103.usersvc.exception;
 
 import org.slf4j.Logger;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
+import reactor.core.publisher.Mono;
+
+import java.security.Principal;
 
 public final class Util {
   private static final String TEMPLATE_NOT_FOUND = "%s with %s: %s not found";
@@ -11,16 +15,17 @@ public final class Util {
     throw new IllegalStateException("Utility class");
   }
 
-  public static String getUserIdfromAuthentication() {
-    return SecurityContextHolder.getContext().getAuthentication().getName();
+  public static Mono<String> getUserIdFromAuthentication() {
+    return ReactiveSecurityContextHolder.getContext()
+        .map(SecurityContext::getAuthentication)
+        .map(Principal::getName);
   }
 
   public static ConflictException createConflictException(
       Logger log, String entity, String attributeName, Object attributeValues) {
     String message = String.format(TEMPLATE_CONFLICT, entity, attributeName, attributeValues);
-    ConflictException conflictException = new ConflictException(message);
-    logging(log, message, conflictException);
-    throw conflictException;
+    logging(log, message, null);
+    return new ConflictException(message);
   }
 
   public static NotFoundException createNotFoundException(
