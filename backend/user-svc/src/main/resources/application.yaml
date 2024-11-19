@@ -1,6 +1,3 @@
-
-
-
 server.port: 5000
 server:
   forward-headers-strategy: framework
@@ -10,18 +7,15 @@ management:
       exposure:
         include: health
 spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
   config:
     import:
-      - "optional:local-dev.yaml"
+      - "optional:dev.yaml"
   application:
-    name: se346-backend
+    name: user-svc
 springdoc:
   api-docs:
     path: /api/v1/users/api-docs
   swagger-ui:
     path: /api/v1/users/ui-docs
     use-root-path: true
-  show-login-endpoint: true
-  show-oauth2-endpoints: true
+  show-actuator: true
