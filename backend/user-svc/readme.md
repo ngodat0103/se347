@@ -1,13 +1,13 @@
 # Getting started
 ```shell
-docker compose --profile app up -d
+docker compose --profile all up -d
 ```
 Go to the http://localhost:5000/api/v1/users/ui-docs
 
-dev credential  for postgresql
+dev credential  for Mongodb
 
-database: user-management
-
-username: dev
-
-password: dev
+Authentication: SHCRAM-SHA-256  
+authentication-database: admin
+database: dev  
+username: dev  
+password: dev  
