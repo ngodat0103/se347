@@ -7,7 +7,6 @@ import reactor.core.publisher.Mono;
 
 public interface UserService extends BaseInterface<AccountDto> {
 
-  Mono<AccountDto> getMe();
-
-  Mono<OAuth2AccessTokenResponse> login(CredentialDto credentialDto);
+  Mono< AccountDto> getMe();
+  Mono <OAuth2AccessTokenResponse> login(CredentialDto credentialDto);
 }

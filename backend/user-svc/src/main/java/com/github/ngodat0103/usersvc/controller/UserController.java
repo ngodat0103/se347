@@ -19,8 +19,7 @@ public class UserController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Mono<AccountDto> createUser(@Valid @RequestBody AccountDto accountDto)
-      throws ConflictException {
+  public Mono<AccountDto> createUser(@Valid @RequestBody AccountDto accountDto) throws ConflictException {
     return userService.create(accountDto);
   }
 
