@@ -38,10 +38,17 @@ export const SignInCard = () => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     "onSubmit";
-    login({
+    var result = login({
       email: values.email,
       password: values.password,
     })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
   };
 
   return (

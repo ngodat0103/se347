@@ -4,7 +4,7 @@ export async function login(login_form: LoginForm): Promise<LoginResponse> {
     console.debug(login_form);
 
     console.info("Sending login request");
-    let response = await fetch(`http://localhost:5000/api/v1/users/auth/login`, {
+    let response = await fetch(`https://dev.se347.ngodat0103.live/api/v1/auth/login`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ export async function register(register_form: RegisterForm): Promise<void> {
 
     console.info("Sending register request");
 
-    const response = await fetch(`http://localhost:5000/api/v1/users`, {
+    const response = await fetch(`https://dev.se347.ngodat0103.live/api/v1/users`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
