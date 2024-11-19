@@ -14,6 +14,7 @@ RUN  jlink --verbose --add-modules ALL-MODULE-PATH --strip-debug --no-man-pages 
 FROM alpine:3.20.3@sha256:beefdbd8a1da6d2915566fde36db9db0b524eb737fc57cd1367effd16dc0d06d
 ENV JAVA_HOME=/jre
 ENV PATH="$JAVA_HOME/bin:$PATH"
+ARG VERSION
 COPY --from=jre-builder /jre $JAVA_HOME
 ARG SERVICE_PORT
 WORKDIR /opt/app
@@ -27,4 +28,5 @@ LABEL org.opencontainers.image.source=https://github.com/ngodat0103/se347
 LABEL  org.opencontainers.image.description="The backend service for SE347 Course"
 LABEL  org.opencontainers.image.title=se347-backend
 LABEL  org.opencontainers.image.url=https://github.com/ngodat0103/se347
+LABEL  app.version=$VERSION
 ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]

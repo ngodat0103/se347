@@ -35,7 +35,7 @@ services:
     container_name: se347-backend
     networks: [ dev ]
     healthcheck:
-     test: ["CMD","curl","http://localhost:5000/actuator/health"]
+     test: ["CMD","curl","http://localhost:5000/api/v1/actuator/health"]
      interval: 3s
      timeout: 3s
      retries: 3
@@ -44,6 +44,7 @@ services:
     ports:
       - "5000:5000"
     environment:
+      APP_VERSION: "$TAG:-dev-latest"
       SPRING_DATASOURCE_URL: "jdbc:postgresql://se347-postgresql:5432/user-management"
       SPRING_PROFILES_ACTIVE: "local-dev"
 volumes:
