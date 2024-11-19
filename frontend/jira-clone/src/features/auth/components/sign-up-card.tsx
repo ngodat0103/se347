@@ -27,9 +27,7 @@ import {
 
 // Định nghĩa schema cho form
 const formSchema = z.object({
-  username: z.string().trim().min(1, "Required"),
-  firstname: z.string().trim().min(1, "Required"),
-  lastname: z.string().trim().min(1, "Required"),
+  nickname: z.string().trim().min(1, "Required"),
   email: z.string().email(),
   password: z.string().min(8, "Minimum 8 characters").max(256),
 });
@@ -39,9 +37,7 @@ export const SignUpCard = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
-      firstname: "",
-      lastname: "",
+      nickname: "",
       email: "",
       password: "",
     },
@@ -50,10 +46,8 @@ export const SignUpCard = () => {
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     console.log(values);
     var result = register({
-      userName: values.username,
-      firstName: values.firstname,
-      lastName: values.lastname,
-      emailAddress: values.email,
+      nickName: values.nickname,
+      email: values.email,
       password: values.password,
     });
 
@@ -78,7 +72,7 @@ export const SignUpCard = () => {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
-                name="username"
+                name="nickname"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
@@ -86,45 +80,15 @@ export const SignUpCard = () => {
                       <Input
                         {...field}
                         type="text"
-                        placeholder="Enter username"
+                        placeholder="Enter your fullname"
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <FormField
-                name="firstname"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="text"
-                        placeholder="Enter first name"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="lastname"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="text"
-                        placeholder="Enter last name"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+
+
               <FormField
                 name="email"
                 control={form.control}

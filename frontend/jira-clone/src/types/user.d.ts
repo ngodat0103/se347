@@ -22,9 +22,7 @@ export interface LoginResponse {
 }
 
 export interface RegisterForm {
-    userName: string;
+    nickName: string;
     password: string;
-    emailAddress: string;
-    firstName: string;
-    lastName: string;
+    email: string;
 }
