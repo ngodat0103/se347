@@ -1,55 +1,45 @@
 services:
-  postgresql:
-    container_name: se347-postgresql
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-    profiles: ["infra","dev","all"]
-    image: "bitnami/postgresql:16.4.0-debian-12-r23"
-    networks: [dev]
-    entrypoint:
-      - sh
-      - -euc
-      - |
-        cat <<EOF > /docker-entrypoint-initdb.d/init-user.sql
-        create role "dev" with password 'dev' ;
-        create database "user-management" with owner  "dev";
-        grant connect to "dev";
-        alter role "dev" with login;
-        EOF
-        /opt/bitnami/scripts/postgresql/entrypoint.sh /opt/bitnami/scripts/postgresql/run.sh
-    ports:
-      - "5432:5432"
+  mongodb:
+    image: mongodb/mongodb-community-server:7.0.6-ubuntu2204-20241117T082517Z
+    profiles: ['dev','all']
+    hostname: usersvc-mongodb
+    networks:
+      dev:
+        ipv4_address: 172.21.0.10
     volumes:
-#      - ./src/main/resources/sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-      - bitnami_postgresql:/bitnami/postgresql
-  se347-backend:
-    profiles: [ "app","all" ]
-    image: "ghcr.io/ngodat0103/se347-backend:${TAG:-dev-latest}"
+      - mongodb-data:/data/db
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=dev
+      - MONGO_INITDB_ROOT_PASSWORD=dev
+      - MONGO_INITDB_DATABASE=dev
+  user-svc:
+    profiles: ['all']
+    image: "ghcr.io/ngodat0103/se347/user-svc:${TAG:-dev-latest}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
     build:
       context: .
       dockerfile: Dockerfile
       args:
         SERVER_PORT: 5000
-        SERVICE_NAME: se347-backend
+        SERVICE_NAME: usersvc
         VERSION: ${TAG:-dev-latest}
-    container_name: se347-backend
     networks: [ dev ]
     healthcheck:
-     test: ["CMD","curl","http://localhost:5000/api/v1/actuator/health"]
+     test: ["CMD","curl","http://localhost:5000/actuator/health"]
      interval: 3s
      timeout: 3s
      retries: 3
     depends_on:
-      - postgresql
+      mongodb:
+        condition: service_started
     ports:
       - "5000:5000"
-    environment:
-      APP_VERSION: "$TAG:-dev-latest"
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://se347-postgresql:5432/user-management"
-      SPRING_PROFILES_ACTIVE: "local-dev"
 volumes:
-  bitnami_postgresql:
-    name: bitnami_postgresql
+  mongodb-data:
+    name: mongodb-data
 networks:
   dev:
     name: dev
