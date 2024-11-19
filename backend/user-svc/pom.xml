@@ -11,7 +11,7 @@
 	<groupId>com.github.ngodat0103</groupId>
 	<artifactId>usersvc</artifactId>
 	<version>${revision}</version>
-	<name>user-svc</name>
+	<name>usersvc</name>
 	<description>user-svc</description>
 	<url/>
 	<licenses>

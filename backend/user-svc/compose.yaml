@@ -14,17 +14,18 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=dev
       - MONGO_INITDB_ROOT_PASSWORD=dev
       - MONGO_INITDB_DATABASE=dev
-  se347-backend:
+  user-svc:
     profiles: ['all']
-    image: "ghcr.io/ngodat0103/se347-backend:${TAG:-dev-latest}"
+    image: "ghcr.io/ngodat0103/se347/user-svc:${TAG:-dev-latest}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
     build:
       context: .
       dockerfile: Dockerfile
       args:
         SERVER_PORT: 5000
-        SERVICE_NAME: user-svc
+        SERVICE_NAME: usersvc
         VERSION: ${TAG:-dev-latest}
-    container_name: se347-backend
     networks: [ dev ]
     healthcheck:
      test: ["CMD","curl","http://localhost:5000/actuator/health"]
@@ -33,7 +34,7 @@ services:
      retries: 3
     depends_on:
       mongodb:
-        condition: service_healthy
+        condition: service_started
     ports:
       - "5000:5000"
 volumes:
