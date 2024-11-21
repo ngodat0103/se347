@@ -4,6 +4,7 @@ export interface LoginForm {
 }
 
 export interface LoginResponse {
+    status: string;
     accessToken: {
         tokenValue: string
         issuedAt: string
