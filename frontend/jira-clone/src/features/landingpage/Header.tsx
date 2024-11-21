@@ -16,12 +16,21 @@ export function Header() {
   };
   return (
     <>
-      <div className="grotesk mb-0 flex items-center justify-between py-4 px-4 sm:mx-0 sm:mb-20 sm:px-0 md:px-6 ">
+      <div className="grotesk mb-0 flex items-center justify-between py-4 px-4 sm:mx-0 sm:mb-0 sm:px-0 md:px-6 ">
         <div className="mt-4 inline-block pb-4 pl-8">
-          <a href="/" className="align-middle text-3xl font-bold text-black">
+          <a
+            href="/"
+            className="inline-flex items-center text-3xl font-bold text-black"
+          >
+            <img
+              src="/images/atlassian_jira.png"
+              alt="Logo"
+              className="w-8 h-8 mr-2"
+            />
             Jira
           </a>
         </div>
+
         <div className="flex items-center">
           <div className="hidden py-1 text-right xl:inline-block">
             <Button variant="ghost" onClick={handleLoginClick}>

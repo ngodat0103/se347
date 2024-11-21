@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { Inter} from "next/font/google";
-import localFont from "next/font/local";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const inter = Inter ({subsets: ["latin"]})
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Jira App",
@@ -18,9 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={cn (inter.className, "antialiased min-h-screen")}
-      >
+      <body className={cn(inter.className, "antialiased min-h-screen")}>
         {children}
       </body>
     </html>
