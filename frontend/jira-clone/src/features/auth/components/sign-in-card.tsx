@@ -35,20 +35,22 @@ export const SignInCard = () => {
       password: "",
     },
   });
-
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    "onSubmit";
-    var result = login({
-      email: values.email,
-      password: values.password,
-    })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const onSubmit = async (values: { email: string; password: string }) => {
+    try {
+      const response = await login({
+        email: values.email,
+        password: values.password,
       });
 
+      // Nếu thành công thì hiển thị thông báo thành công
+      setSuccessMessage("Login successfully");
+      console.log(response);
+    } catch (err: any) {
+      // Nếu server trả lỗi, hiển thị lỗi cho người dùng
+      setErrorMessage(err.message);
+    }
   };
 
   return (
@@ -96,15 +98,22 @@ export const SignInCard = () => {
                   </FormItem>
                 )}
               />
+              {/* Hiển thị thông báo lỗi */}
+              {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+
+              {/* Hiển thị thông báo thành công */}
+              {successMessage && (
+                <p style={{ color: "green" }}>{successMessage}</p>
+              )}
               <Button disabled={false} size="lg" className="w-full">
                 Login
               </Button>
               <p className="text-center mt-4">
-                You already have an account!{" "}
+                Don't have an account?{" "}
                 <Link href="/sign-up" className="text-blue-600 hover:underline">
-                  Log in
+                  Sign up
                 </Link>{" "}
-                now
+                now!
               </p>
             </form>
           </Form>
