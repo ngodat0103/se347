@@ -24,11 +24,6 @@ export function Footer() {
                 Cookie Policy
               </a>
             </div>
-
-            <p className="text-center text-sm text-gray-500">
-              Thank you for visiting. Stay productive with Jira and keep your
-              projects organized!
-            </p>
           </div>
         </div>
       </footer>

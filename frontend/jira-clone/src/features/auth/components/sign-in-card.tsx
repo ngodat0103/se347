@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation"; // Sử dụng useRouter từ next/navigation
 import { login } from "@/services/user_api";
 import {
   Form,
@@ -37,6 +38,7 @@ export const SignInCard = () => {
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const router = useRouter();
   const onSubmit = async (values: { email: string; password: string }) => {
     try {
       const response = await login({
@@ -47,6 +49,9 @@ export const SignInCard = () => {
       // Nếu thành công thì hiển thị thông báo thành công
       setSuccessMessage("Login successfully");
       console.log(response);
+
+      //Redirect to dashboard
+      router.push("/dashboard");
     } catch (err: any) {
       // Nếu server trả lỗi, hiển thị lỗi cho người dùng
       setErrorMessage(err.message);
