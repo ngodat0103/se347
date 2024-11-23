@@ -17,6 +17,7 @@ import { FaGithub } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import {
   Form,
   FormControl,
@@ -32,8 +33,11 @@ const formSchema = z.object({
   password: z.string().min(8, "Minimum 8 characters").max(256),
 });
 import { register } from "@/services/user_api";
+import { set } from "date-fns";
 
 export const SignUpCard = () => {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,13 +48,24 @@ export const SignUpCard = () => {
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-    var result = register({
-      nickName: values.nickname,
-      email: values.email,
-      password: values.password,
-    });
+    try {
+      //Gui yeu cau dang ky
+      console.log(values);
+      var result = register({
+        nickName: values.nickname,
+        email: values.email,
+        password: values.password,
+      });
 
+      ////Dang ky thanh cong
+      setSuccessMessage("Register succcessfully");
+      setErrorMessage(null);
+      //console.log(result);
+    } catch (err: any) {
+      //Dang ky that bai
+      setErrorMessage(err.message || "Registration failed. Please try again.");
+      setSuccessMessage(null);
+    }
   };
 
   return (
@@ -88,7 +103,6 @@ export const SignUpCard = () => {
                 )}
               />
 
-
               <FormField
                 name="email"
                 control={form.control}
@@ -121,6 +135,10 @@ export const SignUpCard = () => {
                   </FormItem>
                 )}
               />
+              {successMessage && (
+                <p className="text-green-500">{successMessage}</p>
+              )}
+              {errorMessage && <p className="text-red-500">{errorMessage}</p>}
               <Button disabled={false} size="lg" className="w-full">
                 Sign up
               </Button>
