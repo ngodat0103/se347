@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -38,6 +39,7 @@ import { set } from "date-fns";
 export const SignUpCard = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -60,6 +62,8 @@ export const SignUpCard = () => {
       ////Dang ky thanh cong
       setSuccessMessage("Register succcessfully");
       setErrorMessage(null);
+      //Redirect to dashboard
+      router.push("/sign-in");
       //console.log(result);
     } catch (err: any) {
       //Dang ky that bai
@@ -143,11 +147,9 @@ export const SignUpCard = () => {
                 Sign up
               </Button>
               <p className="text-center mt-4">
-                You already have an account!{" "}
                 <Link href="/sign-in" className="text-blue-600 hover:underline">
-                  Log in
+                  Already have an Jira account?Log in
                 </Link>{" "}
-                now
               </p>
             </form>
           </Form>
