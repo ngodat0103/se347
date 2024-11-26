@@ -45,10 +45,17 @@ export const SignInCard = () => {
         email: values.email,
         password: values.password,
       });
+      //Luu token vao localStorage
+      const token = response.accessToken?.tokenValue;
+      if (token) {
+        localStorage.setItem("accessToken", token); // Lưu token vào localStorage
+      } else {
+        throw new Error("Token not found in response");
+      }
 
       // Nếu thành công thì hiển thị thông báo thành công
       setSuccessMessage("Login successfully");
-      console.log(response);
+      console.log(localStorage.getItem("accessToken"));
 
       //Redirect to dashboard
       router.push("/dashboard");
