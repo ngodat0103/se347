@@ -2,6 +2,7 @@
 // Tra ve thong tin user dang dang nhap bao gom ca nickName, pictureUrl, email, accountId,token
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 interface User {
   nickName?: string;
@@ -17,7 +18,7 @@ const useUser = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = localStorage.getItem("accessToken");
+      const token = Cookies.get("accessToken");
       if (!token) {
         setError("No token found!");
         setLoading(false);

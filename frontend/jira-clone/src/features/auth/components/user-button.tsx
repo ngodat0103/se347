@@ -12,6 +12,7 @@ import useUser from "@/hooks/useUser";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 interface User {
   nickName?: string;
@@ -24,10 +25,9 @@ const UserProfile: React.FC = () => {
   const { user } = useUser();
   const router = useRouter();
 
-  // Logout function
   const logout = () => {
-    //Xoa token khoi localStorage
-    localStorage.removeItem("accessToken");
+    //Xoa token trong cookie
+    Cookies.remove("accessToken");
 
     //Chuyen huong ve trang login
     router.push("/sign-in");
@@ -83,7 +83,7 @@ const UserProfile: React.FC = () => {
           </DropdownMenu>
         </>
       ) : (
-        <div className="size-10 rounded-full felx items-center justify-center bg-neutral-200 border border-neutral-300">
+        <div className="size-10 rounded-full flex items-center justify-center bg-neutral-200 border border-neutral-300">
           <Loader className="size-4 animate-spin text-muted-foreground" />
         </div>
       )}

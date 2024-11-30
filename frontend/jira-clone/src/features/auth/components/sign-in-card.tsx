@@ -8,6 +8,7 @@ import { FaGithub } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
+import Cookies from "js-cookie";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation"; // Sử dụng useRouter từ next/navigation
 import { login } from "@/services/user_api";
@@ -45,18 +46,18 @@ export const SignInCard = () => {
         email: values.email,
         password: values.password,
       });
-      //Luu token vao localStorage
       const token = response.accessToken?.tokenValue;
       if (token) {
-        localStorage.setItem("accessToken", token); // Lưu token vào localStorage
+        // Lưu token vào cookie
+        Cookies.set("accessToken", token, { expires: 7 }); // Cookie hết hạn sau 7 ngày
       } else {
         throw new Error("Token not found in response");
       }
 
       // Nếu thành công thì hiển thị thông báo thành công
+      setErrorMessage(null);
       setSuccessMessage("Login successfully");
-      console.log(localStorage.getItem("accessToken"));
-
+      console.log("Token:", token);
       //Redirect to dashboard
       router.push("/dashboard");
     } catch (err: any) {
