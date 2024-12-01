@@ -6,18 +6,17 @@ import { ErrorMessage } from "@/types/error";
 export async function createWorkspace(workspaceForm: CreateWorkspaceForm): Promise<WorkspaceResponse> {
     console.debug(workspaceForm);
 
-    const workspace_json = JSON.stringify(workspaceForm);
-
+    const formData = new FormData();
+    formData.append('name', workspaceForm.name);
+    if(workspaceForm.imageUrl) {
+        formData.append('imageUrl', workspaceForm.imageUrl);
+    }
     console.info("Sending create workspace request");
 
     const response = await fetch(`http://localhost:3001/workspace`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: workspace_json
+        body: formData
     });
-
     if (response.ok) {
         const data: WorkspaceResponse = await response.json();
         console.debug(data);
