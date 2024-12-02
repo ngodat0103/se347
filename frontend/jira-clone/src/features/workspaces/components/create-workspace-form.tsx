@@ -15,12 +15,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Avatar } from "@/components/ui/avatar";
 import { createWorkspace } from "@/services/useCreateWorkspace_api"; // Import the createWorkspace function
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import { ImageIcon } from "lucide-react";
+import clsx from "clsx";
 
 interface CreateWorkspaceFormProps {
   onCancel?: () => void;
@@ -48,6 +49,17 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
     }
   };
 
+  useEffect(() => {
+    if (errorMessage || successMessage) {
+      const timeout = setTimeout(() => {
+        setErrorMessage(null);
+        setSuccessMessage(null);
+      }, 5000);
+
+      return () => clearTimeout(timeout);
+    }
+  });
+
   const onSubmit = async (value: z.infer<typeof createWorkspaceSchema>) => {
     try {
       console.log(value);
@@ -56,6 +68,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
 
       // Nếu tạo thành công
       setSuccessMessage("Workspace created successfully");
+      form.reset();
       setErrorMessage(null);
     } catch (err: any) {
       // Xử lý lỗi nếu có
@@ -89,12 +102,6 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                       <FormLabel className="flex-1 h-6">
                         Workspace Name
                       </FormLabel>
-                      {successMessage && (
-                        <div className="text-green-600">{successMessage}</div>
-                      )}
-                      {errorMessage && (
-                        <div className="text-red-600">{errorMessage}</div>
-                      )}
                     </div>
 
                     <FormControl>
@@ -114,7 +121,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                         <div className="size-[72px] relative rounded-md overflow-hidden">
                           <Image
                             alt="Logo"
-                            layout="fill"
+                            fill
                             className="object-cover"
                             src={
                               field.value instanceof File
@@ -175,6 +182,19 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
           </form>
         </Form>
       </CardContent>
+
+      {/* Thong bao */}
+      <div
+        className={clsx(
+          "fixed bottom-5 right-5 p-4 rounded-lg shadow-md transition-all duration-500 ease-in-out",
+          errorMessage || successMessage
+            ? "opacity-100 visible"
+            : "opacity-0 invisible",
+          errorMessage ? "bg-red-500 text-white" : "bg-green-500 text-white"
+        )}
+      >
+        {errorMessage || successMessage}
+      </div>
     </Card>
   );
 };

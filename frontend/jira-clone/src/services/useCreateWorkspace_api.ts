@@ -12,7 +12,7 @@ export async function createWorkspace(workspaceForm: CreateWorkspaceForm): Promi
         formData.append('imageUrl', workspaceForm.imageUrl);
     }
     console.info("Sending create workspace request");
-
+    // ${process.env.NEXT_PUBLIC_API_URL}workspace
     const response = await fetch(`http://localhost:3001/workspace`, {
         method: 'POST',
         body: formData
