@@ -19,7 +19,13 @@ export const WorkspaceAvatar = ({
         className={cn("relative rounded-md overflow-hidden", className)}
         style={{ width: "40px", height: "40px" }}
       >
-        <Image src={image} alt={name} layout="fill" className="object-cover" />
+        <Image
+          src={image}
+          alt={name}
+          layout="fill"
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
       </div>
     );
   }

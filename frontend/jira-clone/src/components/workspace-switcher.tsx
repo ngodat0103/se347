@@ -10,11 +10,12 @@ import {
   SelectContent,
 } from "@/components/ui/select";
 import { WorkspaceAvatar } from "@/features/workspaces/components/workspace-avatar";
+import Cookies from "js-cookie";
 
 interface Workspace {
   workspaceId: string;
-  name: string;
-  imageUrl: string | null;
+  workspaceName: string;
+  workspacePictureUrl: string | null;
 }
 
 export const WorkspaceSwitcher = () => {
@@ -27,14 +28,27 @@ export const WorkspaceSwitcher = () => {
   useEffect(() => {
     const fetchWorkspaces = async () => {
       try {
-        const response = await fetch("http://localhost:3001/workspace");
+        const token = Cookies.get("accessToken");
+
+        if (!token) {
+          throw new Error("Token không tồn tại trong cookie");
+        }
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}workspaces/me`,
+          {
+            method: "GET",
+            headers: {
+              accept: "*/*",
+              Authorization: `Bearer ${token}`, // Thêm token vào header
+            },
+          }
+        );
         if (!response.ok) {
           throw new Error("Lỗi khi lấy danh sách workspace");
         }
         const data = await response.json();
-        setWorkspaces(data.workspaces); // Lấy mảng workspaces từ kết quả trả về
-        setSelectedWorkspace(data.workspaces[0] || null); // Chọn workspace đầu tiên
-        console.log("Dữ liệu đã được GET từ API:", data);
+        setWorkspaces(data); // Lấy mảng workspaces từ kết quả trả về
+        setSelectedWorkspace(data[0] || null); // Chọn workspace đầu tiên
       } catch (err: any) {
         setError(err.message);
       }
@@ -61,10 +75,10 @@ export const WorkspaceSwitcher = () => {
             >
               <div className="flex justify-start items-center gap-3 font-medium">
                 <WorkspaceAvatar
-                  name={workspace.name}
-                  image={workspace.imageUrl}
+                  name={workspace.workspaceName}
+                  image={workspace.workspacePictureUrl}
                 />
-                <span className="truncate">{workspace.name}</span>
+                <span className="truncate">{workspace.workspaceName}</span>
               </div>
             </SelectItem>
           ))}
