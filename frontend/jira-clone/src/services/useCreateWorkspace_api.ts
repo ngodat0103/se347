@@ -3,14 +3,15 @@ import { ErrorMessage } from "@/types/error";
 import Cookies from "js-cookie";
 import { resizeImage } from "@/lib/resizeImage";
 const token = Cookies.get("accessToken");
+import router from "next/router";
 export async function createWorkspace(workspaceForm: CreateWorkspaceForm): Promise<WorkspaceResponse> {
     console.debug(workspaceForm);
 
     if (!token) {
-        throw new Error("Authentication token is missing.");
+         router.push("/login");
     }
     // 1. Gửi yêu cầu tạo workspace chỉ với name
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}workspaces`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/workspaces`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
