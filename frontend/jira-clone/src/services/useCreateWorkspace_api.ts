@@ -18,7 +18,7 @@ export async function createWorkspace(workspaceForm: CreateWorkspaceForm): Promi
             "Accept": "application/json",
             "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify({workspaceName:workspaceForm.name}),
+        body: JSON.stringify({name:workspaceForm.name}),
     });
 
     if (!response.ok) {

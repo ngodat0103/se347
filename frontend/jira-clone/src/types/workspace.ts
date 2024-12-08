@@ -10,7 +10,7 @@ export interface CreateWorkspaceForm {
     name: string; // Tên của workspace
     imageUrl?: File | string;
     description?: string; // Mô tả của workspace (nếu có)
-    createdAt: string; // Thời gian tạo workspace
-    updatedAt: string; // Thời gian cập nhật workspace
+    createdDate: string; // Thời gian tạo workspace
+    lastUpdateDate: string; // Thời gian cập nhật workspace
   }
   
