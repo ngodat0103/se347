@@ -147,7 +147,7 @@ export const SignUpCard = () => {
                 Sign up
               </Button>
               <p className="text-center mt-4">
-                Already have an Jira account?{" "}
+                Already have an account?{" "}
                 <Link href="/sign-in" className="text-blue-600 hover:underline">
                   Log in
                 </Link>{" "}
