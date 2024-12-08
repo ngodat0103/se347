@@ -31,7 +31,7 @@ export async function createWorkspace(workspaceForm: CreateWorkspaceForm): Promi
     // 2. Nếu có ảnh, gửi yêu cầu upload ảnh
     if (workspaceForm.imageUrl) {
         if (workspaceForm.imageUrl instanceof File) {
-            await uploadWorkspaceImage(data.workspaceId, workspaceForm.imageUrl);
+            await uploadWorkspaceImage(data.id, workspaceForm.imageUrl);
         } else {
             throw new Error("Invalid image file.");
         }
@@ -41,7 +41,7 @@ export async function createWorkspace(workspaceForm: CreateWorkspaceForm): Promi
 }
 
 // Hàm upload hình ảnh lên workspace
-async function uploadWorkspaceImage(workspaceID: string, imageFile: File): Promise<void> {
+async function uploadWorkspaceImage(id: string, imageFile: File): Promise<void> {
     try {
         console.log("Image size before resize (bytes):", imageFile.size);
         if (imageFile.size > 2 * 1024 * 1024) {
@@ -50,7 +50,7 @@ async function uploadWorkspaceImage(workspaceID: string, imageFile: File): Promi
         console.log("Image size after resize (bytes):", imageFile.size);
 
         // Upload trực tiếp file nhị phân
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}workspaces/${workspaceID}/picture`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/workspaces/${id}/image`, {
             method: "POST",
             headers: {
                 "accept": "text/plain",
@@ -64,7 +64,7 @@ async function uploadWorkspaceImage(workspaceID: string, imageFile: File): Promi
             throw new Error(errorResponse.detail || "Failed to upload workspace image.");
         }
 
-        console.info("Image uploaded successfully for workspace:", workspaceID);
+        console.info("Image uploaded successfully for workspace:", id);
     } catch (error) {
         console.error("Error uploading image:", error);
         throw new Error("Failed to upload workspace image.");
