@@ -8,6 +8,7 @@ import { FaGithub } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
+import Cookies from "js-cookie";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation"; // Sử dụng useRouter từ next/navigation
 import { login } from "@/services/user_api";
@@ -45,11 +46,18 @@ export const SignInCard = () => {
         email: values.email,
         password: values.password,
       });
+      const token = response.accessToken?.tokenValue;
+      if (token) {
+        // Lưu token vào cookie
+        Cookies.set("accessToken", token, { expires: 7 }); // Cookie hết hạn sau 7 ngày
+      } else {
+        throw new Error("Token not found in response");
+      }
 
       // Nếu thành công thì hiển thị thông báo thành công
+      setErrorMessage(null);
       setSuccessMessage("Login successfully");
-      console.log(response);
-
+      console.log("Token:", token);
       //Redirect to dashboard
       router.push("/dashboard");
     } catch (err: any) {
@@ -70,7 +78,7 @@ export const SignInCard = () => {
         <CardContent className="p-7">
           {/* ...form su dung spead operator de truyen tat ca cac props cua form  */}
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 name="email"
                 control={form.control}

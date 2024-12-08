@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -38,6 +39,7 @@ import { set } from "date-fns";
 export const SignUpCard = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,11 +49,11 @@ export const SignUpCard = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       //Gui yeu cau dang ky
       console.log(values);
-      var result = register({
+      var result = await register({
         nickName: values.nickname,
         email: values.email,
         password: values.password,
@@ -60,6 +62,8 @@ export const SignUpCard = () => {
       ////Dang ky thanh cong
       setSuccessMessage("Register succcessfully");
       setErrorMessage(null);
+      //Redirect to dashboard
+      router.push("/sign-in");
       //console.log(result);
     } catch (err: any) {
       //Dang ky that bai
@@ -85,7 +89,7 @@ export const SignUpCard = () => {
         </div>
         <CardContent className="p-7">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 name="nickname"
                 control={form.control}
@@ -143,11 +147,10 @@ export const SignUpCard = () => {
                 Sign up
               </Button>
               <p className="text-center mt-4">
-                You already have an account!{" "}
+                Already have an account?{" "}
                 <Link href="/sign-in" className="text-blue-600 hover:underline">
                   Log in
                 </Link>{" "}
-                now
               </p>
             </form>
           </Form>
