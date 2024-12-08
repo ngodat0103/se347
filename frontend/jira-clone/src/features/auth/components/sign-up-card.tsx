@@ -49,11 +49,11 @@ export const SignUpCard = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       //Gui yeu cau dang ky
       console.log(values);
-      var result = register({
+      var result = await register({
         nickName: values.nickname,
         email: values.email,
         password: values.password,
