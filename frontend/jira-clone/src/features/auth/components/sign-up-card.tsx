@@ -89,7 +89,7 @@ export const SignUpCard = () => {
         </div>
         <CardContent className="p-7">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 name="nickname"
                 control={form.control}
@@ -147,7 +147,7 @@ export const SignUpCard = () => {
                 Sign up
               </Button>
               <p className="text-center mt-4">
-                Already have an Jira account?{" "}
+                Already have an account?{" "}
                 <Link href="/sign-in" className="text-blue-600 hover:underline">
                   Log in
                 </Link>{" "}
