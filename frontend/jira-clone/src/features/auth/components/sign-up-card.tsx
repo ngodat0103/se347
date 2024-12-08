@@ -89,7 +89,7 @@ export const SignUpCard = () => {
         </div>
         <CardContent className="p-7">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 name="nickname"
                 control={form.control}
