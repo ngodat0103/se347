@@ -34,7 +34,7 @@ export const WorkspaceSwitcher = () => {
           throw new Error("Token không tồn tại trong cookie");
         }
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}workspaces/me`,
+          `${process.env.NEXT_PUBLIC_API_URL}/workspaces/me`,
           {
             method: "GET",
             headers: {
