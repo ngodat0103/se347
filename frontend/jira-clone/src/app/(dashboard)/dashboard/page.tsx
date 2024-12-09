@@ -1,14 +1,14 @@
 // pages/dashboard.tsx
-
+"use client";
 import React from "react";
+import useAuthGuard from "@/lib/useAuthGuard";
+import { CreateWorkspaceForm } from "@/features/workspaces/components/create-workspace-form";
 
 const Dashboard = () => {
+  useAuthGuard();
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-3xl font-bold mb-4">Welcome to your Dashboard</h1>
-      <p className="text-lg">
-        Here you can manage your profile, settings, and more!
-      </p>
+    <div className="bg-neutral-500 p-4 h-full">
+      <CreateWorkspaceForm />
     </div>
   );
 };
