@@ -13,9 +13,9 @@ import { WorkspaceAvatar } from "@/features/workspaces/components/workspace-avat
 import Cookies from "js-cookie";
 
 interface Workspace {
-  workspaceId: string;
-  workspaceName: string;
-  workspacePictureUrl: string | null;
+  id: string;
+  name: string;
+  imageUrl: string | null;
 }
 
 export const WorkspaceSwitcher = () => {
@@ -70,15 +70,15 @@ export const WorkspaceSwitcher = () => {
         <SelectContent>
           {workspaces?.map((workspace) => (
             <SelectItem
-              key={workspace.workspaceId}
-              value={workspace.workspaceId}
+              key={workspace.id}
+              value={workspace.id}
             >
               <div className="flex justify-start items-center gap-3 font-medium">
                 <WorkspaceAvatar
-                  name={workspace.workspaceName}
-                  image={workspace.workspacePictureUrl}
+                  name={workspace.name}
+                  image={workspace.imageUrl}
                 />
-                <span className="truncate">{workspace.workspaceName}</span>
+                <span className="truncate">{workspace.name}</span>
               </div>
             </SelectItem>
           ))}
