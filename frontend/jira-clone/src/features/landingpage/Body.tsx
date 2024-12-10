@@ -14,7 +14,7 @@ export function Body() {
         </div>
       </div>
       <div className="flex items-center space-x-4">
-        <p className="flex-1 max-w-screen-md ml-20 mr-10">
+        <p className="flex-1 max-w-screen-md ml-20 mr-20">
           Connect with our 4.5M+ community members Ask questions, give product
           feedback, and connect with our team and other users to learn best
           practices. From events and forums, to curated learning paths, you're
