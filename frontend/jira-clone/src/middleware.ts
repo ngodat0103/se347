@@ -1,18 +1,29 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { isTokenValid } from "@/lib/jwt_utils";
 
-//Middleware sẽ hoạt động ở phía server bao ve tuyen duong
+export async function middleware(request: NextRequest) {
+  // Authentcation middleware ------------------------
 
-export function middleware(request: NextRequest) {
+  // Login redirect
+  const login_redirect = NextResponse.redirect(new URL("/sign-in", request.url));
+
   const token = request.cookies.get("accessToken")?.value;
-
-  if (!token && request.nextUrl.pathname.startsWith("/dashboard")) {
-    return NextResponse.redirect(new URL("/sign-in", request.url));
+  if (!token) {
+    return login_redirect;
   }
+
+  // Check token
+  const tokenValid = await isTokenValid(token);
+  if (!tokenValid) {
+    return login_redirect;
+  }
+
+  // -------------------------------------------------
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard"],
+  matcher: ["/dashboard", "/setting"],
 };
