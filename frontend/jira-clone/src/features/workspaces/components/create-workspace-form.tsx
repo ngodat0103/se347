@@ -60,16 +60,39 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
     }
   });
 
+  // const onSubmit = async (value: z.infer<typeof createWorkspaceSchema>) => {
+  //   try {
+  //     console.log(value);
+  //     // Gửi yêu cầu tạo workspace
+  //     const response = await createWorkspace(value);
+
+  //     // Nếu tạo thành công
+  //     setSuccessMessage("Workspace created successfully");
+  //     form.reset();
+  //     setErrorMessage(null);
+  //   } catch (err: any) {
+  //     // Xử lý lỗi nếu có
+  //     setErrorMessage(
+  //       err.message || "Error creating workspace. Please try again."
+  //     );
+  //     setSuccessMessage(null);
+  //   }
+  // };
   const onSubmit = async (value: z.infer<typeof createWorkspaceSchema>) => {
     try {
       console.log(value);
       // Gửi yêu cầu tạo workspace
       const response = await createWorkspace(value);
-
+  
       // Nếu tạo thành công
       setSuccessMessage("Workspace created successfully");
       form.reset();
       setErrorMessage(null);
+  
+      // Làm mới trang
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000); // Đợi 1 giây trước khi reload để người dùng thấy thông báo
     } catch (err: any) {
       // Xử lý lỗi nếu có
       setErrorMessage(
