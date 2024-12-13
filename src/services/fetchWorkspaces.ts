@@ -23,6 +23,6 @@ export const fetchWorkspaces = async () => {
     const data = await response.json();
     return data;  // Trả về danh sách workspaces
   } catch (err: any) {
-    throw new Error(err.message);  // Quản lý lỗi khi lấy dữ liệu
+    throw new Error(err.message);  
   }
 };
