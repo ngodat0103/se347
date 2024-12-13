@@ -11,6 +11,10 @@ import {
 } from "@/components/ui/select";
 import { WorkspaceAvatar } from "@/features/workspaces/components/workspace-avatar";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import { useWorkspaceId } from "@/hooks/use-workspace-id";
+import { fetchWorkspaces } from "@/services/fetchWorkspaces";
+import { set } from "date-fns";
 
 interface Workspace {
   id: string;
@@ -24,37 +28,23 @@ export const WorkspaceSwitcher = () => {
     null
   );
   const [error, setError] = useState<string | null>(null);
-
+  const workspaceId = useWorkspaceId();
+  const router = useRouter();
+  const onSelect = (id: string) => {
+    router.push(`/workspaces/${id}`);
+  };
   useEffect(() => {
-    const fetchWorkspaces = async () => {
+    const loadWorkspaces = async () => {
       try {
-        const token = Cookies.get("accessToken");
-
-        if (!token) {
-          throw new Error("Token không tồn tại trong cookie");
-        }
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/workspaces/me`,
-          {
-            method: "GET",
-            headers: {
-              accept: "*/*",
-              Authorization: `Bearer ${token}`, // Thêm token vào header
-            },
-          }
-        );
-        if (!response.ok) {
-          throw new Error("Lỗi khi lấy danh sách workspace");
-        }
-        const data = await response.json();
-        setWorkspaces(data); // Lấy mảng workspaces từ kết quả trả về
-        setSelectedWorkspace(data[0] || null); // Chọn workspace đầu tiên
+        const data = await fetchWorkspaces(); // Sử dụng hàm fetchWorkspaces đã tách ra
+        setWorkspaces(data); // Lưu danh sách workspaces vào state
+        setSelectedWorkspace(data[0] || null); // Chọn workspace đầu tiên nếu có
       } catch (err: any) {
-        setError(err.message);
+        setError(err.message); // Xử lý lỗi
       }
     };
 
-    fetchWorkspaces();
+    loadWorkspaces(); // Gọi hàm khi component được render lần đầu
   }, []);
 
   return (
@@ -63,16 +53,13 @@ export const WorkspaceSwitcher = () => {
         <p className="text-xs uppercase text-neutral-500">Workspaces</p>
         <RiAddCircleFill className="size-4 text-neutral-500 cursor-pointer hover:opacity-75 transition" />
       </div>
-      <Select>
+      <Select onValueChange={onSelect} value={workspaceId}>
         <SelectTrigger className="w-full bg-neutral-200 font-medium p-1">
           <SelectValue placeholder="Chưa chọn workspace" />
         </SelectTrigger>
         <SelectContent>
           {workspaces?.map((workspace) => (
-            <SelectItem
-              key={workspace.id}
-              value={workspace.id}
-            >
+            <SelectItem key={workspace.id} value={workspace.id}>
               <div className="flex justify-start items-center gap-3 font-medium">
                 <WorkspaceAvatar
                   name={workspace.name}
