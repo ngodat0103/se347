@@ -70,6 +70,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
       setSuccessMessage("Workspace created successfully");
       form.reset();
       setErrorMessage(null);
+      onCancel?.();
     } catch (err: any) {
       // Xử lý lỗi nếu có
       setErrorMessage(
@@ -80,109 +81,110 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
   };
 
   return (
-    <Card className="w-full h-full border-none shadow-none">
-      <CardHeader className="flex p-7">
-        <CardTitle className="text-xl font-bold">
-          Create a new workspace
-        </CardTitle>
-      </CardHeader>
-      <div className="p-7">
-        <DottedSeparator />
-      </div>
-      <CardContent className="p-7">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex flex-col gap-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex items-center justify-between w-full">
-                      <FormLabel className="flex-1 h-6">
-                        Workspace Name
-                      </FormLabel>
-                    </div>
+    <>
+      <Card className="w-full h-full border-none shadow-none">
+        <CardHeader className="flex p-7">
+          <CardTitle className="text-xl font-bold">
+            Create a new workspace
+          </CardTitle>
+        </CardHeader>
+        <div className="p-7">
+          <DottedSeparator />
+        </div>
+        <CardContent className="p-7">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="flex flex-col gap-y-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center justify-between w-full">
+                        <FormLabel className="flex-1 h-6">
+                          Workspace Name
+                        </FormLabel>
+                      </div>
 
-                    <FormControl>
-                      <Input {...field} placeholder="Enter workspace name" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="imageUrl"
-                render={({ field }) => (
-                  <div className="flex flex-col gap-y-2">
-                    <div className="flex items-center gap-x-5">
-                      {field.value ? (
-                        <div className="size-[72px] relative rounded-md overflow-hidden">
-                          <Image
-                            alt="Logo"
-                            fill
-                            className="object-cover"
-                            src={
-                              field.value instanceof File
-                                ? URL.createObjectURL(field.value)
-                                : field.value
-                            }
+                      <FormControl>
+                        <Input {...field} placeholder="Enter workspace name" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <div className="flex flex-col gap-y-2">
+                      <div className="flex items-center gap-x-5">
+                        {field.value ? (
+                          <div className="size-[72px] relative rounded-md overflow-hidden">
+                            <Image
+                              alt="Logo"
+                              fill
+                              className="object-cover"
+                              src={
+                                field.value instanceof File
+                                  ? URL.createObjectURL(field.value)
+                                  : field.value
+                              }
+                            />
+                          </div>
+                        ) : (
+                          <Avatar className="w-18 h-18">
+                            <AvatarFallback>
+                              <ImageIcon className="w-9 h-9  text-neutral-400" />
+                            </AvatarFallback>
+                          </Avatar>
+                        )}
+                        <div className="flex flex-col">
+                          <p className="text-sm">Workspace Icon</p>
+                          <p className="text-sm text-muted-foreground">
+                            JPG, PNG, SVG or JPED, max 1mb
+                          </p>
+                          <input
+                            className="hidden"
+                            type="file"
+                            accept=".jpg, .png, .jpeg , .svg"
+                            ref={inputRef}
+                            onChange={handleImageChange}
                           />
+                          <Button
+                            type="button"
+                            variant="teritary"
+                            size="xs"
+                            className="w-fit mt-2"
+                            onClick={() => inputRef.current?.click()}
+                          >
+                            Upload Image
+                          </Button>
                         </div>
-                      ) : (
-                        <Avatar className="w-18 h-18">
-                          <AvatarFallback>
-                            <ImageIcon className="w-9 h-9  text-neutral-400" />
-                          </AvatarFallback>
-                        </Avatar>
-                      )}
-                      <div className="flex flex-col">
-                        <p className="text-sm">Workspace Icon</p>
-                        <p className="text-sm text-muted-foreground">
-                          JPG, PNG, SVG or JPED, max 1mb
-                        </p>
-                        <input
-                          className="hidden"
-                          type="file"
-                          accept=".jpg, .png, .jpeg , .svg"
-                          ref={inputRef}
-                          onChange={handleImageChange}
-                        />
-                        <Button
-                          type="button"
-                          variant="teritary"
-                          size="xs"
-                          className="w-fit mt-2"
-                          onClick={() => inputRef.current?.click()}
-                        >
-                          Upload Image
-                        </Button>
                       </div>
                     </div>
-                  </div>
-                )}
-              />
-            </div>
-            <DottedSeparator className="py-7" />
-            <div className="flex items-center justify-between">
-              <Button
-                type="button"
-                size="lg"
-                variant="secondary"
-                onClick={onCancel}
-                disabled={false}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" size="lg" disabled={false}>
-                Create Workspace
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </CardContent>
-
+                  )}
+                />
+              </div>
+              <DottedSeparator className="py-7" />
+              <div className="flex items-center justify-between">
+                <Button
+                  type="button"
+                  size="lg"
+                  variant="secondary"
+                  onClick={onCancel}
+                  disabled={false}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" size="lg" disabled={false}>
+                  Create Workspace
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
       {/* Thong bao */}
       <div
         className={clsx(
@@ -195,6 +197,6 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
       >
         {errorMessage || successMessage}
       </div>
-    </Card>
+    </>
   );
 };
