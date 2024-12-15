@@ -37,6 +37,7 @@ const useUser = () => {
         );
         setUser(response.data);
       } catch (error) {
+        console.error(error);
         setError("Error fetching user info");
       } finally {
         setLoading(false);
