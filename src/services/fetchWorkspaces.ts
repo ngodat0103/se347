@@ -1,5 +1,5 @@
+import { WorkspaceResponse } from "@/types/workspace";
 import Cookies from "js-cookie";
-
 
 export const fetchWorkspaces = async () => {
   try {
@@ -55,18 +55,24 @@ export const fetchWorkspaceDetails = async (workspaceId: string) => {
       throw new Error("Lỗi khi lấy danh sách workspace");
     }
 
-    const workspaces = await response.json();
+    const workspaces: WorkspaceResponse[] = await response.json();
 
     // Lọc workspace theo ID
-    const workspace = workspaces.find((ws: any) => ws.id === workspaceId);
+    const workspace = workspaces.find((ws) => ws.id === workspaceId);
 
     if (!workspace) {
       throw new Error("Workspace không tồn tại");
     }
 
     return workspace; // Trả về thông tin workspace
-  } catch (err: any) {
-    throw new Error(err.message);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      throw new Error(err.message);
+    } else if (typeof err === "string") {
+      throw new Error(err);
+    } else {
+      throw new Error("Lỗi không xác định");
+    }
   }
 };
 
