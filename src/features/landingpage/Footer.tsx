@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function Footer() {
   return (
     <>
@@ -14,15 +16,15 @@ export function Footer() {
               </h2>
             </div>
             <div className="absolute right-0 -mt-20 hidden text-black lg:inline-block">
-              <a href="/" className="mr-16">
+              <Link href="/" className="mr-16">
                 Terms & Conditions
-              </a>
-              <a href="/" className="mr-16">
+              </Link>
+              <Link href="/" className="mr-16">
                 Privacy Policy
-              </a>
-              <a href="/" className="mr-16">
+              </Link>
+              <Link href="/" className="mr-16">
                 Cookie Policy
-              </a>
+              </Link>
             </div>
           </div>
         </div>
