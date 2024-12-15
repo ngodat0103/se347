@@ -183,7 +183,7 @@ export const Card = ({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
-  useOutsideClick(containerRef, () => handleClose());
+  useOutsideClick(containerRef, () => handleClose()); // WTF?
 
   const handleOpen = () => {
     setOpen(true);
