@@ -31,12 +31,13 @@ export async function updateWorkspace(worspaceId: string, workspaceForm: updateW
     const data: WorkspaceResponse = await response.json();
     console.debug("Workspace created:", data);
     // 2. Nếu có ảnh, gửi yêu cầu upload ảnh
-    if (workspaceForm.imageUrl) {
-        if (workspaceForm.imageUrl instanceof File) {
-            await updateWorkspaceImage(data.id, workspaceForm.imageUrl);
-        } else {
-            throw new Error("Invalid image file.");
-        }
+    if (workspaceForm.imageUrl && workspaceForm.imageUrl instanceof File) {
+        await updateWorkspaceImage(data.id, workspaceForm.imageUrl);
+    } else if (typeof workspaceForm.imageUrl === "string" && workspaceForm.imageUrl !== "") {
+        // Nếu chỉ có URL cũ (chuỗi không rỗng), bỏ qua
+        console.log("No new image selected, keeping the old one.");
+    } else {
+        console.log("No image selected, skipping upload.");
     }
 
     return data;

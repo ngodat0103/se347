@@ -28,7 +28,7 @@ interface UpdateWorkspaceFormProps {
   showCancelButton?: boolean;
   initialValues: {
     name: string;
-    imageUrl?: File | string;
+    imageUrl?: undefined | string;
   };
   workspaceId: string;
 }
@@ -50,11 +50,7 @@ export const UpdateWorkspaceForm = ({
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      form.setValue("imageUrl", file);
-    } else {
-      form.setValue("imageUrl", undefined);
-    }
+    form.setValue("imageUrl", file || undefined);
   };
 
   useEffect(() => {
@@ -70,9 +66,11 @@ export const UpdateWorkspaceForm = ({
 
   const onSubmit = async (value: z.infer<typeof updateWorkspaceSchema>) => {
     try {
+      const response = await updateWorkspace(workspaceId, {
+        ...value,
+        imageUrl: value.imageUrl || undefined,
+      });
       console.log(value);
-      // Gửi yêu cầu cập nhật workspace
-      const response = await updateWorkspace(workspaceId, value); // Thay đổi từ createWorkspace sang updateWorkspace
 
       // Nếu cập nhật thành công
       setSuccessMessage("Workspace updated successfully");
