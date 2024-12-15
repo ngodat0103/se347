@@ -42,8 +42,14 @@ export const WorkspaceSwitcher = () => {
         const data = await fetchWorkspaces(); // Sử dụng hàm fetchWorkspaces đã tách ra
         setWorkspaces(data); // Lưu danh sách workspaces vào state
         setSelectedWorkspace(data[0] || null); // Chọn workspace đầu tiên nếu có
-      } catch (err: any) {
-        setError(err.message); // Xử lý lỗi
+      } catch (err: unknown) {
+        let error_msg = "Unable to load workspace. Please try again.";
+        if (err instanceof Error) {
+          error_msg = err.message;
+        } else if (typeof err === "string") {
+          error_msg = err;
+        }
+        setError(error_msg);
       }
     };
 
