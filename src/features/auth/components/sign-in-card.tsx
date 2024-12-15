@@ -60,9 +60,16 @@ export const SignInCard = () => {
       console.log("Token:", token);
       //Redirect to dashboard
       router.push("/dashboard");
-    } catch (err: any) {
-      // Nếu server trả lỗi, hiển thị lỗi cho người dùng
-      setErrorMessage(err.message);
+    } catch (err: unknown) {
+      //Dang nhap that bai
+      let error_msg = "Login failed. Please try again.";
+      if (err instanceof Error) {
+        error_msg = err.message;
+      } else if (typeof err === "string") {
+        error_msg = err;
+      }
+      setErrorMessage(error_msg);
+      setSuccessMessage(null);
     }
   };
 
@@ -122,7 +129,7 @@ export const SignInCard = () => {
                 Login
               </Button>
               <p className="text-center mt-4">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link href="/sign-up" className="text-blue-600 hover:underline">
                   Sign up
                 </Link>{" "}
