@@ -14,7 +14,7 @@ export async function updateWorkspace(worspaceId: string, workspaceForm: updateW
     }
     // 1. Gửi yêu cầu tạo workspace chỉ với name
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/workspaces/${worspaceId}`, {
-        method: "PATCH",
+        method: "PUT",
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
