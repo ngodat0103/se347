@@ -24,8 +24,14 @@ export const fetchWorkspaces = async () => {
 
     const data = await response.json();
     return data;  // Trả về danh sách workspaces
-  } catch (err: any) {
-    throw new Error(err.message);  
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      throw new Error(err.message);
+    } else if (typeof err === "string") {
+      throw new Error(err);
+    } else {
+      throw new Error("Lỗi không xác định");
+    }
   }
 };
 
