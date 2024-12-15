@@ -4,5 +4,5 @@ export interface ErrorMessage {
     status: number;
     detail: string;
     instance: string;
-    properties: any;
+    properties: unknown;
 }
