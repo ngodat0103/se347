@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation"; // Import useParams và useRouter hook để truy cập params và router
 import { UpdateWorkspaceForm } from "@/features/workspaces/components/update-workspace-form";
 import { fetchWorkspaceDetails } from "@/services/fetchWorkspaces";
+import { WorkspaceResponse } from "@/types/workspace";
 
 const WorkspaceSettingsPage = () => {
   const { workspaceId } = useParams(); // Sử dụng useParams để lấy workspaceId từ URL
   const router = useRouter(); // Sử dụng useRouter để lấy router object
-  const [initialValues, setInitialValues] = useState<any>(null);
+  const [initialValues, setInitialValues] = useState<WorkspaceResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
