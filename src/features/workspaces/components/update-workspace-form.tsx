@@ -1,7 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { createWorkspaceSchema } from "../schema";
+import { updateWorkspaceSchema } from "../schema";
 import { z } from "zod";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { DottedSeparator } from "@/components/dotted-separator";
@@ -18,30 +18,34 @@ import { Button } from "@/components/ui/button";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Avatar } from "@/components/ui/avatar";
-import { createWorkspace } from "@/services/useCreateWorkspace_api"; // Import the createWorkspace function
+import { updateWorkspace } from "@/services/useUpdateWorkspace_api"; // Import hàm updateWorkspace
 import { AvatarFallback } from "@radix-ui/react-avatar";
-import { ImageIcon } from "lucide-react";
+import { ArrowLeftIcon, ImageIcon } from "lucide-react";
 import clsx from "clsx";
 
-interface CreateWorkspaceFormProps {
+interface UpdateWorkspaceFormProps {
   onCancel?: () => void;
   showCancelButton?: boolean;
+  initialValues: {
+    name: string;
+    imageUrl?: File | string;
+  };
+  workspaceId: string;
 }
 
-export const CreateWorkspaceForm = ({
+export const UpdateWorkspaceForm = ({
   onCancel,
   showCancelButton = true,
-}: CreateWorkspaceFormProps) => {
+  initialValues,
+  workspaceId,
+}: UpdateWorkspaceFormProps) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const form = useForm<z.infer<typeof createWorkspaceSchema>>({
-    resolver: zodResolver(createWorkspaceSchema),
-    defaultValues: {
-      name: "",
-      imageUrl: undefined,
-    },
+  const form = useForm<z.infer<typeof updateWorkspaceSchema>>({
+    resolver: zodResolver(updateWorkspaceSchema),
+    defaultValues: initialValues,
   });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,43 +68,21 @@ export const CreateWorkspaceForm = ({
     }
   });
 
-  // const onSubmit = async (value: z.infer<typeof createWorkspaceSchema>) => {
-  //   try {
-  //     console.log(value);
-  //     // Gửi yêu cầu tạo workspace
-  //     const response = await createWorkspace(value);
-
-  //     // Nếu tạo thành công
-  //     setSuccessMessage("Workspace created successfully");
-  //     form.reset();
-  //     setErrorMessage(null);
-  //   } catch (err: any) {
-  //     // Xử lý lỗi nếu có
-  //     setErrorMessage(
-  //       err.message || "Error creating workspace. Please try again."
-  //     );
-  //     setSuccessMessage(null);
-  //   }
-  // };
-  const onSubmit = async (value: z.infer<typeof createWorkspaceSchema>) => {
+  const onSubmit = async (value: z.infer<typeof updateWorkspaceSchema>) => {
     try {
       console.log(value);
-      // Gửi yêu cầu tạo workspace
-      const response = await createWorkspace(value);
-  
-      // Nếu tạo thành công
-      setSuccessMessage("Workspace created successfully");
+      // Gửi yêu cầu cập nhật workspace
+      const response = await updateWorkspace(workspaceId, value); // Thay đổi từ createWorkspace sang updateWorkspace
+
+      // Nếu cập nhật thành công
+      setSuccessMessage("Workspace updated successfully");
       form.reset();
       setErrorMessage(null);
-  
-      // Làm mới trang
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000); // Đợi 1 giây trước khi reload để người dùng thấy thông báo
+      onCancel?.();
     } catch (err: any) {
       // Xử lý lỗi nếu có
       setErrorMessage(
-        err.message || "Error creating workspace. Please try again."
+        err.message || "Error updating workspace. Please try again."
       );
       setSuccessMessage(null);
     }
@@ -109,10 +91,12 @@ export const CreateWorkspaceForm = ({
   return (
     <>
       <Card className="w-full h-full border-none shadow-none">
-        <CardHeader className="flex p-7">
-          <CardTitle className="text-xl font-bold">
-            Create a new workspace
-          </CardTitle>
+        <CardHeader className="flex flex-row items-center gap-x-4 p-7 space-y-0">
+          <Button size="sm" variant="secondary" onClick={onCancel}>
+            <ArrowLeftIcon />
+            Back
+          </Button>
+          <CardTitle className="text-xl font-bold">Update Workspace</CardTitle>
         </CardHeader>
         <div className="p-7">
           <DottedSeparator />
@@ -161,7 +145,7 @@ export const CreateWorkspaceForm = ({
                         ) : (
                           <Avatar className="w-18 h-18">
                             <AvatarFallback>
-                              <ImageIcon className="w-9 h-9  text-neutral-400" />
+                              <ImageIcon className="w-9 h-9 text-neutral-400" />
                             </AvatarFallback>
                           </Avatar>
                         )}
@@ -200,13 +184,12 @@ export const CreateWorkspaceForm = ({
                     size="lg"
                     variant="secondary"
                     onClick={onCancel}
-                    disabled={false}
                   >
                     Cancel
                   </Button>
                 )}
-                <Button type="submit" size="lg" disabled={false}>
-                  Create Workspace
+                <Button type="submit" size="lg" className="ml-auto">
+                  Update Workspace
                 </Button>
               </div>
             </form>

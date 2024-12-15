@@ -3,7 +3,7 @@ import { CreateWorkspaceForm } from "@/features/workspaces/components/create-wor
 const WorkspaceCreatePage = () => {
   return (
     <div className="w-full lg:max-w-xl">
-      <CreateWorkspaceForm />
+      <CreateWorkspaceForm showCancelButton={false} />
     </div>
   );
 };
