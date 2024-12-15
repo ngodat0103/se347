@@ -75,11 +75,15 @@ export const CreateWorkspaceForm = ({
       form.reset();
       setErrorMessage(null);
       onCancel?.();
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Xử lý lỗi nếu có
-      setErrorMessage(
-        err.message || "Error creating workspace. Please try again."
-      );
+      let error_msg = "Error creating workspace. Please try again.";
+      if (err instanceof Error) {
+        error_msg = err.message;
+      } else if (typeof err === "string") {
+        error_msg = err;
+      }
+      setErrorMessage(error_msg);
       setSuccessMessage(null);
     }
   };
