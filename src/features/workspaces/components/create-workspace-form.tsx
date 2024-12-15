@@ -99,9 +99,13 @@ export const CreateWorkspaceForm = ({
       }, 1000); // Đợi 1 giây trước khi reload để người dùng thấy thông báo
     } catch (err: any) {
       // Xử lý lỗi nếu có
-      setErrorMessage(
-        err.message || "Error creating workspace. Please try again."
-      );
+      let error_msg = "Error creating workspace. Please try again.";
+      if (err instanceof Error) {
+        error_msg = err.message;
+      } else if (typeof err === "string") {
+        error_msg = err;
+      }
+      setErrorMessage(error_msg);
       setSuccessMessage(null);
     }
   };
