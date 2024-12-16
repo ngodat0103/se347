@@ -1,7 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { createWorkspaceSchema } from "../schema";
+import { updateWorkspaceSchema } from "../schema";
 import { z } from "zod";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { DottedSeparator } from "@/components/dotted-separator";
@@ -18,39 +18,62 @@ import { Button } from "@/components/ui/button";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Avatar } from "@/components/ui/avatar";
-import { createWorkspace } from "@/services/useCreateWorkspace_api"; // Import the createWorkspace function
+import { updateWorkspace } from "@/services/useUpdateWorkspace_api"; // Import hàm updateWorkspace
 import { AvatarFallback } from "@radix-ui/react-avatar";
-import { ImageIcon } from "lucide-react";
+import { ArrowLeftIcon, ImageIcon } from "lucide-react";
 import clsx from "clsx";
+import { useConfirm } from "@/components/confirm";
+import { deleteWorkspace } from "@/services/useDeleteWorkspace_api";
+import { useRouter } from "next/navigation";
 
-interface CreateWorkspaceFormProps {
+interface UpdateWorkspaceFormProps {
   onCancel?: () => void;
   showCancelButton?: boolean;
+  initialValues: {
+    name: string;
+    imageUrl?: undefined | string;
+  };
+  workspaceId: string;
 }
 
-export const CreateWorkspaceForm = ({
+export const UpdateWorkspaceForm = ({
   onCancel,
   showCancelButton = true,
-}: CreateWorkspaceFormProps) => {
+  initialValues,
+  workspaceId,
+}: UpdateWorkspaceFormProps) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const router = useRouter();
+  const [DeleteDialog, confirmDelete] = useConfirm(
+    "Delete Workspace",
+    "Are you sure you want to delete this workspace?",
+    "destructive"
+  );
 
-  const form = useForm<z.infer<typeof createWorkspaceSchema>>({
-    resolver: zodResolver(createWorkspaceSchema),
-    defaultValues: {
-      name: "",
-      imageUrl: undefined,
-    },
+  const form = useForm<z.infer<typeof updateWorkspaceSchema>>({
+    resolver: zodResolver(updateWorkspaceSchema),
+    defaultValues: initialValues,
   });
 
+  const handleDelete = async () => {
+    const isConfirmed = await confirmDelete(); // Chờ người dùng xác nhận
+    if (!isConfirmed) return;
+
+    try {
+      await deleteWorkspace(workspaceId);
+      console.log("Workspace deleted successfully");
+
+      // Chuyển người dùng về trang dashboard
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Failed to delete workspace:", error);
+    }
+  };
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      form.setValue("imageUrl", file);
-    } else {
-      form.setValue("imageUrl", undefined);
-    }
+    form.setValue("imageUrl", file || undefined);
   };
 
   useEffect(() => {
@@ -64,42 +87,22 @@ export const CreateWorkspaceForm = ({
     }
   });
 
-  // const onSubmit = async (value: z.infer<typeof createWorkspaceSchema>) => {
-  //   try {
-  //     console.log(value);
-  //     // Gửi yêu cầu tạo workspace
-  //     const response = await createWorkspace(value);
-
-  //     // Nếu tạo thành công
-  //     setSuccessMessage("Workspace created successfully");
-  //     form.reset();
-  //     setErrorMessage(null);
-  //   } catch (err: any) {
-  //     // Xử lý lỗi nếu có
-  //     setErrorMessage(
-  //       err.message || "Error creating workspace. Please try again."
-  //     );
-  //     setSuccessMessage(null);
-  //   }
-  // };
-  const onSubmit = async (value: z.infer<typeof createWorkspaceSchema>) => {
+  const onSubmit = async (value: z.infer<typeof updateWorkspaceSchema>) => {
     try {
+      const response = await updateWorkspace(workspaceId, {
+        ...value,
+        imageUrl: value.imageUrl || undefined,
+      });
       console.log(value);
-      // Gửi yêu cầu tạo workspace
-      const response = await createWorkspace(value);
-  
-      // Nếu tạo thành công
-      setSuccessMessage("Workspace created successfully");
+
+      // Nếu cập nhật thành công
+      setSuccessMessage("Workspace updated successfully");
       form.reset();
       setErrorMessage(null);
-  
-      // Làm mới trang
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000); // Đợi 1 giây trước khi reload để người dùng thấy thông báo
-    } catch (err: any) {
+      onCancel?.();
+    } catch (err: unknown) {
       // Xử lý lỗi nếu có
-      let error_msg = "Error creating workspace. Please try again.";
+      let error_msg = "Error updating workspace. Please try again.";
       if (err instanceof Error) {
         error_msg = err.message;
       } else if (typeof err === "string") {
@@ -111,12 +114,15 @@ export const CreateWorkspaceForm = ({
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-y-4">
+      <DeleteDialog />
       <Card className="w-full h-full border-none shadow-none">
-        <CardHeader className="flex p-7">
-          <CardTitle className="text-xl font-bold">
-            Create a new workspace
-          </CardTitle>
+        <CardHeader className="flex flex-row items-center gap-x-4 p-7 space-y-0">
+          <Button size="sm" variant="secondary" onClick={onCancel}>
+            <ArrowLeftIcon />
+            Back
+          </Button>
+          <CardTitle className="text-xl font-bold">Update Workspace</CardTitle>
         </CardHeader>
         <div className="p-7">
           <DottedSeparator />
@@ -163,9 +169,9 @@ export const CreateWorkspaceForm = ({
                             />
                           </div>
                         ) : (
-                          <Avatar className="w-18 h-18 pr-5 pl-4">
+                          <Avatar className="w-18 h-18">
                             <AvatarFallback>
-                              <ImageIcon className="w-9 h-9  text-neutral-400" />
+                              <ImageIcon className="w-9 h-9 text-neutral-400" />
                             </AvatarFallback>
                           </Avatar>
                         )}
@@ -181,32 +187,15 @@ export const CreateWorkspaceForm = ({
                             ref={inputRef}
                             onChange={handleImageChange}
                           />
-                          {field.value ? (
-                            <Button
-                              type="button"
-                              variant="destructive"
-                              size="xs"
-                              className="w-fit mt-2"
-                              onClick={() => {
-                                field.onChange(undefined);
-                                if (inputRef.current) {
-                                  inputRef.current.value = "";
-                                }
-                              }}
-                            >
-                              Remove Image
-                            </Button>
-                          ) : (
-                            <Button
-                              type="button"
-                              variant="teritary"
-                              size="xs"
-                              className="w-fit mt-2"
-                              onClick={() => inputRef.current?.click()}
-                            >
-                              Upload Image
-                            </Button>
-                          )}
+                          <Button
+                            type="button"
+                            variant="teritary"
+                            size="xs"
+                            className="w-fit mt-2"
+                            onClick={() => inputRef.current?.click()}
+                          >
+                            Upload Image
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -221,13 +210,12 @@ export const CreateWorkspaceForm = ({
                     size="lg"
                     variant="secondary"
                     onClick={onCancel}
-                    disabled={false}
                   >
                     Cancel
                   </Button>
                 )}
-                <Button type="submit" size="lg" disabled={false}>
-                  Create Workspace
+                <Button type="submit" size="lg" className="ml-auto">
+                  Update Workspace
                 </Button>
               </div>
             </form>
@@ -246,6 +234,26 @@ export const CreateWorkspaceForm = ({
       >
         {errorMessage || successMessage}
       </div>
-    </>
+      <Card className="w-full h-full border-none shadow-none">
+        <CardContent className="p-7">
+          <div className="flex flex-col">
+            <h3 className="font-bold">Danger Zone</h3>
+            <p className="text-sm text-muted-foreground">
+              Deleting a workspace is irreversible and will remove all
+              associated data.
+            </p>
+            <Button
+              className="mt-6 w-fit ml-auto"
+              size="sm"
+              variant="destructive"
+              type="button"
+              onClick={handleDelete}
+            >
+              Delete Workspace
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };

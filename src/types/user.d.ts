@@ -19,7 +19,7 @@ export interface LoginResponse {
         issuedAt: string
         expiresAt: string
     }
-    additionalParameters: any
+    additionalParameters: unknown
 }
 
 export interface RegisterForm {

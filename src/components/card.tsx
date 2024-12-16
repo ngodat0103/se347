@@ -17,8 +17,8 @@ export function ThreeDCardDemo() {
           translateZ="50"
           className="text-xl font-bold text-neutral-600 dark:text-white"
         >
-          "Before, we found collaboration challenging, but now with Jira, we
-          meet all your work needs."
+          &quot;Before, we found collaboration challenging, but now with Jira, we
+          meet all your work needs.&quot;
         </CardItem>
         <CardItem
           as="p"

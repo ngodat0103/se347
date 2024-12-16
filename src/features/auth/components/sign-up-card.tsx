@@ -53,7 +53,7 @@ export const SignUpCard = () => {
     try {
       //Gui yeu cau dang ky
       console.log(values);
-      var result = await register({
+      const result = await register({
         nickName: values.nickname,
         email: values.email,
         password: values.password,
@@ -65,9 +65,15 @@ export const SignUpCard = () => {
       //Redirect to dashboard
       router.push("/sign-in");
       //console.log(result);
-    } catch (err: any) {
+    } catch (err: unknown) {
       //Dang ky that bai
-      setErrorMessage(err.message || "Registration failed. Please try again.");
+      let error_msg = "Registration failed. Please try again.";
+      if (err instanceof Error) {
+        error_msg = err.message;
+      } else if (typeof err === "string") {
+        error_msg = err;
+      }
+      setErrorMessage(error_msg);
       setSuccessMessage(null);
     }
   };

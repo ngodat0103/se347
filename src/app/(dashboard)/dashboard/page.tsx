@@ -1,16 +1,25 @@
-// pages/dashboard.tsx
 "use client";
-import React from "react";
-import useAuthGuard from "@/lib/useAuthGuard";
-import { CreateWorkspaceForm } from "@/features/workspaces/components/create-workspace-form";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { fetchWorkspaces } from "@/services/fetchWorkspaces";
 
-const Dashboard = () => {
-  // useAuthGuard();
-  return (
-    <div className="bg-neutral-500 p-4 h-full">
-      <CreateWorkspaceForm />
-    </div>
-  );
-};
+export default function Dashboard() {
+  const router = useRouter();
 
-export default Dashboard;
+  useEffect(() => {
+    const getWorkspaces = async () => {
+      try {
+        const workspaces = await fetchWorkspaces();
+        if (workspaces.length === 0) {
+          router.push("/workspaces/create");
+        } else {
+          router.push(`/workspaces/${workspaces[0].id}`);
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy danh sách workspaces:", error);
+      }
+    };
+
+    getWorkspaces();
+  }, [router]);
+}
