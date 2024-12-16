@@ -159,7 +159,7 @@ export const CreateWorkspaceForm = ({
                             />
                           </div>
                         ) : (
-                          <Avatar className="w-18 h-18">
+                          <Avatar className="w-18 h-18 pr-5 pl-4">
                             <AvatarFallback>
                               <ImageIcon className="w-9 h-9  text-neutral-400" />
                             </AvatarFallback>
@@ -177,15 +177,32 @@ export const CreateWorkspaceForm = ({
                             ref={inputRef}
                             onChange={handleImageChange}
                           />
-                          <Button
-                            type="button"
-                            variant="teritary"
-                            size="xs"
-                            className="w-fit mt-2"
-                            onClick={() => inputRef.current?.click()}
-                          >
-                            Upload Image
-                          </Button>
+                          {field.value ? (
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="xs"
+                              className="w-fit mt-2"
+                              onClick={() => {
+                                field.onChange(undefined);
+                                if (inputRef.current) {
+                                  inputRef.current.value = "";
+                                }
+                              }}
+                            >
+                              Remove Image
+                            </Button>
+                          ) : (
+                            <Button
+                              type="button"
+                              variant="teritary"
+                              size="xs"
+                              className="w-fit mt-2"
+                              onClick={() => inputRef.current?.click()}
+                            >
+                              Upload Image
+                            </Button>
+                          )}
                         </div>
                       </div>
                     </div>

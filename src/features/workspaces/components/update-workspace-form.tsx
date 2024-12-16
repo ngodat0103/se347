@@ -22,6 +22,9 @@ import { updateWorkspace } from "@/services/useUpdateWorkspace_api"; // Import h
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import { ArrowLeftIcon, ImageIcon } from "lucide-react";
 import clsx from "clsx";
+import { useConfirm } from "@/components/confirm";
+import { deleteWorkspace } from "@/services/useDeleteWorkspace_api";
+import { useRouter } from "next/navigation";
 
 interface UpdateWorkspaceFormProps {
   onCancel?: () => void;
@@ -42,12 +45,32 @@ export const UpdateWorkspaceForm = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const router = useRouter();
+  const [DeleteDialog, confirmDelete] = useConfirm(
+    "Delete Workspace",
+    "Are you sure you want to delete this workspace?",
+    "destructive"
+  );
 
   const form = useForm<z.infer<typeof updateWorkspaceSchema>>({
     resolver: zodResolver(updateWorkspaceSchema),
     defaultValues: initialValues,
   });
 
+  const handleDelete = async () => {
+    const isConfirmed = await confirmDelete(); // Chờ người dùng xác nhận
+    if (!isConfirmed) return;
+
+    try {
+      await deleteWorkspace(workspaceId);
+      console.log("Workspace deleted successfully");
+
+      // Chuyển người dùng về trang dashboard
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Failed to delete workspace:", error);
+    }
+  };
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     form.setValue("imageUrl", file || undefined);
@@ -87,7 +110,8 @@ export const UpdateWorkspaceForm = ({
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-y-4">
+      <DeleteDialog />
       <Card className="w-full h-full border-none shadow-none">
         <CardHeader className="flex flex-row items-center gap-x-4 p-7 space-y-0">
           <Button size="sm" variant="secondary" onClick={onCancel}>
@@ -206,6 +230,26 @@ export const UpdateWorkspaceForm = ({
       >
         {errorMessage || successMessage}
       </div>
-    </>
+      <Card className="w-full h-full border-none shadow-none">
+        <CardContent className="p-7">
+          <div className="flex flex-col">
+            <h3 className="font-bold">Danger Zone</h3>
+            <p className="text-sm text-muted-foreground">
+              Deleting a workspace is irreversible and will remove all
+              associated data.
+            </p>
+            <Button
+              className="mt-6 w-fit ml-auto"
+              size="sm"
+              variant="destructive"
+              type="button"
+              onClick={handleDelete}
+            >
+              Delete Workspace
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
