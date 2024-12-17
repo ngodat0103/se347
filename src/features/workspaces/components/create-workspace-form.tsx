@@ -97,7 +97,7 @@ export const CreateWorkspaceForm = ({
       setTimeout(() => {
         window.location.reload();
       }, 1000); // Đợi 1 giây trước khi reload để người dùng thấy thông báo
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Xử lý lỗi nếu có
       let error_msg = "Error creating workspace. Please try again.";
       if (err instanceof Error) {
