@@ -27,10 +27,9 @@ const UserProfile: React.FC = () => {
 
   const handleLogout = () => {
     //Xoa token trong cookie
-    const accessToken = Cookies.get("accessToken");
+    
     logoutService();
     Cookies.remove("accessToken");
-
     //Chuyen huong ve trang login
     router.push("/sign-in");
   };
