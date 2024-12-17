@@ -13,7 +13,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-
+import { logout as logoutService } from "@/services/user_api";
 interface User {
   nickName?: string;
   pictureUrl?: string;
@@ -25,10 +25,11 @@ const UserProfile: React.FC = () => {
   const { user } = useUser();
   const router = useRouter();
 
-  const logout = () => {
+  const handleLogout = () => {
     //Xoa token trong cookie
+    
+    logoutService();
     Cookies.remove("accessToken");
-
     //Chuyen huong ve trang login
     router.push("/sign-in");
   };
@@ -73,7 +74,7 @@ const UserProfile: React.FC = () => {
               </div>
               <DottedSeparator className="mb-1" />
               <DropdownMenuItem
-                onClick={() => logout()}
+                onClick={() => handleLogout()}
                 className="h-10 flex items-center justify-center text-red-700 font-medium cursor-pointer"
               >
                 <LogOut className="size-4 mr-2" />
