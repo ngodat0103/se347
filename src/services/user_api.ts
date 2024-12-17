@@ -1,5 +1,6 @@
 import { ErrorMessage } from "@/types/error";
 import { LoginForm, LoginResponse, RegisterForm } from "@/types/user";
+import Cookies  from "js-cookie";
 export async function login(login_form: LoginForm): Promise<LoginResponse> {
     console.debug(login_form);
 
@@ -65,3 +66,22 @@ export async function register(register_form: RegisterForm): Promise<void> {
         throw new Error("Unknown error. Check console for more information");
     }
 }
+export async function logout(): Promise<void> {
+    console.info("Sending logout request");
+    const accessToken = Cookies.get("accessToken");
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    });
+    if (response.ok) {
+        console.info("Logout successful");
+    } else {
+        const data: ErrorMessage = await response.json();
+        console.debug(data);
+
+        throw new Error(data.detail);
+    }
+} 
