@@ -13,7 +13,7 @@ import { WorkspaceAvatar } from "@/features/workspaces/components/workspace-avat
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
-import { fetchWorkspaces } from "@/services/fetchWorkspaces";
+import { fetchWorkspaces } from "@/services/workspaceService";
 import { set } from "date-fns";
 import { useCreateWorkspaceModal } from "@/hooks/use-create-workspace-modal";
 
@@ -26,7 +26,7 @@ interface Workspace {
 export const WorkspaceSwitcher = () => {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(
-    null
+    null,
   );
   const [error, setError] = useState<string | null>(null);
   const workspaceId = useWorkspaceId();
