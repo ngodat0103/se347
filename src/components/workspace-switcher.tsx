@@ -9,13 +9,13 @@ import {
   SelectItem,
   SelectContent,
 } from "@/components/ui/select";
-import { WorkspaceAvatar } from "@/features/workspaces/components/workspace-avatar";
+import { WorkspaceAvatar } from "@/features/workspace/components/workspace-avatar";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { useWorkspaceId } from "@/hooks/use-workspace-id";
+import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 import { fetchWorkspaces } from "@/services/workspaceService";
 import { set } from "date-fns";
-import { useCreateWorkspaceModal } from "@/hooks/use-create-workspace-modal";
+import { useCreateWorkspaceModal } from "@/features/workspace/hook/use-create-workspace-modal";
 
 interface Workspace {
   id: string;
