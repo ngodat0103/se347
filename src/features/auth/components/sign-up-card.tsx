@@ -33,7 +33,7 @@ const formSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8, "Minimum 8 characters").max(256),
 });
-import { register } from "@/services/user_api";
+import { register } from "@/services/userService";
 import { set } from "date-fns";
 
 export const SignUpCard = () => {
@@ -95,7 +95,11 @@ export const SignUpCard = () => {
         </div>
         <CardContent className="p-7">
           <Form {...form}>
-            <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form
+              noValidate
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4"
+            >
               <FormField
                 name="nickname"
                 control={form.control}

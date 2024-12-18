@@ -6,7 +6,9 @@ export async function middleware(request: NextRequest) {
   // Authentcation middleware ------------------------
 
   // Login redirect
-  const login_redirect = NextResponse.redirect(new URL("/sign-in", request.url));
+  const login_redirect = NextResponse.redirect(
+    new URL("/sign-in", request.url),
+  );
 
   const token = request.cookies.get("accessToken")?.value;
   if (!token) {

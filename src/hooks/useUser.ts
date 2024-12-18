@@ -33,7 +33,7 @@ const useUser = () => {
               Authorization: `Bearer ${token}`,
               Accept: "*/*",
             },
-          }
+          },
         );
         setUser(response.data);
       } catch (error) {

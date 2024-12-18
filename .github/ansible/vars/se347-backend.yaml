@@ -1,6 +1,0 @@
-upstream_name: se347-backend
-server_ip: 127.0.0.1
-server_port: 5000
-server_name: dev.se347.ngodat0103.live
-ssl_certificate: /etc/letsencrypt/live/dev.se347.ngodat0103.live/fullchain.pem 
-ssl_certificate_key: /etc/letsencrypt/live/dev.se347.ngodat0103.live/privkey.pem

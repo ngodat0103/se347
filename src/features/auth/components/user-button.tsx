@@ -13,7 +13,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { logout as logoutService } from "@/services/user_api";
+import { logout as logoutService } from "@/services/userService";
 interface User {
   nickName?: string;
   pictureUrl?: string;
@@ -27,7 +27,7 @@ const UserProfile: React.FC = () => {
 
   const handleLogout = () => {
     //Xoa token trong cookie
-    
+
     logoutService();
     Cookies.remove("accessToken");
     //Chuyen huong ve trang login
