@@ -7,12 +7,33 @@ import { RiAddCircleFill } from "react-icons/ri";
 import { cn } from "@/lib/utils";
 import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 import { useCreateProjectModal } from "@/features/project/hook/use-create-project-modal";
-
+import { fetchProjects } from "@/services/projectService";
+import { ProjectResponse } from "@/types/project";
+import { useState } from "react";
+import { useEffect } from "react";
+import { ProjectAvatar } from "@/features/project/components/project-avatar";
 export const Project = () => {
+   const [projects, setProjects] = useState<ProjectResponse[]>([]);
+   
   const pathname = usePathname();
   const { open } = useCreateProjectModal();
   const workspaceId = useWorkspaceId();
-  // const { data } = useGetProjects({ workspaceId });
+  useEffect(() => {
+      const loadProjects = async () => {
+        try {
+          const data = await fetchProjects(workspaceId);
+          setProjects(data);
+        } catch (err: unknown) {
+          let error_msg = "Unable to load workspace. Please try again.";
+          if (err instanceof Error) {
+            error_msg = err.message;
+          } else if (typeof err === "string") {
+            error_msg = err;
+          }
+        }
+      };
+      loadProjects();
+    }, []);
 
   return (
     <div className="flex flex-col gap-y-2">
@@ -23,12 +44,12 @@ export const Project = () => {
           onClick={open}
         />
       </div>
-      {/* {data?.documents.map((project) => {
-        const href = `/workspaces/${workspaceId}/projects/${project.$id}`;
+      {projects?.map((project) => {
+        const href = `/workspaces/${workspaceId}/projects/${project.id}`;
         const isActive = pathname === href;
 
         return (
-          <Link key={project.$id} href={href}>
+          <Link key={project.id} href={href}>
             <div
               className={cn(
                 "flex items-center gap-2.5 p-2.5 rounded-md hover:opacity-75 transition cursor-pointer text-neutral-500",
@@ -40,7 +61,7 @@ export const Project = () => {
             </div>
           </Link>
         );
-      })} */}
+      })}
     </div>
   );
 };
