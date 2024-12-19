@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation"; // Import useParams và useRouter hook để truy cập params và router
-import { UpdateWorkspaceForm } from "@/features/workspaces/components/update-workspace-form";
+import { UpdateWorkspaceForm } from "@/features/workspace/components/update-workspace-form";
 import { fetchWorkspaceDetails } from "@/services/workspaceService";
 import { WorkspaceResponse } from "@/types/workspace";
 
