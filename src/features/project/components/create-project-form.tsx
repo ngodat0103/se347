@@ -23,7 +23,12 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 
+
 import { createProjectSchema } from "../schema";
+import { useState } from "react";
+import { createProject } from "@/services/projectService";
+import { useEffect } from "react";
+
 // import { useCreateProject } from "../api/use-create-project";
 
 interface CreateProjectFormProps {
@@ -31,35 +36,53 @@ interface CreateProjectFormProps {
 }
 
 export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const router = useRouter();
   const workspaceId = useWorkspaceId();
-  // const { mutate, isPending } = useCreateProject();
-  const inputRef = useRef<HTMLInputElement>(null);
-
   const form = useForm<z.infer<typeof createProjectSchema>>({
-    resolver: zodResolver(createProjectSchema.omit({ workspaceId: true })),
+    resolver: zodResolver(createProjectSchema),
     defaultValues: {
       name: "",
     },
   });
 
   const onSubmit = (values: z.infer<typeof createProjectSchema>) => {
-    const finalValues = {
-      ...values,
-      image: values.image instanceof File ? values.image : "",
-      workspaceId,
-    };
+    try {
+      // Gọi API tạo projec
+     const response = createProject(workspaceId, values);
+      // Nếu tạo thành công
+      setSuccessMessage("Project created successfully");
+      form.reset();
+      setErrorMessage(null);
 
-    // mutate(
-    //   { form: finalValues },
-    //   {
-    //     onSuccess: ({ data }) => {
-    //       form.reset();
-    //       router.push(`/workspaces/${workspaceId}/projects/${data.$id}`);
-    //     },
-    //   }
-    // );
+      // Làm mới trang
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000); // Đợi 1 giây trước khi reload để người dùng thấy thông báo
+    } catch (err: unknown) {
+      // Xử lý lỗi nếu có
+      let error_msg = "Error creating project. Please try again.";
+      if (err instanceof Error) {
+        error_msg = err.message;
+      } else if (typeof err === "string") {
+        error_msg = err;
+      }
+      setErrorMessage(error_msg);
+      setSuccessMessage(null);
   };
+};
+ useEffect(() => {
+    if (errorMessage || successMessage) {
+      const timeout = setTimeout(() => {
+        setErrorMessage(null);
+        setSuccessMessage(null);
+      }, 5000);
+
+      return () => clearTimeout(timeout);
+    }
+  });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

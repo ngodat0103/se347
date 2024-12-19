@@ -6,3 +6,7 @@ export interface ProjectResponse {
     createdDate: string; 
     lastUpdatedDate: string;
 }
+export interface createProjectForm {
+    name: string;
+    image?: File;
+}
