@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 
-//Bao ve trang dashboard 
+//Bao ve trang dashboard
 const useAuthGuard = () => {
   const router = useRouter();
 

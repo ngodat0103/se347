@@ -2,16 +2,16 @@ module.exports = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
+        protocol: "https",
+        hostname: "images.unsplash.com",
       },
       {
-        protocol: 'http',
-        hostname: 'localhost', // Allow images from localhost
+        protocol: "http",
+        hostname: "localhost", // Allow images from localhost
       },
       {
-        protocol: 'https',
-        hostname: 'storage.ngodat0103.live', // Thêm hostname mới vào đây
+        protocol: "https",
+        hostname: "storage.ngodat0103.live", // Thêm hostname mới vào đây
       },
     ],
   },

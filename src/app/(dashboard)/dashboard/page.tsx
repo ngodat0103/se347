@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { fetchWorkspaces } from "@/services/fetchWorkspaces";
+import { fetchWorkspaces } from "@/services/workspaceService";
 
 export default function Dashboard() {
   const router = useRouter();
