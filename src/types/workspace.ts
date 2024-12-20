@@ -17,6 +17,7 @@ export interface WorkspaceResponse {
   name: string; // Tên của workspace
   ownerId: string; // ID của chủ sở hữu workspace
   members: Record<string, WorkspaceMember>; // Danh sách thành viên
+  inviteCode: string; // Mã mời tham gia workspace
   imageUrl?: string; // URL của ảnh đại diện workspace
   createdDate: string; // Thời gian tạo workspace
   lastUpdatedDate: string; // Thời gian cập nhật workspace

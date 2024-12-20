@@ -216,3 +216,59 @@ export async function deleteWorkspace(workspaceId: string): Promise<void> {
   }
   console.debug(`Workspace with ID ${workspaceId} deleted successfully.`);
 }
+
+export async function resetInviteCode(workspaceId: string ):Promise<void> {
+  console.debug(`Resetting invite code for workspace with ID: ${workspaceId}`);
+
+  if(!token){
+    router.push("/sign-in");
+    throw new Error("Unauthorized: No access token found.");
+  }
+
+  const response = await fetch(`${BASE_API_URL}/workspaces/${workspaceId}/reset-invite-code`, {
+    method:"PUT",
+    headers:{
+      Authorization: `Bearer ${token}`,
+    },
+});
+if(!response.ok){
+  const errorResponse: ErrorMessage = await response.json();
+  throw new Error(errorResponse.detail || "Failed to reset invite code.");
+}
+
+}
+export async function addMemberByEmail(workspaceId: string, email: string): Promise<void> {
+  console.debug(`Adding member to workspace with ID: ${workspaceId}`);
+
+  if (!token) {
+    router.push("/sign-in");
+    throw new Error("Unauthorized: No access token found.");
+  }
+  console.log("Workspace ID:", workspaceId);
+  console.log("Email:", email);
+  try {
+    const response = await fetch(
+      `${BASE_API_URL}/workspaces/${workspaceId}/members/addByEmail`, // Đảm bảo BASE_API_URL được định nghĩa đúng
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ email }), // Truyền email vào body
+      }
+    );
+
+    if (!response.ok) {
+      const errorResponse: ErrorMessage = await response.json();
+      throw new Error(
+        errorResponse.detail || "Failed to add member to workspace."
+      );
+    }
+
+    console.debug(`Member added to workspace with ID: ${workspaceId}`);
+  } catch (err) {
+    console.error("Error adding member to workspace:", err);
+    throw err; // Ném lại lỗi để phía trên có thể xử lý
+  }
+}
