@@ -87,16 +87,19 @@ export const CreateWorkspaceForm = ({
       console.log(value);
       // Gửi yêu cầu tạo workspace
       const response = await createWorkspace(value);
-  
+
       // Nếu tạo thành công
       setSuccessMessage("Workspace created successfully");
       form.reset();
       setErrorMessage(null);
-  
-      // Làm mới trang
+
+      // Quay lại trang trước đó và reload
       setTimeout(() => {
-        window.location.reload();
-      }, 1000); // Đợi 1 giây trước khi reload để người dùng thấy thông báo
+        window.history.back();
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+      }, 1000);
     } catch (err: any) {
       // Xử lý lỗi nếu có
       let error_msg = "Error creating workspace. Please try again.";
