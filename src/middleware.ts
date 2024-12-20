@@ -9,6 +9,8 @@ export async function middleware(request: NextRequest) {
     if (token) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
+    // If user is not logged in then return next, don't run Auth middleware
+    return NextResponse.next();
   }
 
   // Authentication middleware ------------------------
