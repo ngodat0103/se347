@@ -9,7 +9,7 @@ import { SettingsIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { useWorkspaceId } from "@/hooks/use-workspace-id";
+import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 
 import { cn } from "@/lib/utils";
 
