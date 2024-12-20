@@ -3,7 +3,15 @@ import type { NextRequest } from "next/server";
 import { isTokenValid } from "@/lib/jwt_utils";
 
 export async function middleware(request: NextRequest) {
-  // Authentcation middleware ------------------------
+  // Auto redirect from landing page to dashboard if user is logged in
+  if (request.nextUrl.pathname === "/") {
+    const token = request.cookies.get("accessToken")?.value;
+    if (token) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+  }
+
+  // Authentication middleware ------------------------
 
   // Login redirect
   const login_redirect = NextResponse.redirect(
@@ -27,5 +35,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard", "/setting", "/workspaces", "/workspaces/:path*"],
+  matcher: ["/", "/dashboard", "/setting", "/workspaces", "/workspaces/:path*"],
 };
