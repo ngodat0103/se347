@@ -4,6 +4,32 @@ import Cookies  from "js-cookie";
 const token = Cookies.get("accessToken");
 import router from "next/router";
 import { ErrorMessage } from "@/types/error";
+import {useQuery} from "@tanstack/react-query"
+
+
+
+export const fetchProjectById = (workspaceId: string, projectId:string) => {
+  const query = useQuery({
+      queryKey: ["project", workspaceId, projectId],
+      queryFn: async () => {
+        const response = await fetch(`${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}`,{
+          headers: {
+              Authorization: `Bearer ${token}`,
+          }
+        }
+        );
+        if(!response.ok){
+          throw new Error("Lỗi khi lấy Project");
+        }
+        const project: ProjectResponse = await response.json();
+        return project;
+      }
+    }
+  )
+  return query;
+}
+
+
 export const fetchProjects = async (workspaceId: string) => {
   const response = await fetch(`${BASE_API_URL}/workspaces/${workspaceId}/projects`,{
     headers: {
