@@ -12,11 +12,11 @@ import { ProjectResponse } from "@/types/project";
 import { useState } from "react";
 import { useEffect } from "react";
 import { ProjectAvatar } from "@/features/project/components/project-avatar";
-export const Project = () => {   
+export const Project = () => {
   const pathname = usePathname();
   const { open } = useCreateProjectModal();
   const workspaceId = useWorkspaceId();
-  const {data : projects, isLoading} = fetchProjects(workspaceId);
+  const { data: projects, isLoading } = fetchProjects(workspaceId);
 
   return (
     <div className="flex flex-col gap-y-2">
@@ -36,7 +36,7 @@ export const Project = () => {
             <div
               className={cn(
                 "flex items-center gap-2.5 p-2.5 rounded-md hover:opacity-75 transition cursor-pointer text-neutral-500",
-                isActive && "bg-white shadow-sm hover:opacity-100 text-primary"
+                isActive && "bg-white shadow-sm hover:opacity-100 text-primary",
               )}
             >
               <ProjectAvatar image={project.imageUrl} name={project.name} />

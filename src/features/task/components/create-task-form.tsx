@@ -37,7 +37,7 @@ import { MemberAvatar } from "@/features/member/components/meber-avatar";
 import { createTaskService } from "@/services/taskService";
 interface CreateTaskFormProps {
   onCancel?: () => void;
-  projectOptions: { id: string; name: string; imageUrl: string |undefined }[];
+  projectOptions: { id: string; name: string; imageUrl: string | undefined }[];
   memberOptions: { id: string; name: string }[];
 }
 
@@ -61,13 +61,13 @@ export const CreateTaskForm = ({
 
   const onSubmit = (values: z.infer<typeof createTaskScema>) => {
     mutate(
-      {workspaceId: workspaceId, projectId: projectId, taskDto: values},
+      { workspaceId: workspaceId, projectId: projectId, taskDto: values },
       {
         onSuccess: () => {
           form.reset();
           onCancel?.();
         },
-      }
+      },
     );
   };
 
@@ -225,8 +225,10 @@ export const CreateTaskForm = ({
                 Cancel
               </Button>
 
-              <Button type="submit" size="lg" 
-              // disabled={isPending}
+              <Button
+                type="submit"
+                size="lg"
+                // disabled={isPending}
               >
                 Create Task
               </Button>

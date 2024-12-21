@@ -4,11 +4,11 @@ export interface CreateWorkspaceForm {
 }
 
 export interface WorkspaceMember {
-  id: string; 
-  email: string; 
-  nickName: string; 
-  imageUrl: string; 
-  role: "OWNER" | "MEMBER" | "ADMIN"; 
+  id: string;
+  email: string;
+  nickName: string;
+  imageUrl: string;
+  role: "OWNER" | "MEMBER" | "ADMIN";
   status: "ACTIVE" | "INACTIVE";
 }
 

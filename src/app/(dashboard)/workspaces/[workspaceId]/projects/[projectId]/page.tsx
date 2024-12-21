@@ -13,46 +13,47 @@ import Link from "next/link";
 import { PencilIcon } from "lucide-react";
 import { TaskViewSwticher } from "@/features/task/components/TaskViewSwitcher";
 
-const projectIdPage = () =>{
-   const workspaceId = useWorkspaceId(); 
-   const projectId = useProjectId();
+const projectIdPage = () => {
+  const workspaceId = useWorkspaceId();
+  const projectId = useProjectId();
 
-  const {data :projectReponse,isLoading: isLoaddingProject} =  fetchProjectById(workspaceId,projectId); 
-  
-  if(isLoaddingProject){
+  const { data: projectReponse, isLoading: isLoaddingProject } =
+    fetchProjectById(workspaceId, projectId);
+
+  if (isLoaddingProject) {
     return PageLoader;
   }
   if (!projectReponse) return <PageError message="Project not found" />;
-  else if(projectReponse !=null){ {
-    return (
-      <div className="flex flex-col gap-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-x-2">
-            <ProjectAvatar
-              name={projectReponse.name}
-              image={projectReponse.imageUrl}
-              className="size-8"
-            />
-            <p className="text-lg font-semibold">{projectReponse.name}</p>
+  else if (projectReponse != null) {
+    {
+      return (
+        <div className="flex flex-col gap-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-x-2">
+              <ProjectAvatar
+                name={projectReponse.name}
+                image={projectReponse.imageUrl}
+                className="size-8"
+              />
+              <p className="text-lg font-semibold">{projectReponse.name}</p>
+            </div>
+
+            <div className="">
+              <Button variant="secondary" size="sm" asChild>
+                <Link
+                  href={`/workspaces/${workspaceId}/projects/${projectId}/settings`}
+                >
+                  <PencilIcon className="size-4 mr-2" />
+                  Edit Project
+                </Link>
+              </Button>
+            </div>
           </div>
-  
-          <div className="">
-            <Button variant="secondary" size="sm" asChild>
-              <Link
-                href={`/workspaces/${workspaceId}/projects/${projectId}/settings`}
-              >
-                <PencilIcon className="size-4 mr-2" />
-                Edit Project
-              </Link>
-            </Button>
-          </div>
+          {/* {analytics && <Analytics data={analytics} />} */}
+          <TaskViewSwticher />
         </div>
-        {/* {analytics && <Analytics data={analytics} />} */}
-        <TaskViewSwticher />
-      </div>
-    );
+      );
+    }
   }
-  
-}
-}
+};
 export default projectIdPage;

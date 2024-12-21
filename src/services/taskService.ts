@@ -8,16 +8,27 @@ const token = Cookies.get("accessToken");
 
 export const createTaskService = () => {
   const mutate = useMutation({
-    mutationFn: async ({ workspaceId, projectId, taskDto }: { workspaceId: string; projectId: string; taskDto: TaskRequest }) => {
-      const response = await fetch(`${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks`, {
-        method: "POST",
-        headers: {
-          accept: "*/*",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+    mutationFn: async ({
+      workspaceId,
+      projectId,
+      taskDto,
+    }: {
+      workspaceId: string;
+      projectId: string;
+      taskDto: TaskRequest;
+    }) => {
+      const response = await fetch(
+        `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks`,
+        {
+          method: "POST",
+          headers: {
+            accept: "*/*",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(taskDto),
         },
-        body: JSON.stringify(taskDto),
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Error creating task");

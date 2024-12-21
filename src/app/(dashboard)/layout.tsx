@@ -4,7 +4,7 @@ import { Sidebar } from "../../components/sidebar";
 import { Navbar } from "../../components/navbar";
 import { CreateWorkspaceModal } from "@/features/workspace/components/create-workspace-modal";
 import { CreateProjectModal } from "@/features/project/components/create-project-modal";
-import { Suspense } from 'react'
+import { Suspense } from "react";
 import { CreateTaskModal } from "@/features/task/components/create-task-modal";
 interface DashboardLayoutProps {
   children: React.ReactNode;

@@ -6,7 +6,6 @@ import JoinWorkspaceForm from "@/features/workspace/components/join-workspace-fo
 // Import component JoinWorkspaceForm
 
 const WorkspaceJoinInvitePage = () => {
-  
   const { user, loading, error } = useUser(); // Sử dụng useUser để lấy thông tin người dùng
   const inviteCode = useParams().inviteCode as string;
   // Kiểm tra trạng thái của loading hoặc lỗi
@@ -20,7 +19,6 @@ const WorkspaceJoinInvitePage = () => {
 
   return (
     <div>
-      
       <JoinWorkspaceForm inviteCode={inviteCode} />
     </div>
   );

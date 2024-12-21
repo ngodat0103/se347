@@ -16,13 +16,13 @@ export const MemberAvatar = ({
     <Avatar
       className={cn(
         "size-6 transition border border-neutral-300 rounded-full",
-        className
+        className,
       )}
     >
       <AvatarFallback
         className={cn(
           "bg-neutral-200 font-medium text-neutral-500 flex items-center justify-center",
-          fallbackClassName
+          fallbackClassName,
         )}
       >
         {name.charAt(0).toUpperCase()}

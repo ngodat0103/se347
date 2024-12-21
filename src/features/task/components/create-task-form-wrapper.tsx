@@ -16,9 +16,10 @@ export const CreateTaskFormWrapper = ({
 }: CreateTaskFormWrapperProps) => {
   const workspaceId = useWorkspaceId();
 
-  const { data: projects, isLoading: isLoadingProjects } = fetchProjects(workspaceId,
-  );
-  const { data: members, isLoading: isLoadingMembers } = fetchWorkspaceMembers(workspaceId);
+  const { data: projects, isLoading: isLoadingProjects } =
+    fetchProjects(workspaceId);
+  const { data: members, isLoading: isLoadingMembers } =
+    fetchWorkspaceMembers(workspaceId);
 
   const projectOptions = projects?.map((project) => ({
     id: project.id,
@@ -30,7 +31,7 @@ export const CreateTaskFormWrapper = ({
     id: member.id,
     name: member.nickName,
   }));
-  console.log(memberOptions); 
+  console.log(memberOptions);
 
   const isLoading = isLoadingMembers || isLoadingProjects;
 

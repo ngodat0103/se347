@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useWorkspaceId} from "@/features/workspace/hook/use-workspace-id";
+import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
@@ -22,7 +22,6 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-
 
 import { createProjectSchema } from "../schema";
 import { useState } from "react";
@@ -51,7 +50,7 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
   const onSubmit = (values: z.infer<typeof createProjectSchema>) => {
     try {
       // Gọi API tạo projec
-     const response = createProject(workspaceId, values);
+      const response = createProject(workspaceId, values);
       // Nếu tạo thành công
       setSuccessMessage("Project created successfully");
       form.reset();
@@ -71,9 +70,9 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
       }
       setErrorMessage(error_msg);
       setSuccessMessage(null);
+    }
   };
-};
- useEffect(() => {
+  useEffect(() => {
     if (errorMessage || successMessage) {
       const timeout = setTimeout(() => {
         setErrorMessage(null);

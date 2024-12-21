@@ -9,7 +9,6 @@ interface User {
   pictureUrl?: string;
   email: string;
   accountId: string;
-  
 }
 
 const useUser = () => {

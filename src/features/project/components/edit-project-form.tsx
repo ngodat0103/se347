@@ -38,14 +38,14 @@ export const EditProjectForm = ({
   initialValues,
 }: EditProjectFormProps) => {
   const router = useRouter();
-//   const { mutate, isPending } = useUpdateProject();
-//   const { mutate: deleteProject, isPending: isDeletingProject } =
-//     useDeleteProject();
+  //   const { mutate, isPending } = useUpdateProject();
+  //   const { mutate: deleteProject, isPending: isDeletingProject } =
+  //     useDeleteProject();
 
   const [DeleteDialog, confirmDelete] = useConfirm(
     "Delete Project",
     "This action cannot be undone.",
-    "destructive"
+    "destructive",
   );
 
   const handleDelete = async () => {
@@ -104,7 +104,7 @@ export const EditProjectForm = ({
                 ? onCancel
                 : () =>
                     router.push(
-                      `/workspaces/${initialValues.workspaceId}/projects/${initialValues.id}`
+                      `/workspaces/${initialValues.workspaceId}/projects/${initialValues.id}`,
                     )
             }
           >
@@ -177,7 +177,7 @@ export const EditProjectForm = ({
                           {field.value ? (
                             <Button
                               type="button"
-                            //   disabled={isPending}
+                              //   disabled={isPending}
                               size="xs"
                               variant="destructive"
                               className="w-fit mt-2"
@@ -193,7 +193,7 @@ export const EditProjectForm = ({
                           ) : (
                             <Button
                               type="button"
-                            //   disabled={isPending}
+                              //   disabled={isPending}
                               size="xs"
                               variant="teritary"
                               className="w-fit mt-2"
@@ -215,14 +215,16 @@ export const EditProjectForm = ({
                   size="lg"
                   variant="secondary"
                   onClick={onCancel}
-                //   disabled={isPending}
+                  //   disabled={isPending}
                   className={cn(!onCancel && "invisible")}
                 >
                   Cancel
                 </Button>
 
-                <Button type="submit" size="lg" 
-                // disabled={isPending}
+                <Button
+                  type="submit"
+                  size="lg"
+                  // disabled={isPending}
                 >
                   Save Changes
                 </Button>
@@ -246,7 +248,7 @@ export const EditProjectForm = ({
               type="button"
               variant="destructive"
               className="mt-6 w-fit ml-auto"
-            //   disabled={isPending || isDeletingProject}
+              //   disabled={isPending || isDeletingProject}
               onClick={handleDelete}
             >
               Delete Project

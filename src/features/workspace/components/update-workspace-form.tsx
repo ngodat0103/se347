@@ -25,7 +25,11 @@ import { ArrowLeftIcon, CopyIcon, ImageIcon } from "lucide-react";
 import clsx from "clsx";
 import { useConfirm } from "@/components/confirm";
 import { useRouter } from "next/navigation";
-import { updateWorkspace, deleteWorkspace, resetInviteCode } from "@/services/workspaceService";
+import {
+  updateWorkspace,
+  deleteWorkspace,
+  resetInviteCode,
+} from "@/services/workspaceService";
 
 interface UpdateWorkspaceFormProps {
   onCancel?: () => void;
@@ -35,8 +39,7 @@ interface UpdateWorkspaceFormProps {
     imageUrl?: undefined | string;
     inviteCode: string;
   };
-  workspaceId: string,
-  
+  workspaceId: string;
 }
 
 export const UpdateWorkspaceForm = ({
@@ -84,11 +87,11 @@ export const UpdateWorkspaceForm = ({
     const ok = await confirmReset();
     if (!ok) return;
 
-    try{
+    try {
       await resetInviteCode(workspaceId);
       console.log("Invite code reset successfully");
       window.location.reload();
-    } catch(error){
+    } catch (error) {
       console.error("Failed to reset invite code:", error);
     }
   };
