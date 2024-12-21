@@ -18,8 +18,8 @@ import { Button } from "@/components/ui/button";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Avatar } from "@/components/ui/avatar";
-import { AvatarFallback } from "@radix-ui/react-avatar";
 import { createWorkspace } from "@/services/workspaceService";
+import { AvatarFallback } from "@radix-ui/react-avatar";
 import { ImageIcon } from "lucide-react";
 import clsx from "clsx";
 
@@ -87,17 +87,17 @@ export const CreateWorkspaceForm = ({
       console.log(value);
       // Gửi yêu cầu tạo workspace
       const response = await createWorkspace(value);
-
+  
       // Nếu tạo thành công
       setSuccessMessage("Workspace created successfully");
       form.reset();
       setErrorMessage(null);
-
+  
       // Làm mới trang
       setTimeout(() => {
         window.location.reload();
       }, 1000); // Đợi 1 giây trước khi reload để người dùng thấy thông báo
-    } catch (err: unknown) {
+    } catch (err: any) {
       // Xử lý lỗi nếu có
       let error_msg = "Error creating workspace. Please try again.";
       if (err instanceof Error) {
@@ -241,7 +241,7 @@ export const CreateWorkspaceForm = ({
           errorMessage || successMessage
             ? "opacity-100 visible"
             : "opacity-0 invisible",
-          errorMessage ? "bg-red-500 text-white" : "bg-green-500 text-white",
+          errorMessage ? "bg-red-500 text-white" : "bg-green-500 text-white"
         )}
       >
         {errorMessage || successMessage}
