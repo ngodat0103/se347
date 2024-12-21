@@ -1,10 +1,15 @@
-import { CreateWorkspaceForm, WorkspaceResponse } from "@/types/workspace";
+import {
+  CreateWorkspaceForm,
+  WorkspaceMember,
+  WorkspaceResponse,
+} from "@/types/workspace";
 import { ErrorMessage } from "@/types/error";
 import Cookies from "js-cookie";
 import { resizeImage } from "@/lib/resizeImage";
 import { updateWorkspaceForm } from "@/types/workspace";
 import router from "next/router";
 import { BASE_API_URL, headers } from "./baseApi";
+import { useQuery } from "@tanstack/react-query";
 const token = Cookies.get("accessToken");
 
 export const fetchWorkspaces = async () => {
@@ -216,3 +221,91 @@ export async function deleteWorkspace(workspaceId: string): Promise<void> {
   }
   console.debug(`Workspace with ID ${workspaceId} deleted successfully.`);
 }
+
+export async function resetInviteCode(workspaceId: string): Promise<void> {
+  console.debug(`Resetting invite code for workspace with ID: ${workspaceId}`);
+
+  if (!token) {
+    router.push("/sign-in");
+    throw new Error("Unauthorized: No access token found.");
+  }
+
+  const response = await fetch(
+    `${BASE_API_URL}/workspaces/${workspaceId}/reset-invite-code`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  if (!response.ok) {
+    const errorResponse: ErrorMessage = await response.json();
+    throw new Error(errorResponse.detail || "Failed to reset invite code.");
+  }
+}
+export async function joinWorkspaceByInviteCode(
+  inviteCode: string,
+): Promise<void> {
+  console.log(inviteCode);
+
+  if (!token) {
+    router.push("/sign-in");
+    throw new Error("Unauthorized: No access token found.");
+  }
+
+  try {
+    const response = await fetch(
+      `${BASE_API_URL}/workspaces/join?inviteCode=${inviteCode}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      console.error("Error response:", errorResponse);
+      throw new Error(errorResponse.detail || "Failed to join workspace.");
+    }
+
+    console.debug(
+      `Successfully joined workspace with invite code: ${inviteCode}`,
+    );
+  } catch (err) {
+    console.error("Error joining workspace:", err);
+    throw err; // Ném lại lỗi để phía trên có thể xử lý
+  }
+}
+
+export const fetchWorkspaceMembers = (workspaceId: string) => {
+  const token = Cookies.get("accessToken");
+  const query = useQuery({
+    queryKey: ["workspaceMembers", workspaceId],
+    queryFn: async () => {
+      if (!token) {
+        throw new Error("Token không tồn tại trong cookie");
+      }
+      const response = await fetch(
+        `${BASE_API_URL}/workspaces/${workspaceId}/members`,
+        {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Lỗi khi lấy danh sách thành viên");
+      }
+      const data: WorkspaceMember[] = await response.json();
+      return data; // Trả về danh sách thành viên
+    },
+  });
+  return query;
+};

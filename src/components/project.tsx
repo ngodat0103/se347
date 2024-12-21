@@ -13,27 +13,10 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { ProjectAvatar } from "@/features/project/components/project-avatar";
 export const Project = () => {
-   const [projects, setProjects] = useState<ProjectResponse[]>([]);
-   
   const pathname = usePathname();
   const { open } = useCreateProjectModal();
   const workspaceId = useWorkspaceId();
-  useEffect(() => {
-      const loadProjects = async () => {
-        try {
-          const data = await fetchProjects(workspaceId);
-          setProjects(data);
-        } catch (err: unknown) {
-          let error_msg = "Unable to load workspace. Please try again.";
-          if (err instanceof Error) {
-            error_msg = err.message;
-          } else if (typeof err === "string") {
-            error_msg = err;
-          }
-        }
-      };
-      loadProjects();
-    }, []);
+  const { data: projects, isLoading } = fetchProjects(workspaceId);
 
   return (
     <div className="flex flex-col gap-y-2">
@@ -53,7 +36,7 @@ export const Project = () => {
             <div
               className={cn(
                 "flex items-center gap-2.5 p-2.5 rounded-md hover:opacity-75 transition cursor-pointer text-neutral-500",
-                isActive && "bg-white shadow-sm hover:opacity-100 text-primary"
+                isActive && "bg-white shadow-sm hover:opacity-100 text-primary",
               )}
             >
               <ProjectAvatar image={project.imageUrl} name={project.name} />

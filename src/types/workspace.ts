@@ -1,15 +1,15 @@
-// Định nghĩa kiểu dữ liệu cho form khi tạo workspace
 export interface CreateWorkspaceForm {
   name: string;
   imageUrl?: File | string;
 }
 
 export interface WorkspaceMember {
-  email: string; // Email của thành viên
-  nickName: string; // Tên hiển thị của thành viên
-  imageUrl: string; // Ảnh đại diện của thành viên
-  role: "OWNER" | "MEMBER" | "ADMIN"; // Vai trò của thành viên
-  status: "ACTIVE" | "INACTIVE"; // Trạng thái của thành viên
+  id: string;
+  email: string;
+  nickName: string;
+  imageUrl: string;
+  role: "OWNER" | "MEMBER" | "ADMIN";
+  status: "ACTIVE" | "INACTIVE";
 }
 
 export interface WorkspaceResponse {
@@ -17,6 +17,7 @@ export interface WorkspaceResponse {
   name: string; // Tên của workspace
   ownerId: string; // ID của chủ sở hữu workspace
   members: Record<string, WorkspaceMember>; // Danh sách thành viên
+  inviteCode: string; // Mã mời tham gia workspace
   imageUrl?: string; // URL của ảnh đại diện workspace
   createdDate: string; // Thời gian tạo workspace
   lastUpdatedDate: string; // Thời gian cập nhật workspace

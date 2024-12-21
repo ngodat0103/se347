@@ -25,7 +25,11 @@ import { ArrowLeftIcon, CopyIcon, ImageIcon } from "lucide-react";
 import clsx from "clsx";
 import { useConfirm } from "@/components/confirm";
 import { useRouter } from "next/navigation";
-import { updateWorkspace, deleteWorkspace } from "@/services/workspaceService";
+import {
+  updateWorkspace,
+  deleteWorkspace,
+  resetInviteCode,
+} from "@/services/workspaceService";
 
 interface UpdateWorkspaceFormProps {
   onCancel?: () => void;
@@ -33,6 +37,7 @@ interface UpdateWorkspaceFormProps {
   initialValues: {
     name: string;
     imageUrl?: undefined | string;
+    inviteCode: string;
   };
   workspaceId: string;
 }
@@ -81,6 +86,14 @@ export const UpdateWorkspaceForm = ({
   const handleResetInviteCode = async () => {
     const ok = await confirmReset();
     if (!ok) return;
+
+    try {
+      await resetInviteCode(workspaceId);
+      console.log("Invite code reset successfully");
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to reset invite code:", error);
+    }
   };
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -123,7 +136,7 @@ export const UpdateWorkspaceForm = ({
       setSuccessMessage(null);
     }
   };
-  const fullInviteLink = `${window.location.origin}/workspaces/${workspaceId}/join/random_code`;
+  const fullInviteLink = `${window.location.origin}/workspaces/${workspaceId}/join/${initialValues.inviteCode}`;
   const handleCopyInviteLink = () => {
     navigator.clipboard
       .writeText(fullInviteLink)
