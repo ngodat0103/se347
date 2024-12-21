@@ -1,10 +1,11 @@
-import { CreateWorkspaceForm, WorkspaceResponse } from "@/types/workspace";
+import { CreateWorkspaceForm, WorkspaceMember, WorkspaceResponse } from "@/types/workspace";
 import { ErrorMessage } from "@/types/error";
 import Cookies from "js-cookie";
 import { resizeImage } from "@/lib/resizeImage";
 import { updateWorkspaceForm } from "@/types/workspace";
 import router from "next/router";
 import { BASE_API_URL, headers } from "./baseApi";
+import { useQuery } from "@tanstack/react-query";
 const token = Cookies.get("accessToken");
 
 export const fetchWorkspaces = async () => {
@@ -266,3 +267,31 @@ export async function joinWorkspaceByInviteCode(inviteCode: string): Promise<voi
     throw err; // Ném lại lỗi để phía trên có thể xử lý
   }
 }
+
+export const fetchWorkspaceMembers = (workspaceId: string) =>{
+  const token = Cookies.get("accessToken");
+   const query = useQuery({
+    queryKey: ["workspaceMembers", workspaceId],
+    queryFn: async () => {
+        if (!token) {
+          throw new Error("Token không tồn tại trong cookie");
+        }
+        const response = await fetch(`${BASE_API_URL}/workspaces/${workspaceId}/members`, {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error("Lỗi khi lấy danh sách thành viên" );
+        }
+        const data :WorkspaceMember[] = await response.json();
+        return data; // Trả về danh sách thành viên
+       
+    }
+  }
+  )
+  return query;
+   }

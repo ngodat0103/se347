@@ -1,8 +1,11 @@
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-
+import { Toaster } from "sonner";
+import { QueryProvider } from "@/components/query-provider";
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -18,7 +21,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(inter.className, "antialiased min-h-screen")}>
-        <main>{children}</main>
+        <QueryProvider>
+          <Toaster />
+           <main>
+          <NuqsAdapter>{children}</NuqsAdapter>
+         </main>
+        </QueryProvider>
       </body>
     </html>
   );

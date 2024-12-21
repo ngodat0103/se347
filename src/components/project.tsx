@@ -12,28 +12,11 @@ import { ProjectResponse } from "@/types/project";
 import { useState } from "react";
 import { useEffect } from "react";
 import { ProjectAvatar } from "@/features/project/components/project-avatar";
-export const Project = () => {
-   const [projects, setProjects] = useState<ProjectResponse[]>([]);
-   
+export const Project = () => {   
   const pathname = usePathname();
   const { open } = useCreateProjectModal();
   const workspaceId = useWorkspaceId();
-  useEffect(() => {
-      const loadProjects = async () => {
-        try {
-          const data = await fetchProjects(workspaceId);
-          setProjects(data);
-        } catch (err: unknown) {
-          let error_msg = "Unable to load workspace. Please try again.";
-          if (err instanceof Error) {
-            error_msg = err.message;
-          } else if (typeof err === "string") {
-            error_msg = err;
-          }
-        }
-      };
-      loadProjects();
-    }, []);
+  const {data : projects, isLoading} = fetchProjects(workspaceId);
 
   return (
     <div className="flex flex-col gap-y-2">
