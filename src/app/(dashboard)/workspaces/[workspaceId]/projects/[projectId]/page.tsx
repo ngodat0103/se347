@@ -11,6 +11,7 @@ import { ProjectAvatar } from "@/features/project/components/project-avatar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { PencilIcon } from "lucide-react";
+import { TaskViewSwticher } from "@/features/task/components/TaskViewSwitcher";
 
 const projectIdPage = () =>{
    const workspaceId = useWorkspaceId(); 
@@ -46,8 +47,8 @@ const projectIdPage = () =>{
             </Button>
           </div>
         </div>
-        {/* {analytics && <Analytics data={analytics} />}
-        <TaskViewSwticher /> */}
+        {/* {analytics && <Analytics data={analytics} />} */}
+        <TaskViewSwticher />
       </div>
     );
   }

@@ -30,18 +30,24 @@ export const fetchProjectById = (workspaceId: string, projectId:string) => {
 }
 
 
-export const fetchProjects = async (workspaceId: string) => {
-  const response = await fetch(`${BASE_API_URL}/workspaces/${workspaceId}/projects`,{
-    headers: {
-        Authorization: `Bearer ${token}`,
-    }
-  }
-  );
-if(!response.ok){
-    throw new Error("Lỗi khi lấy danh sách project");
-}
-  const projects: ProjectResponse[] = await response.json();
-  return projects ;
+export const fetchProjects = (workspaceId: string) => {
+  const query = useQuery({
+    queryKey: ["projects", workspaceId],
+    queryFn: async () => {
+      const response = await fetch(`${BASE_API_URL}/workspaces/${workspaceId}/projects`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch projects.");
+      }
+      const data: ProjectResponse[] = await response.json();
+      return data;
+    },
+  })
+  return query;
 };
 
 export async function createProject(

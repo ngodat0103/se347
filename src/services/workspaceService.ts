@@ -1,10 +1,11 @@
-import { CreateWorkspaceForm, WorkspaceResponse } from "@/types/workspace";
+import { CreateWorkspaceForm, WorkspaceMember, WorkspaceResponse } from "@/types/workspace";
 import { ErrorMessage } from "@/types/error";
 import Cookies from "js-cookie";
 import { resizeImage } from "@/lib/resizeImage";
 import { updateWorkspaceForm } from "@/types/workspace";
 import router from "next/router";
 import { BASE_API_URL, headers } from "./baseApi";
+import { useQuery } from "@tanstack/react-query";
 const token = Cookies.get("accessToken");
 
 export const fetchWorkspaces = async () => {
@@ -215,4 +216,42 @@ export async function deleteWorkspace(workspaceId: string): Promise<void> {
     throw new Error(errorResponse.detail || "Failed to delete workspace.");
   }
   console.debug(`Workspace with ID ${workspaceId} deleted successfully.`);
+}
+
+
+export const fetchWorkspaceMembers = (workspaceId: string) =>{
+   const query = useQuery({
+    queryKey: ["workspaceMembers", workspaceId],
+    queryFn: async () => {
+      try {
+        const token = Cookies.get("accessToken");
+        if (!token) {
+          throw new Error("Token không tồn tại trong cookie");
+        }
+        const response = await fetch(`${BASE_API_URL}/workspaces/${workspaceId}/members`, {
+          method: "GET",
+          headers: {
+            accept: "*/*",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error("Lỗi khi lấy danh sách thành viên");
+        }
+  
+        const data :WorkspaceMember[] = await response.json();
+        return data; // Trả về danh sách thành viên
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          throw new Error(err.message);
+        } else if (typeof err === "string") {
+          throw new Error(err);
+        } else {
+          throw new Error("Lỗi không xác định");
+        }
+    }
+   }
+  });
+  return query;
 }
