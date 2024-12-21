@@ -30,6 +30,7 @@ export const CreateTaskFormWrapper = ({
     id: member.id,
     name: member.nickName,
   }));
+  console.log(memberOptions); 
 
   const isLoading = isLoadingMembers || isLoadingProjects;
 

@@ -33,6 +33,7 @@ import {
 import { TaskStatus } from "../types";
 import { createTaskScema } from "../schemas";
 import { useCreateTaskModal } from "../hooks/use-create-task-modal";
+import { MemberAvatar } from "@/features/member/components/meber-avatar";
 
 interface CreateTaskFormProps {
   onCancel?: () => void;
@@ -127,11 +128,11 @@ export const CreateTaskForm = ({
                         {memberOptions.map((member) => (
                           <SelectItem key={member.id} value={member.id}>
                             <div className="flex items-center gap-x-2">
-                              {/* <MemberAvatar
+                              <MemberAvatar
                                 className="size-6"
                                 name={member.name}
                               />
-                              {member.name} */}
+                              {member.name}
                             </div>
                           </SelectItem>
                         ))}
