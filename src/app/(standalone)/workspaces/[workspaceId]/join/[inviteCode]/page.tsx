@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+
 import useUser from "@/hooks/useUser"; // Import useUser để lấy thông tin người dùng
 import JoinWorkspaceForm from "@/features/workspace/components/join-workspace-form"; // Import JoinWorkspaceForm
 // Import component JoinWorkspaceForm
@@ -8,7 +8,7 @@ import JoinWorkspaceForm from "@/features/workspace/components/join-workspace-fo
 const WorkspaceJoinInvitePage = () => {
   
   const { user, loading, error } = useUser(); // Sử dụng useUser để lấy thông tin người dùng
-  const workspaceId = useParams().workspaceId as string;
+  const inviteCode = useParams().inviteCode as string;
   // Kiểm tra trạng thái của loading hoặc lỗi
   if (loading) {
     return <p>Loading user data...</p>;
@@ -21,7 +21,7 @@ const WorkspaceJoinInvitePage = () => {
   return (
     <div>
       
-      <JoinWorkspaceForm workspaceId={workspaceId} email={user?.email || ""} />
+      <JoinWorkspaceForm inviteCode={inviteCode} />
     </div>
   );
 };

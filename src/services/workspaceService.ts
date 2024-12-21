@@ -237,38 +237,32 @@ if(!response.ok){
 }
 
 }
-export async function addMemberByEmail(workspaceId: string, email: string): Promise<void> {
-  console.debug(`Adding member to workspace with ID: ${workspaceId}`);
+export async function joinWorkspaceByInviteCode(inviteCode: string): Promise<void> {
+  console.log(inviteCode);
 
   if (!token) {
     router.push("/sign-in");
     throw new Error("Unauthorized: No access token found.");
   }
-  console.log("Workspace ID:", workspaceId);
-  console.log("Email:", email);
+
   try {
-    const response = await fetch(
-      `${BASE_API_URL}/workspaces/${workspaceId}/members/addByEmail`, // Đảm bảo BASE_API_URL được định nghĩa đúng
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ email }), // Truyền email vào body
-      }
-    );
-
+    const response = await fetch(`${BASE_API_URL}/workspaces/join?inviteCode=${inviteCode}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  
     if (!response.ok) {
-      const errorResponse: ErrorMessage = await response.json();
-      throw new Error(
-        errorResponse.detail || "Failed to add member to workspace."
-      );
+      const errorResponse = await response.json();
+      console.error("Error response:", errorResponse); 
+      throw new Error(errorResponse.detail || "Failed to join workspace.");
     }
-
-    console.debug(`Member added to workspace with ID: ${workspaceId}`);
+  
+    console.debug(`Successfully joined workspace with invite code: ${inviteCode}`);
   } catch (err) {
-    console.error("Error adding member to workspace:", err);
+    console.error("Error joining workspace:", err);
     throw err; // Ném lại lỗi để phía trên có thể xử lý
   }
 }

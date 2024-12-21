@@ -10,15 +10,14 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { useState } from "react";
-import { addMemberByEmail } from "@/services/workspaceService";
+import { joinWorkspaceByInviteCode } from "@/services/workspaceService";
 import { log } from "console";
 
 interface JoinWorkspaceFormProps {
-    workspaceId: string;
-    email: string;
+    inviteCode: string;
 }
 
-const JoinWorkspaceForm = ({ workspaceId, email }: JoinWorkspaceFormProps) => {
+const JoinWorkspaceForm = ({ inviteCode }: JoinWorkspaceFormProps) => {
     const [loading, setLoading] = useState(false); // Quản lý trạng thái loading
     const [error, setError] = useState<string | null>(null); // Quản lý lỗi
     const [successMessage, setSuccessMessage] = useState<string | null>(null); // Thông báo thành công
@@ -27,10 +26,10 @@ const JoinWorkspaceForm = ({ workspaceId, email }: JoinWorkspaceFormProps) => {
       setLoading(true);
       setError(null); 
       setSuccessMessage(null);
-  
+      
       try {
         
-        await addMemberByEmail(workspaceId, email);
+        await joinWorkspaceByInviteCode(inviteCode);
   
         // Nếu thành công, hiển thị thông báo
         setSuccessMessage("User added to workspace successfully!");
@@ -47,7 +46,7 @@ const JoinWorkspaceForm = ({ workspaceId, email }: JoinWorkspaceFormProps) => {
       <CardHeader className="p-7">
         <CardTitle className="text-xl font-bold">Join workspace</CardTitle>
         <CardDescription className="text-neutral-500">
-          You&apos;ve been invited to join this workspace: {workspaceId}
+          You&apos;ve been invited to join this workspace: {inviteCode}
         </CardDescription>
       </CardHeader>
       <div>
