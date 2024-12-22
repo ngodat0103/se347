@@ -309,3 +309,60 @@ export const fetchWorkspaceMembers = (workspaceId: string) => {
   });
   return query;
 };
+export const fetchDeleteMember = async (workspaceId: string, memberId: string) => {
+
+  if (!token) {
+    throw new Error("Token không tồn tại trong cookie");
+  }
+
+  try {
+    const response = await fetch(
+      `${BASE_API_URL}/workspaces/${workspaceId}/members/${memberId}`,
+      {
+        method: "DELETE",
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Lỗi khi xóa thành viên");
+    }
+
+    console.log(`Thành viên ${memberId} đã được xóa khỏi workspace ${workspaceId}`);
+    return response;
+  } catch (error) {
+    console.error("Lỗi:", error);
+    throw error;
+  }
+};
+
+export const fetchSetRoleMember = async (
+  workspaceId: string,
+  memberId: string,
+  newRole: "OWNER" | "MEMBER"
+) => {
+  if (!token) {
+    throw new Error("Token does not exist in cookies");
+  }
+
+  const response = await fetch(
+    `${BASE_API_URL}/workspaces/${workspaceId}/members/${memberId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ newRole }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to update the member's role");
+  }
+
+  return response.json(); // Return the response data if needed
+};

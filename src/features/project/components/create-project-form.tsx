@@ -56,10 +56,12 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
       form.reset();
       setErrorMessage(null);
 
-      // Làm mới trang
       setTimeout(() => {
-        window.location.reload();
-      }, 1000); // Đợi 1 giây trước khi reload để người dùng thấy thông báo
+        if (onCancel) onCancel();
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+      }, 1000);
     } catch (err: unknown) {
       // Xử lý lỗi nếu có
       let error_msg = "Error creating project. Please try again.";

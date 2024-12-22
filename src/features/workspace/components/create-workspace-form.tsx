@@ -64,24 +64,6 @@ export const CreateWorkspaceForm = ({
     }
   });
 
-  // const onSubmit = async (value: z.infer<typeof createWorkspaceSchema>) => {
-  //   try {
-  //     console.log(value);
-  //     // Gửi yêu cầu tạo workspace
-  //     const response = await createWorkspace(value);
-
-  //     // Nếu tạo thành công
-  //     setSuccessMessage("Workspace created successfully");
-  //     form.reset();
-  //     setErrorMessage(null);
-  //   } catch (err: any) {
-  //     // Xử lý lỗi nếu có
-  //     setErrorMessage(
-  //       err.message || "Error creating workspace. Please try again."
-  //     );
-  //     setSuccessMessage(null);
-  //   }
-  // };
   const onSubmit = async (value: z.infer<typeof createWorkspaceSchema>) => {
     try {
       console.log(value);
@@ -93,10 +75,12 @@ export const CreateWorkspaceForm = ({
       form.reset();
       setErrorMessage(null);
 
-      // Làm mới trang
       setTimeout(() => {
-        window.location.reload();
-      }, 1000); // Đợi 1 giây trước khi reload để người dùng thấy thông báo
+        if (onCancel) onCancel();
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+      }, 1000);
     } catch (err: any) {
       // Xử lý lỗi nếu có
       let error_msg = "Error creating workspace. Please try again.";
@@ -241,7 +225,7 @@ export const CreateWorkspaceForm = ({
           errorMessage || successMessage
             ? "opacity-100 visible"
             : "opacity-0 invisible",
-          errorMessage ? "bg-red-500 text-white" : "bg-green-500 text-white",
+          errorMessage ? "bg-red-500 text-white" : "bg-green-500 text-white"
         )}
       >
         {errorMessage || successMessage}
