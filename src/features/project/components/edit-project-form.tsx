@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { z } from "zod";
 import Image from "next/image";
 import { useRef } from "react";
@@ -7,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftIcon, ImageIcon } from "lucide-react";
-
+import { deleteProject } from "@/services/projectService";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ import {
 
 import { ProjectResponse } from "@/types/project";
 import { updateProjectSchema } from "../schema";
+import { updateProject } from "@/services/projectService";
 // import { useUpdateProject } from "../api/use-update-project";
 // import { useDeleteProject } from "../api/use-delete-project";
 
@@ -38,6 +40,8 @@ export const EditProjectForm = ({
   initialValues,
 }: EditProjectFormProps) => {
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   //   const { mutate, isPending } = useUpdateProject();
   //   const { mutate: deleteProject, isPending: isDeletingProject } =
   //     useDeleteProject();
@@ -45,7 +49,7 @@ export const EditProjectForm = ({
   const [DeleteDialog, confirmDelete] = useConfirm(
     "Delete Project",
     "This action cannot be undone.",
-    "destructive",
+    "destructive"
   );
 
   const handleDelete = async () => {
@@ -53,41 +57,58 @@ export const EditProjectForm = ({
 
     if (!ok) return;
 
-    // deleteProject(
-    //   { param: { projectId: initialValues.$id } },
-    //   {
-    //     onSuccess: () => {
-    //       window.location.href = `/workspaces/${initialValues.workspaceId}`;
-    //     },
-    //   }
-    // );
+    try {
+      await deleteProject(initialValues.id, initialValues.workspaceId);
+      await router.push(`/workspaces/${initialValues.workspaceId}`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (error) {
+      console.error("Failed to delete project:", error);
+    }
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof updateProjectSchema>>({
     resolver: zodResolver(updateProjectSchema),
-    defaultValues: {
-      ...initialValues,
-      image: initialValues.imageUrl ?? "",
-    },
+    defaultValues: initialValues,
   });
 
-  const onSubmit = (values: z.infer<typeof updateProjectSchema>) => {
-    const finalValues = {
-      ...values,
-      image: values.image instanceof File ? values.image : "",
-    };
+  const onSubmit = async (values: z.infer<typeof updateProjectSchema>) => {
+    try {
+      const response = await updateProject(
+        initialValues.id,
+        initialValues.workspaceId,
+        {
+          ...values,
+          name: values.name || "",
+          image: values.image || undefined,
+        }
+      );
+      console.log(values);
 
-    // mutate({ form: finalValues, param: { projectId: initialValues.id } });
+      // Nếu cập nhật thành công
+      setSuccessMessage("Workspace updated successfully");
+      form.reset();
+      setErrorMessage(null);
+      onCancel?.();
+    } catch (err: unknown) {
+      // Xử lý lỗi nếu có
+      let error_msg = "Error updating workspace. Please try again.";
+      if (err instanceof Error) {
+        error_msg = err.message;
+      } else if (typeof err === "string") {
+        error_msg = err;
+      }
+      setErrorMessage(error_msg);
+      setSuccessMessage(null);
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
-    if (file) {
-      form.setValue("image", file);
-    }
+    form.setValue("image", file || undefined);
   };
 
   return (
@@ -104,7 +125,7 @@ export const EditProjectForm = ({
                 ? onCancel
                 : () =>
                     router.push(
-                      `/workspaces/${initialValues.workspaceId}/projects/${initialValues.id}`,
+                      `/workspaces/${initialValues.workspaceId}/projects/${initialValues.id}`
                     )
             }
           >
@@ -141,13 +162,15 @@ export const EditProjectForm = ({
                   render={({ field }) => (
                     <div className="flex flex-col gap-y-2">
                       <div className="flex items-center gap-x-5">
-                        {field.value ? (
+                        {field.value || initialValues.imageUrl ? (
                           <div className="size-[72px] relative rounded-md overflow-hidden">
                             <Image
                               src={
                                 field.value instanceof File
-                                  ? URL.createObjectURL(field.value)
-                                  : field.value
+                                  ? URL.createObjectURL(field.value) // Nếu là tệp mới được chọn
+                                  : field.value ||
+                                    initialValues.imageUrl ||
+                                    "/path/to/default-image.jpg" // Nếu không có ảnh, hiển thị ảnh mặc định
                               }
                               alt="Logo"
                               fill
@@ -164,7 +187,7 @@ export const EditProjectForm = ({
                         <div className="flex flex-col">
                           <p className="text-sm">Project Icon</p>
                           <p className="text-sm text-muted-foreground">
-                            JPG, PNG, SVG, JPEG, max 1mb
+                            JPG, PNG, SVG, JPEG, tối đa 1mb
                           </p>
                           <input
                             type="file"
@@ -172,12 +195,10 @@ export const EditProjectForm = ({
                             accept=".jpg, .png, .svg, .jpeg"
                             ref={inputRef}
                             onChange={handleImageChange}
-                            // disabled={isPending}
                           />
                           {field.value ? (
                             <Button
                               type="button"
-                              //   disabled={isPending}
                               size="xs"
                               variant="destructive"
                               className="w-fit mt-2"
@@ -193,7 +214,6 @@ export const EditProjectForm = ({
                           ) : (
                             <Button
                               type="button"
-                              //   disabled={isPending}
                               size="xs"
                               variant="teritary"
                               className="w-fit mt-2"
