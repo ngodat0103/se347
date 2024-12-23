@@ -72,13 +72,15 @@ export const CreateWorkspaceForm = ({
 
       // Nếu tạo thành công
       setSuccessMessage("Workspace created successfully");
-      form.reset();
+      // form.reset();
       setErrorMessage(null);
 
       setTimeout(() => {
         if (onCancel) onCancel();
         setTimeout(() => {
-          window.location.reload();
+          const path = `/workspaces/${response.id}`;
+          // Sử dụng window.location.href để reload trang
+          window.location.href = path;
         }, 500);
       }, 1000);
     } catch (err: any) {

@@ -47,10 +47,10 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof createProjectSchema>) => {
+  const onSubmit = async (values: z.infer<typeof createProjectSchema>) => {
     try {
       // Gọi API tạo projec
-      const response = createProject(workspaceId, values);
+      const response = await createProject(workspaceId, values);
       // Nếu tạo thành công
       setSuccessMessage("Project created successfully");
       form.reset();
@@ -59,7 +59,10 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
       setTimeout(() => {
         if (onCancel) onCancel();
         setTimeout(() => {
-          window.location.reload();
+          // Redirect thẳng tới project mới để bỏ query "create-project" khỏi URL, để đóng project modal
+          // Đồng thời refresh trang để hiển thị project mới tạo
+          const path = `/workspaces/${workspaceId}/projects/${response.id}`;
+          window.location.href = path;
         }, 500);
       }, 1000);
     } catch (err: unknown) {
