@@ -1,3 +1,6 @@
+import { ProjectResponse } from "./project";
+import { UserResponse } from "./user";
+
 export enum TaskStatus {
   BACKLOG = "BACKLOG",
   TODO = "TODO",
@@ -15,11 +18,11 @@ export interface TaskResponse {
   id: string;
   name: string;
   status: TaskStatus;
-  dueDate: Date;
-  assigneeId: string;
+  dueDate: string;
+  project: ProjectResponse;
+  assignee: UserResponse;
   description: string;
   workspaceId: string;
-  projectId: string;
   createAt: Date;
   lastUpdatedAt: Date;
 }

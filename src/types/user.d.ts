@@ -22,6 +22,13 @@ export interface LoginResponse {
   additionalParameters: unknown;
 }
 
+export interface UserResponse {
+  userId: string;
+  nickName: string;
+  email: string;
+  imageUrl: string;
+}
+
 export interface RegisterForm {
   nickName: string;
   password: string;

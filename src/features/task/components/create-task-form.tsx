@@ -35,6 +35,7 @@ import { createTaskScema } from "../schemas";
 import { useCreateTaskModal } from "../hooks/use-create-task-modal";
 import { MemberAvatar } from "@/features/member/components/meber-avatar";
 import { createTaskService } from "@/services/taskService";
+import { useProjectId } from "@/features/project/hook/use-project-id";
 interface CreateTaskFormProps {
   onCancel?: () => void;
   projectOptions: { id: string; name: string; imageUrl: string | undefined }[];
@@ -47,7 +48,7 @@ export const CreateTaskForm = ({
   projectOptions,
 }: CreateTaskFormProps) => {
   const workspaceId = useWorkspaceId();
-  const projectId = projectOptions[0]?.id;
+  const defaultProjectId = useProjectId();
   const { mutate, isPending } = createTaskService();
   const { status } = useCreateTaskModal();
 
@@ -55,13 +56,14 @@ export const CreateTaskForm = ({
     resolver: zodResolver(createTaskScema.omit({ workspaceId: true })),
     defaultValues: {
       workspaceId,
+      projectId: defaultProjectId,
       status: status ? (status as TaskStatus) : undefined,
     },
   });
 
   const onSubmit = (values: z.infer<typeof createTaskScema>) => {
     mutate(
-      { workspaceId: workspaceId, projectId: projectId, taskDto: values },
+      { workspaceId: workspaceId, projectId: values.projectId, taskDto: values },
       {
         onSuccess: () => {
           form.reset();
