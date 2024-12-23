@@ -17,6 +17,12 @@ export async function login(login_form: LoginForm): Promise<LoginResponse> {
     console.debug(data);
 
     return data;
+  } else if (response.status === 401 || response.status === 404) { 
+    // Unauthorized error (wrong password or account)
+    const data: ErrorMessage = await response.json();
+    console.debug(data);
+
+    throw new Error("Incorrect email or password. Please try again.");
   } else {
     // Handle unknown error
     const data = await response.json();
@@ -42,7 +48,7 @@ export async function register(register_form: RegisterForm): Promise<void> {
     const data = await response.json();
     console.debug(data);
   } else if (response.status === 409) {
-    // Handle conflict error (username or email already exist)
+    // Handle conflict error (email already exist)
     const data: ErrorMessage = await response.json();
     console.debug(data);
 
