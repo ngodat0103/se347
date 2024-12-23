@@ -75,12 +75,14 @@ export const CreateWorkspaceForm = ({
       // form.reset();
       setErrorMessage(null);
 
-      // Làm mới trang
       setTimeout(() => {
-        const path = `/workspaces/${response.id}`;
-        // Sử dụng window.location.href để reload trang
-        window.location.href = path;
-      }, 1000); // Đợi 1 giây trước khi reload để người dùng thấy thông báo
+        if (onCancel) onCancel();
+        setTimeout(() => {
+          const path = `/workspaces/${response.id}`;
+          // Sử dụng window.location.href để reload trang
+          window.location.href = path;
+        }, 500);
+      }, 1000);
     } catch (err: any) {
       // Xử lý lỗi nếu có
       let error_msg = "Error creating workspace. Please try again.";
@@ -225,7 +227,7 @@ export const CreateWorkspaceForm = ({
           errorMessage || successMessage
             ? "opacity-100 visible"
             : "opacity-0 invisible",
-          errorMessage ? "bg-red-500 text-white" : "bg-green-500 text-white",
+          errorMessage ? "bg-red-500 text-white" : "bg-green-500 text-white"
         )}
       >
         {errorMessage || successMessage}

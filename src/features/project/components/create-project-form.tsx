@@ -56,13 +56,15 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
       form.reset();
       setErrorMessage(null);
 
-      // Làm mới trang
       setTimeout(() => {
-        // Redirect thẳng tới project mới để bỏ query "create-project" khỏi URL, để đóng project modal
-        // Đồng thời refresh trang để hiển thị project mới tạo
-        const path = `/workspaces/${workspaceId}/projects/${response.id}`;
-        window.location.href = path;
-      }, 1000); // Đợi 1 giây trước khi reload để người dùng thấy thông báo
+        if (onCancel) onCancel();
+        setTimeout(() => {
+          // Redirect thẳng tới project mới để bỏ query "create-project" khỏi URL, để đóng project modal
+          // Đồng thời refresh trang để hiển thị project mới tạo
+          const path = `/workspaces/${workspaceId}/projects/${response.id}`;
+          window.location.href = path;
+        }, 500);
+      }, 1000);
     } catch (err: unknown) {
       // Xử lý lỗi nếu có
       let error_msg = "Error creating project. Please try again.";
