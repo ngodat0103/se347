@@ -10,3 +10,7 @@ export interface createProjectForm {
   name: string;
   image?: File;
 }
+export interface updateProjectForm {
+  name: string;
+  image?: File | string;
+}
