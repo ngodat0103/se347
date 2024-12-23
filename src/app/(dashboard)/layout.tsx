@@ -5,7 +5,8 @@ import { Navbar } from "../../components/navbar";
 import { CreateWorkspaceModal } from "@/features/workspace/components/create-workspace-modal";
 import { CreateProjectModal } from "@/features/project/components/create-project-modal";
 import { Suspense } from "react";
-import { CreateTaskModal } from "@/features/task/components/create-task-modal";
+import { CreateTaskModal } from "@/features/task/components/create-task/create-task-modal";
+import { EditTaskModal } from "@/features/task/components/edit-task/edit-task-modal";
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
@@ -17,6 +18,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <CreateWorkspaceModal />
         <CreateProjectModal />
         <CreateTaskModal />
+        <EditTaskModal/>
         <div className="flex w-full h-full">
           <div className="fixed left-0 top-0 hidden lg:block lg:w-[264px] h-full overflow-y-auto">
             <Sidebar />

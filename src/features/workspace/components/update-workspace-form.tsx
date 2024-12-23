@@ -56,12 +56,12 @@ export const UpdateWorkspaceForm = ({
   const [DeleteDialog, confirmDelete] = useConfirm(
     "Delete Workspace",
     "Are you sure you want to delete this workspace?",
-    "destructive"
+    "destructive",
   );
   const [ResetDialog, confirmReset] = useConfirm(
     "Reset invite link",
     "This will reset the invite link for this workspace. Are you sure you want to continue?",
-    "destructive"
+    "destructive",
   );
 
   const form = useForm<z.infer<typeof updateWorkspaceSchema>>({
@@ -259,7 +259,7 @@ export const UpdateWorkspaceForm = ({
           errorMessage || successMessage
             ? "opacity-100 visible"
             : "opacity-0 invisible",
-          errorMessage ? "bg-red-500 text-white" : "bg-green-500 text-white"
+          errorMessage ? "bg-red-500 text-white" : "bg-green-500 text-white",
         )}
       >
         {errorMessage || successMessage}

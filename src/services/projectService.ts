@@ -81,10 +81,10 @@ export async function createProject(
 
   const data: ProjectResponse = await response.json();
   console.debug("Workspace created:", data);
- // 2. Nếu có ảnh, gửi yêu cầu upload ảnh
+  // 2. Nếu có ảnh, gửi yêu cầu upload ảnh
   if (projectForm.image) {
     if (projectForm.image instanceof File) {
-      await uploadProjectImage(data.workspaceId,data.id, projectForm.image);
+      await uploadProjectImage(data.workspaceId, data.id, projectForm.image);
     } else {
       throw new Error("Invalid image file.");
     }
@@ -93,25 +93,28 @@ export async function createProject(
   return data;
 }
 async function uploadProjectImage(
-  workspaceId: string,    
-  projectId: string,     
-  imageFile: File,       
+  workspaceId: string,
+  projectId: string,
+  imageFile: File,
 ): Promise<void> {
   try {
     console.log("Image size before resize (bytes):", imageFile.size);
-    if (imageFile.size > 2 * 1024 * 1024) { 
+    if (imageFile.size > 2 * 1024 * 1024) {
       imageFile = await resizeImage(imageFile, 800, 800);
     }
     console.log("Image size after resize (bytes):", imageFile.size);
 
-    const response = await fetch(`${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/image`, {
-      method: "POST",
-      headers: {
-        accept: "text/plain",
-        Authorization: `Bearer ${token}`, 
+    const response = await fetch(
+      `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/image`,
+      {
+        method: "POST",
+        headers: {
+          accept: "text/plain",
+          Authorization: `Bearer ${token}`,
+        },
+        body: imageFile,
       },
-      body: imageFile, 
-    });
+    );
 
     if (!response.ok) {
       const errorResponse: ErrorMessage = await response.json();
@@ -149,7 +152,7 @@ export async function deleteProject(projectId: string, workspaceId: string) {
 export async function updateProject(
   projectId: string,
   workspaceId: string,
-  projectForm: updateProjectForm
+  projectForm: updateProjectForm,
 ): Promise<ProjectResponse> {
   console.debug(projectForm);
 
@@ -168,14 +171,12 @@ export async function updateProject(
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ name: projectForm.name }),
-    }
+    },
   );
 
   if (!response.ok) {
     const errorResponse: ErrorMessage = await response.json();
-    throw new Error(
-      errorResponse.detail || "Failed to update project."
-    );
+    throw new Error(errorResponse.detail || "Failed to update project.");
   }
 
   const data: ProjectResponse = await response.json();
@@ -183,7 +184,7 @@ export async function updateProject(
 
   // 2. Nếu có ảnh, gửi yêu cầu upload ảnh
   if (projectForm.image && projectForm.image instanceof File) {
-    await uploadProjectImage(workspaceId,projectId, projectForm.image);
+    await uploadProjectImage(workspaceId, projectId, projectForm.image);
   } else if (
     typeof projectForm.image === "string" &&
     projectForm.image !== ""
@@ -196,4 +197,3 @@ export async function updateProject(
 
   return data;
 }
-

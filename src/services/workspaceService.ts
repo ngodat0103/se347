@@ -309,8 +309,7 @@ export const fetchWorkspaceMembers = (workspaceId: string) => {
   });
   return query;
 };
-export const fetchDeleteMember = async (workspaceId: string, memberId: string) => {
-
+export const deleteMember = async (workspaceId: string, memberId: string) => {
   if (!token) {
     throw new Error("Token không tồn tại trong cookie");
   }
@@ -324,14 +323,16 @@ export const fetchDeleteMember = async (workspaceId: string, memberId: string) =
           accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     if (!response.ok) {
       throw new Error("Lỗi khi xóa thành viên");
     }
 
-    console.log(`Thành viên ${memberId} đã được xóa khỏi workspace ${workspaceId}`);
+    console.log(
+      `Thành viên ${memberId} đã được xóa khỏi workspace ${workspaceId}`,
+    );
     return response;
   } catch (error) {
     console.error("Lỗi:", error);
@@ -339,10 +340,10 @@ export const fetchDeleteMember = async (workspaceId: string, memberId: string) =
   }
 };
 
-export const fetchSetRoleMember = async (
+export const updateRoleMember = async (
   workspaceId: string,
   memberId: string,
-  newRole: "OWNER" | "MEMBER"
+  newRole: "OWNER" | "MEMBER",
 ) => {
   if (!token) {
     throw new Error("Token does not exist in cookies");
@@ -357,7 +358,7 @@ export const fetchSetRoleMember = async (
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ newRole }),
-    }
+    },
   );
 
   if (!response.ok) {

@@ -30,9 +30,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { TaskStatus } from "../types";
-import { createTaskScema } from "../schemas";
-import { useCreateTaskModal } from "../hooks/use-create-task-modal";
+import { TaskStatus } from "../../types";
+import { createTaskScema } from "../../schemas";
+import { useCreateTaskModal } from "../../hooks/use-create-task-modal";
 import { MemberAvatar } from "@/features/member/components/meber-avatar";
 import { createTaskService } from "@/services/taskService";
 import { useProjectId } from "@/features/project/hook/use-project-id";
@@ -63,7 +63,11 @@ export const CreateTaskForm = ({
 
   const onSubmit = (values: z.infer<typeof createTaskScema>) => {
     mutate(
-      { workspaceId: workspaceId, projectId: values.projectId, taskDto: values },
+      {
+        workspaceId: workspaceId,
+        projectId: values.projectId,
+        taskDto: values,
+      },
       {
         onSuccess: () => {
           form.reset();
