@@ -9,8 +9,7 @@ import {
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Loader, LogOut } from "lucide-react";
 import useUser from "@/hooks/useUser";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { logout as logoutService } from "@/services/userService";
@@ -30,6 +29,8 @@ const UserProfile: React.FC = () => {
 
     logoutService();
     Cookies.remove("accessToken");
+    localStorage.clear();
+    sessionStorage.clear();
     //Chuyen huong ve trang login
     router.push("/sign-in");
   };
