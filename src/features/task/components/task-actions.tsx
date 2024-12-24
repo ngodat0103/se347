@@ -3,7 +3,7 @@ import { ExternalLinkIcon, PencilIcon, TrashIcon } from "lucide-react";
 
 import { useConfirm } from "@/components/confirm";
 import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
-
+import { deleteTaskService } from "@/services/taskService";
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -23,26 +23,25 @@ interface TaskActionsProps {
 export const TaskActions = ({ children, id, projectId }: TaskActionsProps) => {
   const router = useRouter();
   const workspaceId = useWorkspaceId();
-  const { open } = useEditTaskModal();
+  const { open: openEditTaskModal } = useEditTaskModal();
 
   const [ConfirmDialog, confirm] = useConfirm(
     "Delete task",
     "This action cannot be undone.",
     "destructive",
   );
-  // const { mutate, isPending } = useDeleteTask();
+  const { mutate: deleteTaskMutate, isPending } = deleteTaskService();
 
   const onDelete = async () => {
     const ok = await confirm();
     if (!ok) return;
-
-    // mutate({ param: { taskId: id } });
+    deleteTaskMutate({ workspaceId, projectId, taskId: id });
   };
 
   const onOpenTask = () => {
-    router.push(`/workspaces/${workspaceId}/tasks/${id}`);
+    router.push(`/workspaces/${workspaceId}/projects/${projectId}/tasks/${id}`);
   };
-
+  
   const onOpenProject = () => {
     router.push(`/workspaces/${workspaceId}/projects/${projectId}`);
   };
@@ -70,7 +69,7 @@ export const TaskActions = ({ children, id, projectId }: TaskActionsProps) => {
           </DropdownMenuItem>
 
           <DropdownMenuItem
-            onClick={() => open(id)}
+            onClick={() => openEditTaskModal(id)}
             className="font-medium p-[10px]"
           >
             <PencilIcon className="size-4 mr-2 stroke-2" />
@@ -79,7 +78,7 @@ export const TaskActions = ({ children, id, projectId }: TaskActionsProps) => {
 
           <DropdownMenuItem
             onClick={onDelete}
-            // disabled={isPending}
+            disabled={isPending}
             className="text-amber-700 focus:text-amber-700 font-medium p-[10px]"
           >
             <TrashIcon className="size-4 mr-2 stroke-2" />

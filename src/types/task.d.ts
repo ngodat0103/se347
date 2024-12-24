@@ -8,13 +8,13 @@ export enum TaskStatus {
   IN_REVIEW = "IN_REVIEW",
   DONE = "DONE",
 }
-export interface TaskRequest {
+export interface RequestTask {
   name: string;
   status: TaskStatus;
   dueDate: Date;
   assigneeId: string;
 }
-export interface TaskResponse {
+export interface ResponseTask {
   id: string;
   name: string;
   status: TaskStatus;

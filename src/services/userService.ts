@@ -17,7 +17,7 @@ export async function login(login_form: LoginForm): Promise<LoginResponse> {
     console.debug(data);
 
     return data;
-  } else if (response.status === 401 || response.status === 404) { 
+  } else if (response.status === 401 || response.status === 404) {
     // Unauthorized error (wrong password or account)
     const data: ErrorMessage = await response.json();
     console.debug(data);

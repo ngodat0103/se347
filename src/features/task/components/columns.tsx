@@ -9,11 +9,11 @@ import { ProjectAvatar } from "@/features/project/components/project-avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-import { TaskResponse } from "@/types/task";
+import { ResponseTask } from "@/types/task";
 import { TaskDate } from "./task-date";
 import { TaskActions } from "./task-actions";
 
-export const columns: ColumnDef<TaskResponse>[] = [
+export const columns: ColumnDef<ResponseTask>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -104,7 +104,6 @@ export const columns: ColumnDef<TaskResponse>[] = [
     },
     cell: ({ row }) => {
       // const dueDate = row.original.dueDate;
-
       // return <TaskDate value={dueDate} />;
     },
   },

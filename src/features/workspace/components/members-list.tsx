@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { useState, useEffect } from "react";
-import { fetchDeleteMember } from "@/services/workspaceService";
+import { deleteMember } from "@/services/workspaceService";
 import { Fragment } from "react";
 import useUser from "@/hooks/useUser";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,7 +13,7 @@ import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 import { fetchWorkspaceMembers } from "@/services/workspaceService";
 import { MemberAvatar } from "@/features/member/components/meber-avatar";
 import { Loader } from "lucide-react";
-import { fetchSetRoleMember } from "@/services/workspaceService";
+import { updateRoleMember } from "@/services/workspaceService";
 import { Separator } from "@/components/ui/separator";
 import {
   DropdownMenu,
@@ -34,7 +34,7 @@ export const MembersList = () => {
   const currentUserEmail = user?.email;
   //Kiem tra role user
   const currentUserRole = members?.find(
-    (member: any) => member.email === currentUserEmail
+    (member: any) => member.email === currentUserEmail,
   )?.role;
   console.log(currentUserRole);
   const handleBack = () => {
@@ -45,7 +45,7 @@ export const MembersList = () => {
 
   const handleRemoveMember = async (id: string) => {
     try {
-      await fetchDeleteMember(workspaceId, id);
+      await deleteMember(workspaceId, id);
       setSuccessMessage(`The member has been successfully removed!`);
       setTimeout(() => {
         window.location.reload(); // Reload the page
@@ -53,14 +53,14 @@ export const MembersList = () => {
     } catch (error) {
       console.error("Error removing member:", error);
       setErrorMessage(
-        "An error occurred while removing the member. Please try again!"
+        "An error occurred while removing the member. Please try again!",
       );
     }
   };
 
   const handleSetRole = async (id: string, role: "OWNER" | "MEMBER") => {
     try {
-      await fetchSetRoleMember(workspaceId, id, role);
+      await updateRoleMember(workspaceId, id, role);
       setSuccessMessage(`The member's role has been updated to ${role}!`);
       setTimeout(() => {
         window.location.reload(); // Reload the page to reflect changes
@@ -177,7 +177,7 @@ export const MembersList = () => {
           errorMessage || successMessage
             ? "opacity-100 visible"
             : "opacity-0 invisible",
-          errorMessage ? "bg-red-500 text-white" : "bg-green-500 text-white"
+          errorMessage ? "bg-red-500 text-white" : "bg-green-500 text-white",
         )}
       >
         {errorMessage || successMessage}

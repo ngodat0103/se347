@@ -21,7 +21,7 @@ const projectIdPage = () => {
     fetchProjectById(workspaceId, projectId);
 
   if (isLoaddingProject) {
-    return <PageLoader/>;
+    return <PageLoader />;
   }
   if (!projectReponse) return <PageError message="Project not found" />;
   else if (projectReponse != null) {
