@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftIcon, ImageIcon } from "lucide-react";
-import { deleteProject } from "@/services/projectService";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -26,9 +25,10 @@ import {
 
 import { ProjectResponse } from "@/types/project";
 import { updateProjectSchema } from "../schema";
-import { updateProject } from "@/services/projectService";
-// import { useUpdateProject } from "../api/use-update-project";
-// import { useDeleteProject } from "../api/use-delete-project";
+import { useUpdateProject } from "@/services/projectService";
+import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
+import { useProjectId } from "../hook/use-project-id";
+import { useDeleteProject } from "@/services/projectService";
 
 interface EditProjectFormProps {
   onCancel?: () => void;
@@ -40,9 +40,13 @@ export const EditProjectForm = ({
   initialValues,
 }: EditProjectFormProps) => {
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  //   const { mutate, isPending } = useUpdateProject();
+  const { mutate: updateProjectMutate, isPending: isUpdateProjectPending } =
+    useUpdateProject();
+  const { mutate: deleteProjectMutate, isPending: isDeleteProjectPending } =
+    useDeleteProject();
+
+  const currentProjectId = useProjectId();
+  const currentWorkspaceId = useWorkspaceId();
   //   const { mutate: deleteProject, isPending: isDeletingProject } =
   //     useDeleteProject();
 
@@ -56,16 +60,11 @@ export const EditProjectForm = ({
     const ok = await confirmDelete();
 
     if (!ok) return;
-
-    try {
-      await deleteProject(initialValues.id, initialValues.workspaceId);
-      await router.push(`/workspaces/${initialValues.workspaceId}`);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-    } catch (error) {
-      console.error("Failed to delete project:", error);
-    }
+    deleteProjectMutate({
+      workspaceId: currentWorkspaceId,
+      projectId: currentProjectId,
+    });
+    await router.push(`/workspaces/${initialValues.workspaceId}`);
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -76,34 +75,12 @@ export const EditProjectForm = ({
   });
 
   const onSubmit = async (values: z.infer<typeof updateProjectSchema>) => {
-    try {
-      const response = await updateProject(
-        initialValues.id,
-        initialValues.workspaceId,
-        {
-          ...values,
-          name: values.name || "",
-          image: values.image || undefined,
-        },
-      );
-      console.log(values);
-
-      // Nếu cập nhật thành công
-      setSuccessMessage("Workspace updated successfully");
-      form.reset();
-      setErrorMessage(null);
-      onCancel?.();
-    } catch (err: unknown) {
-      // Xử lý lỗi nếu có
-      let error_msg = "Error updating workspace. Please try again.";
-      if (err instanceof Error) {
-        error_msg = err.message;
-      } else if (typeof err === "string") {
-        error_msg = err;
-      }
-      setErrorMessage(error_msg);
-      setSuccessMessage(null);
-    }
+    updateProjectMutate({
+      workspaceId: currentWorkspaceId,
+      projectId: currentProjectId,
+      projectForm: { name: values.name, image: values.image },
+    });
+    await router.back();
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

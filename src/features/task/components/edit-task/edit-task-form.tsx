@@ -63,10 +63,9 @@ export const EditTaskForm = ({
     },
   });
   const currentWorkspaceid = useWorkspaceId();
-  const {taskId: currentTaskId} = useEditTaskModal();  
+  const { taskId: currentTaskId } = useEditTaskModal();
   const onSubmit = (values: z.infer<typeof createTaskScema>) => {
-   
-    if(currentTaskId==null){
+    if (currentTaskId == null) {
       console.error("Task not found");
       console.error(currentTaskId);
       return; // Should Notify the user that the task is not found
