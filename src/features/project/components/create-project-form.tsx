@@ -25,8 +25,8 @@ import {
 
 import { createProjectSchema } from "../schema";
 import { useState } from "react";
-import { createProject } from "@/services/projectService";
 import { useEffect } from "react";
+import { useCreateProjectMutation } from "@/services/projectService";
 
 // import { useCreateProject } from "../api/use-create-project";
 
@@ -35,11 +35,11 @@ interface CreateProjectFormProps {
 }
 
 export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const router = useRouter();
   const workspaceId = useWorkspaceId();
+
+  const { mutate: createProjectMutation } = useCreateProjectMutation();
   const form = useForm<z.infer<typeof createProjectSchema>>({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
@@ -48,45 +48,15 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
   });
 
   const onSubmit = async (values: z.infer<typeof createProjectSchema>) => {
-    try {
-      // Gọi API tạo projec
-      const response = await createProject(workspaceId, values);
-      // Nếu tạo thành công
-      setSuccessMessage("Project created successfully");
-      form.reset();
-      setErrorMessage(null);
-
-      setTimeout(() => {
-        if (onCancel) onCancel();
-        setTimeout(() => {
-          // Redirect thẳng tới project mới để bỏ query "create-project" khỏi URL, để đóng project modal
-          // Đồng thời refresh trang để hiển thị project mới tạo
-          const path = `/workspaces/${workspaceId}/projects/${response.id}`;
-          window.location.href = path;
-        }, 500);
-      }, 1000);
-    } catch (err: unknown) {
-      // Xử lý lỗi nếu có
-      let error_msg = "Error creating project. Please try again.";
-      if (err instanceof Error) {
-        error_msg = err.message;
-      } else if (typeof err === "string") {
-        error_msg = err;
-      }
-      setErrorMessage(error_msg);
-      setSuccessMessage(null);
-    }
+    createProjectMutation({
+      workspaceId,
+      projectForm: {
+        name: values.name,
+        image: values.image,
+      },
+    });
+    router.back();
   };
-  useEffect(() => {
-    if (errorMessage || successMessage) {
-      const timeout = setTimeout(() => {
-        setErrorMessage(null);
-        setSuccessMessage(null);
-      }, 5000);
-
-      return () => clearTimeout(timeout);
-    }
-  });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

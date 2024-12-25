@@ -1,17 +1,19 @@
+"use client";
 import { BASE_API_URL } from "./baseApi";
 import { createProjectForm, ProjectResponse } from "@/types/project";
 import Cookies from "js-cookie";
-const token = Cookies.get("accessToken");
-import router from "next/router";
+import { useRouter } from "next/router";
 import { ErrorMessage } from "@/types/error";
 import { useQuery } from "@tanstack/react-query";
 import { resizeImage } from "@/lib/resizeImage";
 import { updateProjectForm } from "@/types/project";
-
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 export const fetchProjectById = (workspaceId: string, projectId: string) => {
   const query = useQuery({
     queryKey: ["project", workspaceId, projectId],
     queryFn: async () => {
+      const token = Cookies.get("accessToken");
       const response = await fetch(
         `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}`,
         {
@@ -34,6 +36,7 @@ export const fetchProjects = (workspaceId: string) => {
   const query = useQuery({
     queryKey: ["projects", workspaceId],
     queryFn: async () => {
+      const token = Cookies.get("accessToken");
       const response = await fetch(
         `${BASE_API_URL}/workspaces/${workspaceId}/projects`,
         {
@@ -53,17 +56,18 @@ export const fetchProjects = (workspaceId: string) => {
   return query;
 };
 
-export async function createProject(
-  workspaceId: string,
-  projectForm: createProjectForm,
-): Promise<ProjectResponse> {
-  if (!token) {
-    router.push("/login");
-  }
-  // 1. Gửi yêu cầu tạo project chỉ với name
+const createProjectAPI = async ({
+  workspaceId,
+  projectForm,
+}: {
+  workspaceId: string;
+  projectForm: createProjectForm;
+}) => {
+  const token = Cookies.get("accessToken");
   const response = await fetch(
     `${BASE_API_URL}/workspaces/${workspaceId}/projects`,
     {
+
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -80,8 +84,8 @@ export async function createProject(
   }
 
   const data: ProjectResponse = await response.json();
-  console.debug("Workspace created:", data);
-  // 2. Nếu có ảnh, gửi yêu cầu upload ảnh
+
+  // Handle image upload if needed
   if (projectForm.image) {
     if (projectForm.image instanceof File) {
       await uploadProjectImage(data.workspaceId, data.id, projectForm.image);
@@ -91,7 +95,25 @@ export async function createProject(
   }
 
   return data;
+};
+
+export function useCreateProjectMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createProjectAPI,
+    onSuccess: (data) => {
+      console.debug("Workspace created:", data);
+      // Invalidate and refetch queries to update the UI
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      // Optionally redirect or perform other success actions
+      toast.success("Project created successfully");
+    },
+    onError: (error) => {
+      console.error("Error creating project:", error);
+    },
+  });
 }
+
 async function uploadProjectImage(
   workspaceId: string,
   projectId: string,
@@ -103,7 +125,7 @@ async function uploadProjectImage(
       imageFile = await resizeImage(imageFile, 800, 800);
     }
     console.log("Image size after resize (bytes):", imageFile.size);
-
+    const token = Cookies.get("accessToken");
     const response = await fetch(
       `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/image`,
       {
@@ -131,6 +153,8 @@ async function uploadProjectImage(
 }
 
 export async function deleteProject(projectId: string, workspaceId: string) {
+  const token = Cookies.get("accessToken");
+  const router = useRouter();
   if (!token) {
     router.push("/login");
   }
@@ -149,18 +173,16 @@ export async function deleteProject(projectId: string, workspaceId: string) {
   }
 }
 
-export async function updateProject(
-  projectId: string,
-  workspaceId: string,
-  projectForm: updateProjectForm,
-): Promise<ProjectResponse> {
-  console.debug(projectForm);
-
-  if (!token) {
-    router.push("/login");
-  }
-
-  // 1. Gửi yêu cầu cập nhật project chỉ với name
+const updateProjectAPI = async ({
+  workspaceId,
+  projectId,
+  projectForm,
+}: {
+  workspaceId: string;
+  projectId: string;
+  projectForm: updateProjectForm;
+}) => {
+  const token = Cookies.get("accessToken");
   const response = await fetch(
     `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}`,
     {
@@ -175,25 +197,44 @@ export async function updateProject(
   );
 
   if (!response.ok) {
-    const errorResponse: ErrorMessage = await response.json();
+    const errorResponse = await response.json();
     throw new Error(errorResponse.detail || "Failed to update project.");
   }
 
-  const data: ProjectResponse = await response.json();
+  const data = await response.json();
   console.debug("Project updated:", data);
 
-  // 2. Nếu có ảnh, gửi yêu cầu upload ảnh
+  // Handle image upload if needed
   if (projectForm.image && projectForm.image instanceof File) {
     await uploadProjectImage(workspaceId, projectId, projectForm.image);
   } else if (
     typeof projectForm.image === "string" &&
     projectForm.image !== ""
   ) {
-    // Nếu chỉ có URL cũ (chuỗi không rỗng), bỏ qua
     console.log("No new image selected, keeping the old one.");
   } else {
     console.log("No image selected, skipping upload.");
   }
 
   return data;
-}
+};
+
+// Use Mutation hook
+export const useUpdateProject = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateProjectAPI,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["projects",data.workspaceId,data.projectId] });
+      queryClient.invalidateQueries({queryKey: ["tasks"]});
+      toast.success(
+        "Project updated successfully. For image changes, it may take a few seconds to reflect.",
+      );
+      // router.push(`/workspaces/${data.workspaceId}/projects/${data.id}`);
+    },
+    onError: (error) => {
+      console.error("Error updating project:", error.message);
+      toast.error("Error updating project, please try again later");
+    },
+  });
+};

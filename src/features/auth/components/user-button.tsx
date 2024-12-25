@@ -26,11 +26,11 @@ const UserProfile: React.FC = () => {
   const router = useRouter();
 
   const handleLogout = () => {
-    //Xoa token trong cookie
 
     logoutService();
     Cookies.remove("accessToken");
-    //Chuyen huong ve trang login
+    localStorage.clear();
+    sessionStorage.clear();
     router.push("/sign-in");
   };
   return (
