@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftIcon, ImageIcon } from "lucide-react";
-import { deleteProject } from "@/services/projectService";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -29,8 +28,7 @@ import { updateProjectSchema } from "../schema";
 import { useUpdateProject } from "@/services/projectService";
 import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 import { useProjectId } from "../hook/use-project-id";
-// import { useUpdateProject } from "../api/use-update-project";
-// import { useDeleteProject } from "../api/use-delete-project";
+import { useDeleteProject } from "@/services/projectService";
 
 interface EditProjectFormProps {
   onCancel?: () => void;
@@ -44,6 +42,8 @@ export const EditProjectForm = ({
   const router = useRouter();
   const { mutate: updateProjectMutate, isPending: isUpdateProjectPending } =
     useUpdateProject();
+  const { mutate: deleteProjectMutate, isPending: isDeleteProjectPending } =
+    useDeleteProject();
 
   const currentProjectId = useProjectId();
   const currentWorkspaceId = useWorkspaceId();
@@ -60,16 +60,11 @@ export const EditProjectForm = ({
     const ok = await confirmDelete();
 
     if (!ok) return;
-
-    try {
-      await deleteProject(initialValues.id, initialValues.workspaceId);
-      await router.push(`/workspaces/${initialValues.workspaceId}`);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-    } catch (error) {
-      console.error("Failed to delete project:", error);
-    }
+    deleteProjectMutate({
+      workspaceId: currentWorkspaceId,
+      projectId: currentProjectId,
+    });
+    await router.push(`/workspaces/${initialValues.workspaceId}`);
   };
 
   const inputRef = useRef<HTMLInputElement>(null);

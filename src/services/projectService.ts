@@ -67,7 +67,6 @@ const createProjectAPI = async ({
   const response = await fetch(
     `${BASE_API_URL}/workspaces/${workspaceId}/projects`,
     {
-
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -152,12 +151,14 @@ async function uploadProjectImage(
   }
 }
 
-export async function deleteProject(projectId: string, workspaceId: string) {
+export const deleteProjectAPI = async ({
+  workspaceId,
+  projectId,
+}: {
+  workspaceId: string;
+  projectId: string;
+}) => {
   const token = Cookies.get("accessToken");
-  const router = useRouter();
-  if (!token) {
-    router.push("/login");
-  }
   const response = await fetch(
     `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}`,
     {
@@ -171,7 +172,18 @@ export async function deleteProject(projectId: string, workspaceId: string) {
     const errorResponse: ErrorMessage = await response.json();
     throw new Error(errorResponse.detail || "Failed to delete project.");
   }
-}
+};
+
+export const useDeleteProject = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteProjectAPI,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      toast.success("Project deleted successfully");
+    },
+  });
+};
 
 const updateProjectAPI = async ({
   workspaceId,
@@ -225,8 +237,10 @@ export const useUpdateProject = () => {
   return useMutation({
     mutationFn: updateProjectAPI,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["projects",data.workspaceId,data.projectId] });
-      queryClient.invalidateQueries({queryKey: ["tasks"]});
+      queryClient.invalidateQueries({
+        queryKey: ["projects", data.workspaceId, data.projectId],
+      });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
       toast.success(
         "Project updated successfully. For image changes, it may take a few seconds to reflect.",
       );

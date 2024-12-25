@@ -26,7 +26,6 @@ const UserProfile: React.FC = () => {
   const router = useRouter();
 
   const handleLogout = () => {
-
     logoutService();
     Cookies.remove("accessToken");
     localStorage.clear();
