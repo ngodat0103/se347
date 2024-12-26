@@ -49,7 +49,7 @@ export const EditProjectForm = ({
   const [DeleteDialog, confirmDelete] = useConfirm(
     "Delete Project",
     "This action cannot be undone.",
-    "destructive",
+    "destructive"
   );
 
   const handleDelete = async () => {
@@ -84,18 +84,23 @@ export const EditProjectForm = ({
           ...values,
           name: values.name || "",
           image: values.image || undefined,
-        },
+        }
       );
       console.log(values);
 
       // Nếu cập nhật thành công
-      setSuccessMessage("Workspace updated successfully");
+      setSuccessMessage("Project updated successfully");
       form.reset();
       setErrorMessage(null);
-      onCancel?.();
+      onCancel?.(); // Gọi hàm `onCancel` nếu tồn tại
+      setTimeout(() => {
+        if (typeof window !== "undefined") {
+          window.location.reload(); // Chỉ reload nếu là môi trường trình duyệt
+        }
+      }, 100);
     } catch (err: unknown) {
       // Xử lý lỗi nếu có
-      let error_msg = "Error updating workspace. Please try again.";
+      let error_msg = "Error updating project. Please try again.";
       if (err instanceof Error) {
         error_msg = err.message;
       } else if (typeof err === "string") {
@@ -125,7 +130,7 @@ export const EditProjectForm = ({
                 ? onCancel
                 : () =>
                     router.push(
-                      `/workspaces/${initialValues.workspaceId}/projects/${initialValues.id}`,
+                      `/workspaces/${initialValues.workspaceId}/projects/${initialValues.id}`
                     )
             }
           >

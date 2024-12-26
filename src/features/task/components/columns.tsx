@@ -103,8 +103,8 @@ export const columns: ColumnDef<ResponseTask>[] = [
       );
     },
     cell: ({ row }) => {
-      // const dueDate = row.original.dueDate;
-      // return <TaskDate value={dueDate} />;
+      const dueDate = row.original.dueDate;
+      return <TaskDate value={dueDate} />;
     },
   },
   {

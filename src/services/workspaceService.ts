@@ -343,7 +343,7 @@ export const deleteMember = async (workspaceId: string, memberId: string) => {
 export const updateRoleMember = async (
   workspaceId: string,
   memberId: string,
-  newRole: "OWNER" | "MEMBER",
+  newRole: "OWNER" | "MEMBER"|"ADMINISTRATOR"|"DEVELOPER",
 ) => {
   if (!token) {
     throw new Error("Token does not exist in cookies");

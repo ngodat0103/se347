@@ -6,13 +6,15 @@ import { EditProjectForm } from "@/features/project/components/edit-project-form
 import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 import { PageError } from "@/components/page-error";
 import { PageLoader } from "@/components/page-loader";
+import { useRouter } from "next/navigation";
 
 const ProjectIdSettingsClient = () => {
+  const router = useRouter();
   const projectId = useProjectId();
   const workspaceId = useWorkspaceId();
   const { data: initialValues, isLoading } = fetchProjectById(
     workspaceId,
-    projectId,
+    projectId
   );
 
   if (isLoading) return <PageLoader />;
@@ -21,7 +23,12 @@ const ProjectIdSettingsClient = () => {
 
   return (
     <div className="w-full lg:max-w-xl">
-      <EditProjectForm initialValues={initialValues} />
+      <EditProjectForm
+        onCancel={() => {
+          router.back();
+        }}
+        initialValues={initialValues}
+      />
     </div>
   );
 };

@@ -25,4 +25,5 @@ export interface ResponseTask {
   workspaceId: string;
   createAt: Date;
   lastUpdatedAt: Date;
+  position: number;
 }
