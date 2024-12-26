@@ -373,3 +373,32 @@ export const updateRoleMember = async (
 
   return response.json(); // Return the response data if needed
 };
+
+export const fetchWorkspaceByInviteCode =  (inviteCode: string) => {
+  const token = Cookies.get("accessToken");
+  const query = useQuery({
+    queryKey: ["workspaceByInviteCode", inviteCode],
+    queryFn: async () => {
+      if (!token) {
+        throw new Error("Token không tồn tại trong cookie");
+      }
+      const response = await fetch(
+        `${BASE_API_URL}/workspaces/join?inviteCode=${encodeURIComponent(inviteCode)}`,
+        {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Lỗi khi lấy thông tin workspace bằng mã mời");
+      }
+      const data: WorkspaceResponse = await response.json();
+      return data; // Trả về thông tin workspace
+    },
+  });
+  return query;
+};
