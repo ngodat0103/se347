@@ -55,6 +55,7 @@ export const CreateTaskForm = ({
   const form = useForm<z.infer<typeof createTaskScema>>({
     resolver: zodResolver(createTaskScema.omit({ workspaceId: true })),
     defaultValues: {
+      name: "",
       workspaceId,
       projectId: defaultProjectId,
       status: status ? (status as TaskStatus) : undefined,
@@ -73,7 +74,7 @@ export const CreateTaskForm = ({
           form.reset();
           onCancel?.();
         },
-      },
+      }
     );
   };
 
