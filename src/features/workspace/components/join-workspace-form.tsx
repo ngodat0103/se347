@@ -10,8 +10,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useState } from "react";
-import { joinWorkspaceByInviteCode } from "@/services/workspaceService";
-import { log } from "console";
+import {
+  joinWorkspaceByInviteCode,
+  fetchWorkspaceByInviteCode,
+} from "@/services/workspaceService";
 
 interface JoinWorkspaceFormProps {
   inviteCode: string;
@@ -21,7 +23,11 @@ const JoinWorkspaceForm = ({ inviteCode }: JoinWorkspaceFormProps) => {
   const [loading, setLoading] = useState(false); // Quản lý trạng thái loading
   const [error, setError] = useState<string | null>(null); // Quản lý lỗi
   const [successMessage, setSuccessMessage] = useState<string | null>(null); // Thông báo thành công
-
+  const {
+    data: workspace,
+    isLoading,
+    error: fetchError,
+  } = fetchWorkspaceByInviteCode(inviteCode);
   const onSubmit = async () => {
     setLoading(true);
     setError(null);
@@ -35,7 +41,7 @@ const JoinWorkspaceForm = ({ inviteCode }: JoinWorkspaceFormProps) => {
     } catch (err: any) {
       // Xử lý lỗi
       setError(
-        err.message || "Failed to join workspace. Please try again later.",
+        err.message || "Failed to join workspace. Please try again later."
       );
       console.error(err);
     } finally {
@@ -47,7 +53,7 @@ const JoinWorkspaceForm = ({ inviteCode }: JoinWorkspaceFormProps) => {
       <CardHeader className="p-7">
         <CardTitle className="text-xl font-bold">Join workspace</CardTitle>
         <CardDescription className="text-neutral-500">
-          You&apos;ve been invited to join this workspace: {inviteCode}
+          You&apos;ve been invited to join this workspace: {workspace?.name}
         </CardDescription>
       </CardHeader>
       <div>
