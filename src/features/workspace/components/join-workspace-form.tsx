@@ -68,7 +68,7 @@ const JoinWorkspaceForm = ({ inviteCode }: JoinWorkspaceFormProps) => {
             size="lg"
             className="w-full lg:w-fit"
           >
-            <Link href={`/join/${inviteCode}`}>Cancel</Link>
+            <Link href="/">Cancel</Link>
           </Button>
           <Button
             size="lg"
