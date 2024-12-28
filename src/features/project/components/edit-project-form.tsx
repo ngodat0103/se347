@@ -53,7 +53,7 @@ export const EditProjectForm = ({
   const [DeleteDialog, confirmDelete] = useConfirm(
     "Delete Project",
     "This action cannot be undone.",
-    "destructive",
+    "destructive"
   );
 
   const handleDelete = async () => {
@@ -102,7 +102,7 @@ export const EditProjectForm = ({
                 ? onCancel
                 : () =>
                     router.push(
-                      `/workspaces/${initialValues.workspaceId}/projects/${initialValues.id}`,
+                      `/workspaces/${initialValues.workspaceId}/projects/${initialValues.id}`
                     )
             }
           >

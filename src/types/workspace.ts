@@ -8,7 +8,7 @@ export interface WorkspaceMember {
   email: string;
   nickName: string;
   imageUrl: string;
-  role: "OWNER" | "MEMBER" | "ADMIN";
+  role: "OWNER" | "MEMBER" | "ADMINISTRATOR"|"DEVELOPER";
   status: "ACTIVE" | "INACTIVE";
 }
 

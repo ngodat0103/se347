@@ -53,7 +53,7 @@ export const EditTaskForm = ({
   const { mutate, isPending } = updateTaskService();
   const form = useForm<z.infer<typeof createTaskScema>>({
     resolver: zodResolver(
-      createTaskScema.omit({ workspaceId: true, description: true }),
+      createTaskScema.omit({ workspaceId: true, description: true })
     ),
     defaultValues: {
       ...initialValues,
@@ -82,7 +82,7 @@ export const EditTaskForm = ({
           form.reset();
           onCancel?.();
         },
-      },
+      }
     );
   };
 

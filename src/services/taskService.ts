@@ -1,11 +1,12 @@
 "use client";
 import { RequestTask, ResponseTask } from "@/types/task";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import {  useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { BASE_API_URL } from "./baseApi";
 import Cookies from "js-cookie";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { METHODS } from "http";
+import axios from "axios";
+import { TaskStatus } from "@/types/task";
 const token = Cookies.get("accessToken");
 
 export const createTaskService = () => {
@@ -183,4 +184,67 @@ export const fetchTaskById = (
     },
   });
   return query;
+};
+// Hàm gọi API thuần túy, không sử dụng Hook
+export const fetchTaskByIdAPI = async (
+  workspaceId: string,
+  projectId: string,
+  taskId: string
+): Promise<ResponseTask> => {
+  const response = await fetch(
+    `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks/${taskId}`,
+    {
+      method: "GET",
+      headers: {
+        accept: "*/*",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Error when fetching task");
+  }
+
+  return response.json();
+};
+
+export const updateMultipleTasks = async (
+  workspaceId: string,
+  projectId: string,
+  tasks: { $id: string; status: TaskStatus; position: number }[]  // Mảng các task cần cập nhật
+) => {
+  try {
+    // Duyệt qua từng task và thực hiện PUT request cho mỗi task
+    const promises = tasks.map(async (task) => {
+      const taskDetails = await fetchTaskByIdAPI(workspaceId, projectId, task.$id);
+
+      const taskDto: RequestTask= {
+        name: taskDetails.name|| "Untitled",                
+        status: task.status,      
+        position: task.position,  
+        dueDate: new Date(),      
+        assigneeId: taskDetails.assignee.userId||"user", 
+      };
+      // Tạo URL API cho từng task
+      const url = `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks/${task.$id}`;
+
+      // Gửi PUT request cho từng task
+      return axios.put(url, taskDto, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Nếu cần xác thực
+        },
+      });
+    });
+
+    // Chờ tất cả các promises hoàn thành
+    const responses = await Promise.all(promises);
+    console.log("All tasks updated successfully:", responses);
+    return responses;  // Trả về các kết quả từ các requests
+  } catch (error) {
+    console.error("Error updating tasks:", error);
+    throw error;  
+  }
 };

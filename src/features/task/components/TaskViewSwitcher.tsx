@@ -12,6 +12,10 @@ import { fetchTasksService } from "@/services/taskService";
 import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 import { useProjectId } from "@/features/project/hook/use-project-id";
 import { Loader } from "lucide-react";
+import { DataKanban } from "./data-kanban";
+import { useCallback } from "react";
+import { TaskStatus } from "@/types/task";
+import { updateMultipleTasks } from "@/services/taskService";
 interface TaskViewSwticherProps {
   isHideProjectFilter?: boolean;
 }
@@ -25,8 +29,16 @@ export const TaskViewSwticher = ({
   const projectId = useProjectId();
   const { data: tasks, isLoading: isLoadingTasks } = fetchTasksService(
     workspaceId,
-    projectId,
+    projectId
   );
+  //console.log(tasks);
+  const onKanbanChange = useCallback(
+    (tasks: { $id: string; status: TaskStatus; position: number }[]) => {
+      updateMultipleTasks(workspaceId, projectId, tasks);
+    },
+    []
+  );
+
   return (
     <Tabs
       className="flex-1 w-full border rounded-lg"
@@ -69,14 +81,11 @@ export const TaskViewSwticher = ({
               <DataTable columns={columns} data={tasks ?? []} />
             </TabsContent>
 
-            {/* <TabsContent value="kanban" className="mt-0">
-              <DataKanban
-                data={tasks?.documents ?? []}
-                onChange={onKanbanChange}
-              />
+            <TabsContent value="kanban" className="mt-0">
+              <DataKanban onChange={onKanbanChange} data={tasks ?? []} />
             </TabsContent>
 
-            <TabsContent value="calendar" className="mt-0 h-full pb-4">
+            {/* <TabsContent value="calendar" className="mt-0 h-full pb-4">
               <DataCalendar data={tasks?.documents ?? []} />
             </TabsContent> */}
           </>
