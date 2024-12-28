@@ -11,6 +11,7 @@ export enum TaskStatus {
 export interface RequestTask {
   name: string;
   status: TaskStatus;
+  position: number;
   dueDate: Date;
   assigneeId: string;
 }

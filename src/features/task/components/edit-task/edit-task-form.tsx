@@ -53,7 +53,7 @@ export const EditTaskForm = ({
   const { mutate, isPending } = updateTaskService();
   const form = useForm<z.infer<typeof createTaskScema>>({
     resolver: zodResolver(
-      createTaskScema.omit({ workspaceId: true, description: true }),
+      createTaskScema.omit({ workspaceId: true, description: true })
     ),
     defaultValues: {
       ...initialValues,
@@ -63,10 +63,9 @@ export const EditTaskForm = ({
     },
   });
   const currentWorkspaceid = useWorkspaceId();
-  const {taskId: currentTaskId} = useEditTaskModal();  
+  const { taskId: currentTaskId } = useEditTaskModal();
   const onSubmit = (values: z.infer<typeof createTaskScema>) => {
-   
-    if(currentTaskId==null){
+    if (currentTaskId == null) {
       console.error("Task not found");
       console.error(currentTaskId);
       return; // Should Notify the user that the task is not found
@@ -83,7 +82,7 @@ export const EditTaskForm = ({
           form.reset();
           onCancel?.();
         },
-      },
+      }
     );
   };
 
