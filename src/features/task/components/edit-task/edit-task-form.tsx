@@ -32,10 +32,8 @@ import { TaskStatus } from "../../types";
 import { ResponseTask } from "@/types/task";
 import { createTaskScema } from "../../schemas";
 import { updateTaskService } from "@/services/taskService";
-import { useTaskId } from "../../hooks/use-task-id";
 import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 import { useEditTaskModal } from "../../hooks/use-edit-task-modal";
-import { Toaster } from "sonner";
 
 interface EditTaskFormProps {
   onCancel?: () => void;
@@ -52,16 +50,16 @@ export const EditTaskForm = ({
 }: EditTaskFormProps) => {
   const { mutate, isPending } = updateTaskService();
   const form = useForm<z.infer<typeof createTaskScema>>({
-    resolver: zodResolver(
-      createTaskScema.omit({ workspaceId: true, description: true }),
-    ),
+    resolver: zodResolver(createTaskScema.omit({ workspaceId: true })),
     defaultValues: {
       ...initialValues,
       dueDate: initialValues.dueDate
         ? new Date(initialValues.dueDate)
         : undefined,
+      description: initialValues.description ?? "",
     },
   });
+
   const currentWorkspaceid = useWorkspaceId();
   const { taskId: currentTaskId } = useEditTaskModal();
   const onSubmit = (values: z.infer<typeof createTaskScema>) => {
@@ -82,7 +80,7 @@ export const EditTaskForm = ({
           form.reset();
           onCancel?.();
         },
-      },
+      }
     );
   };
 

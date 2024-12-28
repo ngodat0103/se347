@@ -188,7 +188,7 @@ export const fetchTaskById = (
   });
   return query;
 };
-// Hàm gọi API thuần túy, không sử dụng Hook
+// Hàm gọi API  không sử dụng Hook
 export const fetchTaskByIdAPI = async (
   workspaceId: string,
   projectId: string,
@@ -252,6 +252,31 @@ export const updateMultipleTasks = async (
     return responses; // Trả về các kết quả từ các requests
   } catch (error) {
     console.error("Error updating tasks:", error);
+    throw error;
+  }
+};
+export const updateTask = async (
+  workspaceId: string,
+  projectId: string,
+  taskId: string,
+  updatedFields: Partial<RequestTask>  // Chỉ truyền các trường cần cập nhật
+) => {
+  try {
+    // Tạo URL API
+    const url = `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks/${taskId}`;
+
+    // Gửi PUT request chỉ với các trường cần cập nhật
+    const response = await axios.put(url, updatedFields, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // Nếu cần xác thực
+      },
+    });
+
+    console.log("Task updated successfully:", response.data);
+    return response.data;  // Trả về kết quả từ API
+  } catch (error) {
+    console.error("Error updating task:", error);
     throw error;
   }
 };
