@@ -43,6 +43,7 @@ export const createTaskService = () => {
     onSuccess: () => {
       toast.success("Task created successfully");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({queryKey: ["projectAnalytics"]});
     },
     onError: () => {
       toast.error("Error creating task, please try again later");
@@ -106,6 +107,7 @@ export const deleteTaskService = () => {
     onSuccess: () => {
       toast.success("Task deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({queryKey: ["projectAnalytics"]});
     },
     onError: () => {
       toast.error("Error deleting task, please try again later");
@@ -121,6 +123,7 @@ export const updateTaskService = () => {
     onSuccess: () => {
       toast.success("Task updated successfully");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({queryKey: ["projectAnalytics"]});
     },
     onError: () => {
       toast.error("Error updating task, please try again later");
