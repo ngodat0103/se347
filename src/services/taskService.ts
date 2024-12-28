@@ -150,7 +150,7 @@ export const updateTaskService = () => {
       );
       if (!response.ok) {
         throw new Error("Error updating task");
-      }  
+      }
       const data: ResponseTask = await response.json();
       return data;
     },

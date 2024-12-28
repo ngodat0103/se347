@@ -10,7 +10,6 @@ import { updateWorkspaceForm } from "@/types/workspace";
 import router from "next/router";
 import { BASE_API_URL, headers } from "./baseApi";
 import { useQuery } from "@tanstack/react-query";
-const token = Cookies.get("accessToken");
 
 export const fetchWorkspaces = async () => {
   try {
@@ -88,6 +87,7 @@ export async function createWorkspace(
   workspaceForm: CreateWorkspaceForm,
 ): Promise<WorkspaceResponse> {
   console.debug(workspaceForm);
+  const token = Cookies.get("accessToken");
 
   if (!token) {
     router.push("/login");
@@ -129,6 +129,7 @@ export async function updateWorkspace(
   workspaceForm: updateWorkspaceForm,
 ): Promise<WorkspaceResponse> {
   console.debug(workspaceForm);
+  const token = Cookies.get("accessToken");
 
   if (!token) {
     router.push("/login");
@@ -177,6 +178,7 @@ async function uploadWorkspaceImage(
       imageFile = await resizeImage(imageFile, 800, 800);
     }
     console.log("Image size after resize (bytes):", imageFile.size);
+    const token = Cookies.get("accessToken");
 
     // Upload trực tiếp file nhị phân
     const response = await fetch(`${BASE_API_URL}/workspaces/${id}/image`, {
@@ -203,7 +205,7 @@ async function uploadWorkspaceImage(
 }
 export async function deleteWorkspace(workspaceId: string): Promise<void> {
   console.debug(`Deleting workspace with ID: ${workspaceId}`);
-
+  const token = Cookies.get("accessToken");
   if (!token) {
     router.push("/sign-in");
     throw new Error("Unauthorized: No access token found.");
@@ -224,6 +226,7 @@ export async function deleteWorkspace(workspaceId: string): Promise<void> {
 
 export async function resetInviteCode(workspaceId: string): Promise<void> {
   console.debug(`Resetting invite code for workspace with ID: ${workspaceId}`);
+  const token = Cookies.get("accessToken");
 
   if (!token) {
     router.push("/sign-in");
@@ -248,6 +251,7 @@ export async function joinWorkspaceByInviteCode(
   inviteCode: string,
 ): Promise<void> {
   console.log(inviteCode);
+  const token = Cookies.get("accessToken");
 
   if (!token) {
     router.push("/sign-in");
@@ -310,6 +314,7 @@ export const fetchWorkspaceMembers = (workspaceId: string) => {
   return query;
 };
 export const deleteMember = async (workspaceId: string, memberId: string) => {
+  const token = Cookies.get("accessToken");
   if (!token) {
     throw new Error("Token không tồn tại trong cookie");
   }
@@ -345,6 +350,7 @@ export const updateRoleMember = async (
   memberId: string,
   newRole: "OWNER" | "MEMBER"|"ADMINISTRATOR"|"DEVELOPER",
 ) => {
+  const token = Cookies.get("accessToken");
   if (!token) {
     throw new Error("Token does not exist in cookies");
   }
@@ -366,4 +372,33 @@ export const updateRoleMember = async (
   }
 
   return response.json(); // Return the response data if needed
+};
+
+export const fetchWorkspaceByInviteCode =  (inviteCode: string) => {
+  const token = Cookies.get("accessToken");
+  const query = useQuery({
+    queryKey: ["workspaceByInviteCode", inviteCode],
+    queryFn: async () => {
+      if (!token) {
+        throw new Error("Token không tồn tại trong cookie");
+      }
+      const response = await fetch(
+        `${BASE_API_URL}/workspaces/join?inviteCode=${encodeURIComponent(inviteCode)}`,
+        {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Lỗi khi lấy thông tin workspace bằng mã mời");
+      }
+      const data: WorkspaceResponse = await response.json();
+      return data; // Trả về thông tin workspace
+    },
+  });
+  return query;
 };
