@@ -32,7 +32,7 @@ export const AnalyticsCard = ({
             <span
               className={cn(
                 increaseValueColor,
-                "truncate text-base font-medium"
+                "truncate text-base font-medium",
               )}
             >
               {increaseValue}

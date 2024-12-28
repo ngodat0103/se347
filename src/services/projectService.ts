@@ -1,6 +1,10 @@
 "use client";
 import { BASE_API_URL } from "./baseApi";
-import { createProjectForm, projectAnalyticsResponse, ProjectResponse } from "@/types/project";
+import {
+  createProjectForm,
+  projectAnalyticsResponse,
+  ProjectResponse,
+} from "@/types/project";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { ErrorMessage } from "@/types/error";
@@ -253,27 +257,29 @@ export const useUpdateProject = () => {
   });
 };
 
-
-export const fetchProjectAnalytics = (workspaceId: string, projectId: string) => {
-     const query = useQuery({
-      queryKey: ["projectAnalytics", workspaceId, projectId],
-      queryFn: async () => {
-        const token = Cookies.get("accessToken");
-        const response = await fetch(
-          `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/analytics`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+export const fetchProjectAnalytics = (
+  workspaceId: string,
+  projectId: string,
+) => {
+  const query = useQuery({
+    queryKey: ["projectAnalytics", workspaceId, projectId],
+    queryFn: async () => {
+      const token = Cookies.get("accessToken");
+      const response = await fetch(
+        `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/analytics`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        );
-  
-        if (!response.ok) {
-          throw new Error("Failed to fetch project analytics.");
-        }
-        const data :projectAnalyticsResponse = await response.json();
-        return data;
-      },
-     })
-     return query;
-}
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch project analytics.");
+      }
+      const data: projectAnalyticsResponse = await response.json();
+      return data;
+    },
+  });
+  return query;
+};

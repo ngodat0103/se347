@@ -348,7 +348,7 @@ export const deleteMember = async (workspaceId: string, memberId: string) => {
 export const updateRoleMember = async (
   workspaceId: string,
   memberId: string,
-  newRole: "OWNER" | "MEMBER"|"ADMINISTRATOR"|"DEVELOPER",
+  newRole: "OWNER" | "MEMBER" | "ADMINISTRATOR" | "DEVELOPER",
 ) => {
   const token = Cookies.get("accessToken");
   if (!token) {
@@ -374,7 +374,7 @@ export const updateRoleMember = async (
   return response.json(); // Return the response data if needed
 };
 
-export const fetchWorkspaceByInviteCode =  (inviteCode: string) => {
+export const fetchWorkspaceByInviteCode = (inviteCode: string) => {
   const token = Cookies.get("accessToken");
   const query = useQuery({
     queryKey: ["workspaceByInviteCode", inviteCode],

@@ -1,6 +1,6 @@
 "use client";
 import { RequestTask, ResponseTask } from "@/types/task";
-import {  useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { BASE_API_URL } from "./baseApi";
 import Cookies from "js-cookie";
@@ -43,7 +43,7 @@ export const createTaskService = () => {
     onSuccess: () => {
       toast.success("Task created successfully");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      queryClient.invalidateQueries({queryKey: ["projectAnalytics"]});
+      queryClient.invalidateQueries({ queryKey: ["projectAnalytics"] });
     },
     onError: () => {
       toast.error("Error creating task, please try again later");
@@ -107,7 +107,7 @@ export const deleteTaskService = () => {
     onSuccess: () => {
       toast.success("Task deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      queryClient.invalidateQueries({queryKey: ["projectAnalytics"]});
+      queryClient.invalidateQueries({ queryKey: ["projectAnalytics"] });
     },
     onError: () => {
       toast.error("Error deleting task, please try again later");
@@ -123,7 +123,7 @@ export const updateTaskService = () => {
     onSuccess: () => {
       toast.success("Task updated successfully");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      queryClient.invalidateQueries({queryKey: ["projectAnalytics"]});
+      queryClient.invalidateQueries({ queryKey: ["projectAnalytics"] });
     },
     onError: () => {
       toast.error("Error updating task, please try again later");
@@ -192,7 +192,7 @@ export const fetchTaskById = (
 export const fetchTaskByIdAPI = async (
   workspaceId: string,
   projectId: string,
-  taskId: string
+  taskId: string,
 ): Promise<ResponseTask> => {
   const response = await fetch(
     `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks/${taskId}`,
@@ -203,7 +203,7 @@ export const fetchTaskByIdAPI = async (
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   if (!response.ok) {
@@ -216,19 +216,23 @@ export const fetchTaskByIdAPI = async (
 export const updateMultipleTasks = async (
   workspaceId: string,
   projectId: string,
-  tasks: { $id: string; status: TaskStatus; position: number }[]  // Mảng các task cần cập nhật
+  tasks: { $id: string; status: TaskStatus; position: number }[], // Mảng các task cần cập nhật
 ) => {
   try {
     // Duyệt qua từng task và thực hiện PUT request cho mỗi task
     const promises = tasks.map(async (task) => {
-      const taskDetails = await fetchTaskByIdAPI(workspaceId, projectId, task.$id);
+      const taskDetails = await fetchTaskByIdAPI(
+        workspaceId,
+        projectId,
+        task.$id,
+      );
 
-      const taskDto: RequestTask= {
-        name: taskDetails.name|| "Untitled",                
-        status: task.status,      
-        position: task.position,  
-        dueDate: new Date(),      
-        assigneeId: taskDetails.assignee.userId||"user", 
+      const taskDto: RequestTask = {
+        name: taskDetails.name || "Untitled",
+        status: task.status,
+        position: task.position,
+        dueDate: new Date(),
+        assigneeId: taskDetails.assignee.userId || "user",
       };
       // Tạo URL API cho từng task
       const url = `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks/${task.$id}`;
@@ -236,8 +240,8 @@ export const updateMultipleTasks = async (
       // Gửi PUT request cho từng task
       return axios.put(url, taskDto, {
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // Nếu cần xác thực
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Nếu cần xác thực
         },
       });
     });
@@ -245,9 +249,9 @@ export const updateMultipleTasks = async (
     // Chờ tất cả các promises hoàn thành
     const responses = await Promise.all(promises);
     console.log("All tasks updated successfully:", responses);
-    return responses;  // Trả về các kết quả từ các requests
+    return responses; // Trả về các kết quả từ các requests
   } catch (error) {
     console.error("Error updating tasks:", error);
-    throw error;  
+    throw error;
   }
 };

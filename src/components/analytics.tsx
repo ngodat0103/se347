@@ -1,10 +1,9 @@
-
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { AnalyticsCard } from "./analytics-card";
 import { DottedSeparator } from "./dotted-separator";
 import { projectAnalyticsResponse } from "@/types/project";
 
-export const Analytics = (projectAnalytics: projectAnalyticsResponse ) => {
+export const Analytics = (projectAnalytics: projectAnalyticsResponse) => {
   return (
     <ScrollArea className="border rounded-lg w-full whitespace-nowrap shrink-0">
       <ScrollBar orientation="horizontal" />
@@ -23,7 +22,9 @@ export const Analytics = (projectAnalytics: projectAnalyticsResponse ) => {
           <AnalyticsCard
             title="Assigned Tasks"
             value={projectAnalytics.assignedTaskCount}
-            variant={projectAnalytics.assignedTaskDifference > 0 ? "up" : "down"}
+            variant={
+              projectAnalytics.assignedTaskDifference > 0 ? "up" : "down"
+            }
             increaseValue={projectAnalytics.assignedTaskDifference}
           />
           <DottedSeparator direction="vertical" />
@@ -33,7 +34,9 @@ export const Analytics = (projectAnalytics: projectAnalyticsResponse ) => {
           <AnalyticsCard
             title="Completed Tasks"
             value={projectAnalytics.completedTaskCount}
-            variant={projectAnalytics.completedTaskDifference > 0 ? "up" : "down"}
+            variant={
+              projectAnalytics.completedTaskDifference > 0 ? "up" : "down"
+            }
             increaseValue={projectAnalytics.completedTaskDifference}
           />
           <DottedSeparator direction="vertical" />
@@ -43,7 +46,9 @@ export const Analytics = (projectAnalytics: projectAnalyticsResponse ) => {
           <AnalyticsCard
             title="Incomplete Tasks"
             value={projectAnalytics.inCompletedTaskCount}
-            variant={projectAnalytics.inCompletedTaskDifference > 0 ? "up" : "down"}
+            variant={
+              projectAnalytics.inCompletedTaskDifference > 0 ? "up" : "down"
+            }
             increaseValue={projectAnalytics.inCompletedTaskDifference}
           />
           <DottedSeparator direction="vertical" />

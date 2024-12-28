@@ -16,7 +16,7 @@ const projectIdPage = () => {
   const workspaceId = useWorkspaceId();
   const projectId = useProjectId();
   const { data: analyticsResponse, isLoading: isLoaddingAnalytics } =
-    fetchProjectAnalytics(workspaceId,projectId)
+    fetchProjectAnalytics(workspaceId, projectId);
 
   const { data: projectReponse, isLoading: isLoaddingProject } =
     fetchProjectById(workspaceId, projectId);

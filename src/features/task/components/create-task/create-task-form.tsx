@@ -74,7 +74,7 @@ export const CreateTaskForm = ({
           form.reset();
           onCancel?.();
         },
-      }
+      },
     );
   };
 

@@ -8,8 +8,7 @@ import {
 import { ResponseTask, TaskStatus } from "../../../types/task";
 import { KanbanColumnHeader } from "./kanban-column-header";
 import { KanbanCard } from "./kanban-card";
-import { on } from "events";
-
+import { useQueryClient } from "@tanstack/react-query";
 const boards: TaskStatus[] = [
   TaskStatus.BACKLOG,
   TaskStatus.TODO,
@@ -25,7 +24,7 @@ type TasksStatus = {
 interface DataKanbanProps {
   data: ResponseTask[];
   onChange: (
-    tasks: { $id: string; status: TaskStatus; position: number }[]
+    tasks: { $id: string; status: TaskStatus; position: number }[],
   ) => void;
 }
 
@@ -148,7 +147,7 @@ export const DataKanban = ({ data, onChange }: DataKanbanProps) => {
       });
       onChange(updatesPayload);
     },
-    [onChange]
+    [onChange],
   );
 
   return (
