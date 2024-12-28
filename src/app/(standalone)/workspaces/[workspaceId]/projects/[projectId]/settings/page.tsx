@@ -14,7 +14,7 @@ const ProjectIdSettingsClient = () => {
   const workspaceId = useWorkspaceId();
   const { data: initialValues, isLoading } = fetchProjectById(
     workspaceId,
-    projectId
+    projectId,
   );
 
   if (isLoading) return <PageLoader />;

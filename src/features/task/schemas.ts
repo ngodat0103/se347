@@ -7,7 +7,7 @@ export const createTaskScema = z.object({
   workspaceId: z.string().trim().min(1, "Required"),
   projectId: z.string().trim().min(1, "Required"),
   dueDate: z.coerce.date(),
-  position: z.number().int().min(0, "Required").default(0),//kanban
+  position: z.number().int().min(0, "Required").default(0), //kanban
   assigneeId: z.string().trim().min(1, "Required"),
   description: z.string().optional(),
 });

@@ -34,7 +34,7 @@ export const MembersList = () => {
   const currentUserEmail = user?.email;
   //Kiem tra role user
   const currentUserRole = members?.find(
-    (member: any) => member.email === currentUserEmail
+    (member: any) => member.email === currentUserEmail,
   )?.role;
   console.log(currentUserRole);
   const handleBack = () => {
@@ -53,14 +53,14 @@ export const MembersList = () => {
     } catch (error) {
       console.error("Error removing member:", error);
       setErrorMessage(
-        "An error occurred while removing the member. Please try again!"
+        "An error occurred while removing the member. Please try again!",
       );
     }
   };
 
   const handleSetRole = async (
     id: string,
-    role: "OWNER" | "MEMBER" | "ADMINISTRATOR" | "DEVELOPER"
+    role: "OWNER" | "MEMBER" | "ADMINISTRATOR" | "DEVELOPER",
   ) => {
     try {
       await updateRoleMember(workspaceId, id, role);
@@ -192,7 +192,7 @@ export const MembersList = () => {
           errorMessage || successMessage
             ? "opacity-100 visible"
             : "opacity-0 invisible",
-          errorMessage ? "bg-red-500 text-white" : "bg-green-500 text-white"
+          errorMessage ? "bg-red-500 text-white" : "bg-green-500 text-white",
         )}
       >
         {errorMessage || successMessage}

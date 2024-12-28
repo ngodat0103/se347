@@ -41,7 +41,7 @@ const JoinWorkspaceForm = ({ inviteCode }: JoinWorkspaceFormProps) => {
     } catch (err: any) {
       // Xử lý lỗi
       setError(
-        err.message || "Failed to join workspace. Please try again later."
+        err.message || "Failed to join workspace. Please try again later.",
       );
       console.error(err);
     } finally {

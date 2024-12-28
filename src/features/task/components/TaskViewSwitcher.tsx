@@ -29,14 +29,14 @@ export const TaskViewSwticher = ({
   const projectId = useProjectId();
   const { data: tasks, isLoading: isLoadingTasks } = fetchTasksService(
     workspaceId,
-    projectId
+    projectId,
   );
   //console.log(tasks);
   const onKanbanChange = useCallback(
     (tasks: { $id: string; status: TaskStatus; position: number }[]) => {
       updateMultipleTasks(workspaceId, projectId, tasks);
     },
-    []
+    [],
   );
 
   return (
