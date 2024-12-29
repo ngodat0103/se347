@@ -81,6 +81,7 @@ export const fetchTasksService = (
   return query;
 };
 
+
 export const deleteTaskService = () => {
   const queryClient = useQueryClient();
   const mutate = useMutation({
