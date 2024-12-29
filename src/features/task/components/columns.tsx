@@ -76,7 +76,7 @@ export const columns: ColumnDef<ResponseTask>[] = [
     },
     cell: ({ row }) => {
       const assignee = row.original.assignee;
-
+      if(!assignee) return null;
       return (
         <div className="flex items-center gap-x-2 text-sm font-medium">
           <MemberAvatar
