@@ -51,12 +51,14 @@ export const createTaskService = () => {
   });
   return mutate;
 };
-export const fetchTasksService = (workspaceId: string, projectId: string) => {
+export const fetchTasksService = (workspaceId: string, projectId: string,myTasks : boolean) => {
   const query = useQuery({
     queryKey: ["tasks", workspaceId, projectId],
     queryFn: async () => {
+      const ENDPOINT = myTasks ? `${BASE_API_URL}/tasks/my-tasks` : `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks`;
+
       const response = await fetch(
-        `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks`,
+        `${ENDPOINT}`,
         {
           method: "GET",
           headers: {

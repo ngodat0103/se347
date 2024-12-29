@@ -17,7 +17,7 @@ import { useCallback } from "react";
 import { TaskStatus } from "@/types/task";
 import { updateMultipleTasks } from "@/services/taskService";
 interface TaskViewSwticherProps {
-  isHideProjectFilter?: boolean;
+  isHideProjectFilter: boolean;
 }
 
 export const TaskViewSwticher = ({
@@ -30,6 +30,7 @@ export const TaskViewSwticher = ({
   const { data: tasks, isLoading: isLoadingTasks } = fetchTasksService(
     workspaceId,
     projectId,
+    isHideProjectFilter,
   );
   //console.log(tasks);
   const onKanbanChange = useCallback(
