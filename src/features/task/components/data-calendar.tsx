@@ -10,7 +10,8 @@ import {
 import {enUS} from "date-fns/locale";
 import { useState } from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
-
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "./data-calendar.css"
 const locales ={
     "en-US": enUS
 };
