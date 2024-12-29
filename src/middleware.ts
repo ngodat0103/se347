@@ -3,10 +3,11 @@ import type { NextRequest } from "next/server";
 import { isTokenValid } from "@/lib/jwt_utils";
 
 export async function middleware(request: NextRequest) {
+
   // Auto redirect from landing page to dashboard if user is logged in
   if (request.nextUrl.pathname === "/") {
     const token = request.cookies.get("accessToken")?.value;
-    if (token) {
+    if (token && (await isTokenValid(token))) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
     // If user is not logged in then return next, don't run Auth middleware
