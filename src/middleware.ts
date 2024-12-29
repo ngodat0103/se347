@@ -3,11 +3,18 @@ import type { NextRequest } from "next/server";
 import { isTokenValid } from "@/lib/jwt_utils";
 
 export async function middleware(request: NextRequest) {
+  // Check access token first
+  const token = request.cookies.get("accessToken")?.value;
+  const token_valid = await isTokenValid(token);
+
+  // If token is invalid then remove it from cookies
+  if (!token_valid) {
+    request.cookies.delete("accessToken");
+  }
 
   // Auto redirect from landing page to dashboard if user is logged in
   if (request.nextUrl.pathname === "/") {
-    const token = request.cookies.get("accessToken")?.value;
-    if (token && (await isTokenValid(token))) {
+    if (token_valid) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
     // If user is not logged in then return next, don't run Auth middleware
@@ -21,14 +28,8 @@ export async function middleware(request: NextRequest) {
     new URL("/sign-in", request.url),
   );
 
-  const token = request.cookies.get("accessToken")?.value;
-  if (!token) {
-    return login_redirect;
-  }
-
-  // Check token
-  const tokenValid = await isTokenValid(token);
-  if (!tokenValid) {
+  // Check if user is logged in
+  if (!token_valid) {
     return login_redirect;
   }
 
