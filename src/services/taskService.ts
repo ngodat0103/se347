@@ -51,6 +51,7 @@ export const createTaskService = () => {
   });
   return mutate;
 };
+
 export const fetchTasksService = (workspaceId: string, projectId: string) => {
   const query = useQuery({
     queryKey: ["tasks", workspaceId, projectId],
@@ -75,6 +76,7 @@ export const fetchTasksService = (workspaceId: string, projectId: string) => {
   });
   return query;
 };
+
 
 export const deleteTaskService = () => {
   const queryClient = useQueryClient();
@@ -255,3 +257,4 @@ export const updateMultipleTasks = async (
     throw error;
   }
 };
+
