@@ -17,6 +17,10 @@ import { DataCalendar } from "./calendar/data-calendar";
 import { useCallback } from "react";
 import { TaskStatus } from "@/types/task";
 import { useUpdateMultipleTasks } from "@/services/taskService";
+import { useState } from "react";
+import { ResponseTask } from "@/types/task";
+import { useTaskFilters } from "../hooks/use-task-filters";
+import { useEffect } from "react";
 
 export const TaskViewSwitcher = ({ isHideProjectFilter = false }) => {
   const [view, setView] = useQueryState("task-view", { defaultValue: "table" });
