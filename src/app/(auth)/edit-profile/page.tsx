@@ -1,9 +1,7 @@
-"use client";
-
 import { UpdateProfileForm } from "@/features/auth/components/edit-profile-card";
 
-const Profilepage = () => {
+const EditProfilePage = () => {
   return <UpdateProfileForm />;
 };
 
-export default Profilepage;
+export default EditProfilePage;
