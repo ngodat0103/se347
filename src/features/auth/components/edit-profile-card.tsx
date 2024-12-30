@@ -2,34 +2,31 @@
 
 import React, { useState, useEffect } from "react";
 import { FaEdit } from "react-icons/fa"; // Importing pencil icon
-import { getUsers, updateUser } from "@/services/userService"; // Importing services
+import { getCurrentUser, updateCurrentUser } from "@/services/userService"; // Importing services
+
+const defaultImageUrl = "https://i.pinimg.com/736x/97/bb/06/97bb067e30ff6b89f4fbb7b9141025ca.jpg";
 
 export const UpdateProfileForm = () => {
   const [userData, setUserData] = useState({
     id: "",
     name: "",
     email: "",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", // Default image
+    imageUrl: defaultImageUrl, // Default image
   });
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   // Fetch user data from API
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const users = await getUsers();
-        if (users?.userId && users?.nickName && users?.email) {
-          setUserData({
-            id: users.userId,
-            name: users.nickName || "Default Name",
-            email: users.email,
-            imageUrl: users.imageUrl || userData.imageUrl,
-          });
-        } else {
-          console.error("Invalid user data structure:", users);
-        }
+        const users = await getCurrentUser();
+        setUserData({
+          id: users.userId,
+          name: users.nickName,
+          email: users.email,
+          imageUrl: users.imageUrl || userData.imageUrl,
+        });
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -40,22 +37,28 @@ export const UpdateProfileForm = () => {
 
   // Function to handle edit/save button click
   const handleEditClick = () => {
-    if (isEditing) {
-      if (!userData.id || !userData.name) {
-        console.error("Missing user ID or name.");
-        return;
-      }
-
-      updateUser(userData.id, { nickName: userData.name }) // Update with only allowed fields
-        .then(() => console.log("User updated successfully"))
-        .catch((error) => console.error("Error updating user:", error));
+    if (!userData.id || !userData.name) {
+      console.error("Missing user ID or name.");
+      return;
     }
 
-    setIsEditing(!isEditing);
+    updateCurrentUser({ nickName: userData.name}, imageFile) // Update with only allowed fields
+      .then(() => console.log("User updated successfully"))
+      .catch((error) => console.error("Error updating user:", error));
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.debug(e);
+    const file = e.target.files?.[0];
+    if (!file) {
+      return;
+    }
+    setUserData({ ...userData, imageUrl: URL.createObjectURL(file) });
+    setImageFile(file);
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="h-full bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden">
         <div className="px-8 py-6">
           <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">
@@ -70,9 +73,11 @@ export const UpdateProfileForm = () => {
                   alt="Profile"
                   className="w-full h-full rounded-full object-cover border-4 border-gray-200"
                 />
+                <input type="file" id="imgupload" className="invisible" hidden onChange={handleImageUpload} />
                 <button
                   type="button"
                   className="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full text-white hover:bg-blue-700 transition-colors text-sm"
+                  onClick={() => document.getElementById("imgupload")?.click()}
                 >
                   <FaEdit />
                 </button>
@@ -95,25 +100,6 @@ export const UpdateProfileForm = () => {
                 onChange={(e) => setUserData({ ...userData, name: e.target.value })}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter your name"
-                readOnly={!isEditing}
-              />
-            </div>
-
-            {/* Email field (read-only) */}
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={userData.email}
-                readOnly
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
@@ -124,7 +110,7 @@ export const UpdateProfileForm = () => {
                 onClick={handleEditClick}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
               >
-                {isEditing ? "Save" : "Update Profile"}
+                Update Profile
               </button>
             </div>
           </form>

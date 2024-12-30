@@ -3,16 +3,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-
-interface User {
-  nickName?: string;
-  pictureUrl?: string;
-  email: string;
-  accountId: string;
-}
+import { UserResponse } from "@/types/user";
 
 const useUser = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 

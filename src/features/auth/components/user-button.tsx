@@ -14,12 +14,6 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { logout as logoutService } from "@/services/userService";
 import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
-interface User {
-  nickName?: string;
-  pictureUrl?: string;
-  email: string;
-  accountId: string;
-}
 
 const UserProfile: React.FC = () => {
   const { user } = useUser();
@@ -51,7 +45,7 @@ const UserProfile: React.FC = () => {
               <Avatar className="size-10 hover:opacity-75 transition border border-neutral-300">
                 <AvatarImage
                   src={
-                    user.pictureUrl ||
+                    user.imageUrl ||
                     "https://i.pinimg.com/736x/97/bb/06/97bb067e30ff6b89f4fbb7b9141025ca.jpg"
                   }
                   alt="Avatar"
@@ -68,7 +62,7 @@ const UserProfile: React.FC = () => {
                 <Avatar className="size-[52px]  border border-neutral-300">
                   <AvatarImage
                     src={
-                      user.pictureUrl ||
+                      user.imageUrl ||
                       "https://i.pinimg.com/736x/97/bb/06/97bb067e30ff6b89f4fbb7b9141025ca.jpg"
                     }
                     alt="Avatar"
