@@ -1,5 +1,5 @@
 import { ErrorMessage } from "@/types/error";
-import { LoginForm, LoginResponse, RegisterForm } from "@/types/user";
+import { LoginForm, LoginResponse, RegisterForm, UserResponse } from "@/types/user";
 import Cookies from "js-cookie";
 import { BASE_API_URL, headers } from "./baseApi";
 
@@ -81,7 +81,7 @@ export async function logout(): Promise<void> {
     throw new Error(data.detail);
   }
 }
-export async function getUsers(): Promise<any> {
+export async function getCurrentUser(): Promise<UserResponse> {
   try {
     const accessToken = Cookies.get("accessToken");
 
@@ -101,7 +101,7 @@ export async function getUsers(): Promise<any> {
       throw new Error(`Error fetching users: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data: UserResponse = await response.json();
     console.log("Fetched data:", data); // Log the response to inspect its structure
     return data;
   } catch (error) {
