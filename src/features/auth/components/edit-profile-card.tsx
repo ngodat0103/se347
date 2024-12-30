@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { FaEdit } from "react-icons/fa"; // Importing pencil icon
-import { getUsers, updateUser } from "@/services/userService"; // Importing services
+import { getCurrentUser, updateUser } from "@/services/userService"; // Importing services
 
 export const UpdateProfileForm = () => {
   const [userData, setUserData] = useState({
@@ -10,7 +10,7 @@ export const UpdateProfileForm = () => {
     name: "",
     email: "",
     imageUrl:
-      "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", // Default image
+      "https://i.pinimg.com/736x/97/bb/06/97bb067e30ff6b89f4fbb7b9141025ca.jpg", // Default image
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -19,7 +19,7 @@ export const UpdateProfileForm = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const users = await getUsers();
+        const users = await getCurrentUser();
         if (users?.userId && users?.nickName && users?.email) {
           setUserData({
             id: users.userId,
