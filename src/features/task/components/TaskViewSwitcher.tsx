@@ -16,13 +16,8 @@ import { DataKanban } from "./data-kanban";
 import { useCallback } from "react";
 import { TaskStatus } from "@/types/task";
 import { updateMultipleTasks } from "@/services/taskService";
-interface TaskViewSwitcherProps {
-  isHideProjectFilter: boolean;
-}
 
-export const TaskViewSwitcher = ({
-  isHideProjectFilter,
-}: TaskViewSwitcherProps) => {
+export const TaskViewSwitcher = ({isHideProjectFilter = false}) => {
   const [view, setView] = useQueryState("task-view", { defaultValue: "table" });
   const { open } = useCreateTaskModal();
   const workspaceId = useWorkspaceId();
