@@ -80,3 +80,31 @@ export async function logout(): Promise<void> {
     throw new Error(data.detail);
   }
 }
+export async function getUsers(): Promise<any> {
+  try {
+    const accessToken = Cookies.get("accessToken");
+
+    if (!accessToken) {
+      throw new Error("No access token found. Please log in first.");
+    }
+
+    const response = await fetch(`${BASE_API_URL}/users/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error fetching users: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log("Fetched data:", data); // Log the response to inspect its structure
+    return data;
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw new Error("Could not fetch users.");
+  }
+}
