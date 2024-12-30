@@ -78,6 +78,7 @@ export const fetchTasksService = (workspaceId: string, projectId: string,myTasks
   return query;
 };
 
+
 export const deleteTaskService = () => {
   const queryClient = useQueryClient();
   const mutate = useMutation({
