@@ -2,6 +2,7 @@ import { ErrorMessage } from "@/types/error";
 import { LoginForm, LoginResponse, RegisterForm } from "@/types/user";
 import Cookies from "js-cookie";
 import { BASE_API_URL, headers } from "./baseApi";
+
 export async function login(login_form: LoginForm): Promise<LoginResponse> {
   console.debug(login_form);
 
@@ -106,5 +107,36 @@ export async function getUsers(): Promise<any> {
   } catch (error) {
     console.error("Error fetching users:", error);
     throw new Error("Could not fetch users.");
+  }
+}
+
+// Function to update user data
+
+
+export async function updateUser(userId: string, updateData: Partial<RegisterForm>): Promise<void> {
+  const update_json = JSON.stringify(updateData);
+
+  const accessToken = Cookies.get("accessToken");
+
+  if (!accessToken) {
+    throw new Error("No access token found. Please log in first.");
+  }
+
+  const response = await fetch(`${BASE_API_URL}/users`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: update_json,
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    console.log(data);
+  } else {
+    const data = await response.json();
+    console.error(data);
+    throw new Error("Error updating user data.");
   }
 }
