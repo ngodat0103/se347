@@ -16,7 +16,7 @@ export const TaskBreadcrumb = ({ project, task }: TaskBreadcrumbProps) => {
   const [ConfirmDialog, confirm] = useConfirm(
     "Delete task",
     "This action cannot be undone.",
-    "destructive"
+    "destructive",
   );
   const { mutate: deleteTaskMutate, isPending } = deleteTaskService();
   const router = useRouter();
@@ -38,7 +38,7 @@ export const TaskBreadcrumb = ({ project, task }: TaskBreadcrumbProps) => {
         onError: (error) => {
           console.error("Failed to delete task:", error);
         },
-      }
+      },
     );
   };
   console.log(task.workspaceId, project.id, task.id);

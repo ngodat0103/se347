@@ -80,7 +80,7 @@ export const EditTaskForm = ({
           form.reset();
           onCancel?.();
         },
-      }
+      },
     );
   };
 

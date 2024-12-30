@@ -1,5 +1,5 @@
 import { ResponseTask } from "@/types/task";
-import { TaskActions } from "../task-actions";
+import { TaskActions } from "../tasks/task-actions";
 import { MoreHorizontal } from "lucide-react";
 import { DottedSeparator } from "@/components/dotted-separator";
 import { MemberAvatar } from "@/features/member/components/meber-avatar";
@@ -21,11 +21,13 @@ export const KanbanCard = ({ task }: KanbanCardProps) => {
       </div>
       <DottedSeparator />
       <div className="flex item-center gap-x-1.5">
-        {task.assignee !=null? (<MemberAvatar
-          name={task.assignee.nickName}
-          className="w-6 h-6"
-          fallbackClassName="text-[10px]"
-        />):null}
+        {task.assignee != null ? (
+          <MemberAvatar
+            name={task.assignee.nickName}
+            className="w-6 h-6"
+            fallbackClassName="text-[10px]"
+          />
+        ) : null}
         <div className="flex items-center justify-center">
           <div className="w-1.5 h-1.5 rounded-full bg-neutral-300"></div>
         </div>

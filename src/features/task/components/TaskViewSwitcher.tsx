@@ -16,7 +16,7 @@ import { DataKanban } from "./kaban/data-kanban";
 import { DataCalendar } from "./calendar/data-calendar";
 import { useCallback } from "react";
 import { TaskStatus } from "@/types/task";
-import { updateMultipleTasks } from "@/services/taskService";
+import { useUpdateMultipleTasks } from "@/services/taskService";
 
 
 export const TaskViewSwitcher = ({isHideProjectFilter = false}) => {
@@ -30,9 +30,11 @@ export const TaskViewSwitcher = ({isHideProjectFilter = false}) => {
     isHideProjectFilter,
   );
 
+  const { mutate: updateMultipleTasksMutate } = useUpdateMultipleTasks();
+
   const onKanbanChange = useCallback(
     (tasks: { $id: string; status: TaskStatus; position: number }[]) => {
-      updateMultipleTasks(workspaceId, projectId, tasks);
+      updateMultipleTasksMutate({ workspaceId, projectId, tasks });
     },
     [],
   );
