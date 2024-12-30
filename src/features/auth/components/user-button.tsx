@@ -1,4 +1,6 @@
 "use client";
+import React from "react";
+import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -7,23 +9,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DottedSeparator } from "@/components/dotted-separator";
-import { Loader, LogOut } from "lucide-react";
+import { Loader, LogOut, Edit } from "lucide-react";
 import useUser from "@/hooks/useUser";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { logout as logoutService } from "@/services/userService";
-interface User {
-  nickName?: string;
-  pictureUrl?: string;
-  email: string;
-  accountId: string;
-}
+import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 
 const UserProfile: React.FC = () => {
   const { user } = useUser();
   const router = useRouter();
+  const workspaceId = useWorkspaceId();
 
   const handleLogout = () => {
     logoutService();
@@ -32,8 +28,9 @@ const UserProfile: React.FC = () => {
     sessionStorage.clear();
     router.push("/sign-in");
   };
+
   return (
-    <div>
+    <div className="relative flex items-center">
       {user ? (
         <>
           <DropdownMenu modal={false}>
@@ -55,7 +52,7 @@ const UserProfile: React.FC = () => {
               sideOffset={10}
             >
               <div className="flex flex-col items-center justify-center gap-2 px-2.5 py-4">
-                <Avatar className="size-[52px]  border border-neutral-300">
+                <Avatar className="size-[52px] border border-neutral-300">
                   <AvatarImage
                     src={
                       user.pictureUrl ||
@@ -71,9 +68,22 @@ const UserProfile: React.FC = () => {
                   <p className="text-xs text-neutral-500">{user.email}</p>
                 </div>
               </div>
-              <DottedSeparator className="mb-1" />
+
+              {/* Edit Profile button */}
               <DropdownMenuItem
-                onClick={() => handleLogout()}
+                className="h-10 flex items-center gap-2 text-blue-600 font-medium cursor-pointer"
+              >
+                <Edit className="size-4" />
+                <Link href="/edit-profile">
+                    <a>Profile</a>
+                </Link>
+              </DropdownMenuItem>
+
+              <DottedSeparator className="mb-1" />
+
+              {/* Log out button */}
+              <DropdownMenuItem
+                onClick={handleLogout}
                 className="h-10 flex items-center justify-center text-red-700 font-medium cursor-pointer"
               >
                 <LogOut className="size-4 mr-2" />
