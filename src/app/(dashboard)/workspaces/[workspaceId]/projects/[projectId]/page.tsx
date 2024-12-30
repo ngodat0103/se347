@@ -8,8 +8,8 @@ import { PageError } from "@/components/page-error";
 import { ProjectAvatar } from "@/features/project/components/project-avatar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { PencilIcon, Underline } from "lucide-react";
-import { TaskViewSwticher } from "@/features/task/components/TaskViewSwitcher";
+import { PencilIcon } from "lucide-react";
+import { TaskViewSwitcher } from "@/features/task/components/TaskViewSwitcher";
 import { fetchProjectAnalytics } from "@/services/projectService";
 import { Analytics } from "@/components/analytics";
 const projectIdPage = () => {
@@ -51,7 +51,7 @@ const projectIdPage = () => {
             </div>
           </div>
           {analyticsResponse && <Analytics {...analyticsResponse} />}
-          <TaskViewSwticher />
+          <TaskViewSwitcher />
         </div>
       );
     }

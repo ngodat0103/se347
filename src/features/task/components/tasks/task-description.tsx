@@ -35,7 +35,7 @@ export const TaskDescription = ({ task }: TaskDescriptionProps) => {
         onSuccess: () => {
           setIsEditing(false); // Đóng chế độ chỉnh sửa sau khi lưu thành công
         },
-      }
+      },
     );
   };
 

@@ -2,7 +2,7 @@
 import { useQueryState } from "nuqs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
+import { Calendar, PlusIcon } from "lucide-react";
 import { DottedSeparator } from "@/components/dotted-separator";
 import { useCreateTaskModal } from "../hooks/use-create-task-modal";
 import { DataFilters } from "./data-filters";
@@ -12,30 +12,64 @@ import { fetchTasksService } from "@/services/taskService";
 import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 import { useProjectId } from "@/features/project/hook/use-project-id";
 import { Loader } from "lucide-react";
-import { DataKanban } from "./data-kanban";
+import { DataKanban } from "./kaban/data-kanban";
+import { DataCalendar } from "./calendar/data-calendar";
 import { useCallback } from "react";
 import { TaskStatus } from "@/types/task";
-import { updateMultipleTasks } from "@/services/taskService";
+import { useUpdateMultipleTasks } from "@/services/taskService";
+import { useState } from "react";
+import { ResponseTask } from "@/types/task";
+import { useTaskFilters } from "../hooks/use-task-filters";
+import { useEffect } from "react";
 
-interface TaskViewSwticherProps {
-  isHideProjectFilter?: boolean;
-}
-
-export const TaskViewSwticher = ({
-  isHideProjectFilter,
-}: TaskViewSwticherProps) => {
+export const TaskViewSwitcher = ({ isHideProjectFilter = false }) => {
   const [view, setView] = useQueryState("task-view", { defaultValue: "table" });
+  const [tasks, setTasks] = useState<ResponseTask[] | null>(null);
   const { open } = useCreateTaskModal();
   const workspaceId = useWorkspaceId();
   const projectId = useProjectId();
-  const { data: tasks, isLoading: isLoadingTasks } = fetchTasksService(
+  const { data: all_tasks, isLoading: isLoadingTasks } = fetchTasksService(
     workspaceId,
-    projectId
+    projectId,
+    isHideProjectFilter
   );
-  console.log(tasks);
+
+  const { mutate: updateMultipleTasksMutate } = useUpdateMultipleTasks();
+  const [filters, setFilters] = useTaskFilters();
+  useEffect(() => {
+    if (!all_tasks) {
+      return;
+    }
+    const { assigneeId, dueDate, projectId, status } = filters;
+    const tasks = all_tasks.filter((task) => {
+      if (assigneeId && task.assignee.userId !== assigneeId) {
+        return false;
+      }
+      if (projectId && task.project.id !== projectId) {
+        return false;
+      }
+      if (status && task.status !== status) {
+        return false;
+      }
+      if (dueDate) {
+        const taskDueDate = new Date(task.dueDate);
+        const filterDueDate = new Date(dueDate);
+        if (
+          taskDueDate.getDate() !== filterDueDate.getDate() ||
+          taskDueDate.getMonth() !== filterDueDate.getMonth() ||
+          taskDueDate.getFullYear() !== filterDueDate.getFullYear()
+        ) {
+          return false;
+        }
+      }
+      return true;
+    });
+    setTasks(tasks);
+  }, [filters, all_tasks]);
+
   const onKanbanChange = useCallback(
     (tasks: { $id: string; status: TaskStatus; position: number }[]) => {
-      updateMultipleTasks(workspaceId, projectId, tasks);
+      updateMultipleTasksMutate({ workspaceId, projectId, tasks });
     },
     []
   );
@@ -86,9 +120,9 @@ export const TaskViewSwticher = ({
               <DataKanban onChange={onKanbanChange} data={tasks ?? []} />
             </TabsContent>
 
-            {/* <TabsContent value="calendar" className="mt-0 h-full pb-4">
-              <DataCalender data={tasks ?? []} />
-            </TabsContent> */}
+            <TabsContent value="calendar" className="mt-0 h-full pb-4">
+              <DataCalendar data={tasks ?? []} />
+            </TabsContent>
           </>
         )}
       </div>

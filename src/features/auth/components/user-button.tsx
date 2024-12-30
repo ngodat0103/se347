@@ -7,19 +7,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DottedSeparator } from "@/components/dotted-separator";
-import { Loader, LogOut } from "lucide-react";
+import { Loader, LogOut, Edit } from "lucide-react"; // Add the Edit icon from lucide-react
 import useUser from "@/hooks/useUser";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { logout as logoutService } from "@/services/userService";
-interface User {
-  nickName?: string;
-  pictureUrl?: string;
-  email: string;
-  accountId: string;
-}
+import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 
 const UserProfile: React.FC = () => {
   const { user } = useUser();
@@ -32,8 +26,18 @@ const UserProfile: React.FC = () => {
     sessionStorage.clear();
     router.push("/sign-in");
   };
+  const workspaceId = useWorkspaceId();
+  const handleEditProfile = () => {
+    if (user && workspaceId) {
+      router.push(`/edit-profile`);
+    } else {
+      // Nếu không có workspaceId, bạn có thể xử lý lỗi ở đây, ví dụ:
+      console.error("Workspace id is missing!");
+    }
+  };
+
   return (
-    <div>
+    <div className="relative flex items-center">
       {user ? (
         <>
           <DropdownMenu modal={false}>
@@ -41,7 +45,7 @@ const UserProfile: React.FC = () => {
               <Avatar className="size-10 hover:opacity-75 transition border border-neutral-300">
                 <AvatarImage
                   src={
-                    user.pictureUrl ||
+                    user.imageUrl ||
                     "https://i.pinimg.com/736x/97/bb/06/97bb067e30ff6b89f4fbb7b9141025ca.jpg"
                   }
                   alt="Avatar"
@@ -58,7 +62,7 @@ const UserProfile: React.FC = () => {
                 <Avatar className="size-[52px]  border border-neutral-300">
                   <AvatarImage
                     src={
-                      user.pictureUrl ||
+                      user.imageUrl ||
                       "https://i.pinimg.com/736x/97/bb/06/97bb067e30ff6b89f4fbb7b9141025ca.jpg"
                     }
                     alt="Avatar"
@@ -71,6 +75,16 @@ const UserProfile: React.FC = () => {
                   <p className="text-xs text-neutral-500">{user.email}</p>
                 </div>
               </div>
+
+              {/* Edit Profile button next to the avatar in the dropdown */}
+              <DropdownMenuItem
+                onClick={handleEditProfile}
+                className="h-10 flex items-center justify-start gap-2 text-blue-600 font-medium cursor-pointer"
+              >
+                <Edit className="size-4 mr-2" />
+                Edit Profile
+              </DropdownMenuItem>
+
               <DottedSeparator className="mb-1" />
               <DropdownMenuItem
                 onClick={() => handleLogout()}

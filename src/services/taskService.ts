@@ -51,21 +51,26 @@ export const createTaskService = () => {
   });
   return mutate;
 };
-export const fetchTasksService = (workspaceId: string, projectId: string) => {
+export const fetchTasksService = (
+  workspaceId: string,
+  projectId: string,
+  myTasks: boolean,
+) => {
   const query = useQuery({
     queryKey: ["tasks", workspaceId, projectId],
     queryFn: async () => {
-      const response = await fetch(
-        `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks`,
-        {
-          method: "GET",
-          headers: {
-            accept: "*/*",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+      const ENDPOINT = myTasks
+        ? `${BASE_API_URL}/tasks/my-tasks`
+        : `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks`;
+
+      const response = await fetch(`${ENDPOINT}`, {
+        method: "GET",
+        headers: {
+          accept: "*/*",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
       if (!response.ok) {
         throw new Error("Error when fetching task");
       }
@@ -75,6 +80,7 @@ export const fetchTasksService = (workspaceId: string, projectId: string) => {
   });
   return query;
 };
+
 
 export const deleteTaskService = () => {
   const queryClient = useQueryClient();
@@ -213,70 +219,96 @@ export const fetchTaskByIdAPI = async (
   return response.json();
 };
 
-export const updateMultipleTasks = async (
-  workspaceId: string,
-  projectId: string,
-  tasks: { $id: string; status: TaskStatus; position: number }[], // Mảng các task cần cập nhật
-) => {
-  try {
-    // Duyệt qua từng task và thực hiện PUT request cho mỗi task
-    const promises = tasks.map(async (task) => {
-      const taskDetails = await fetchTaskByIdAPI(
-        workspaceId,
-        projectId,
-        task.$id,
-      );
+export const useUpdateMultipleTasks = () => {
+  const queryClient = useQueryClient();
 
-      const taskDto: RequestTask = {
-        name: taskDetails.name || "Untitled",
-        status: task.status,
-        position: task.position,
-        dueDate: new Date(),
-        assigneeId: taskDetails.assignee.userId || "user",
-      };
-      // Tạo URL API cho từng task
-      const url = `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks/${task.$id}`;
+  return useMutation({
+    onSuccess: () => {
+      toast.success("Tasks updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["projectAnalytics"] });
+    },
+    onError: () => {
+      toast.error("Error updating tasks, please try again later");
+    },
+    mutationFn: async ({
+      workspaceId,
+      projectId,
+      tasks,
+    }: {
+      workspaceId: string;
+      projectId: string;
+      tasks: { $id: string; status: TaskStatus; position: number }[];
+    }) => {
+      const promises = tasks.map(async (task) => {
+        const taskDetails = await fetchTaskByIdAPI(
+          workspaceId,
+          projectId,
+          task.$id,
+        );
 
-      // Gửi PUT request cho từng task
-      return axios.put(url, taskDto, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Nếu cần xác thực
-        },
+        const taskDto: RequestTask = {
+          name: taskDetails.name || "Untitled",
+          status: task.status,
+          position: task.position,
+          dueDate: new Date(),
+          assigneeId: taskDetails.assignee.userId || "user",
+        };
+
+        const url = `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks/${task.$id}`;
+
+        return axios.put(url, taskDto, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Adjust as needed
+          },
+        });
       });
-    });
 
-    // Chờ tất cả các promises hoàn thành
-    const responses = await Promise.all(promises);
-    console.log("All tasks updated successfully:", responses);
-    return responses; // Trả về các kết quả từ các requests
-  } catch (error) {
-    console.error("Error updating tasks:", error);
-    throw error;
-  }
+      return Promise.all(promises);
+    },
+  });
 };
-export const updateTask = async (
-  workspaceId: string,
-  projectId: string,
-  taskId: string,
-  updatedFields: Partial<RequestTask>  // Chỉ truyền các trường cần cập nhật
-) => {
-  try {
-    // Tạo URL API
-    const url = `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks/${taskId}`;
+export const useUpdateTask = () => {
+  const queryClient = useQueryClient();
 
-    // Gửi PUT request chỉ với các trường cần cập nhật
-    const response = await axios.put(url, updatedFields, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`, // Nếu cần xác thực
-      },
-    });
-
-    console.log("Task updated successfully:", response.data);
-    return response.data;  // Trả về kết quả từ API
-  } catch (error) {
-    console.error("Error updating task:", error);
-    throw error;
-  }
+  return useMutation({
+    onSuccess: () => {
+      toast.success("Task updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["projectAnalytics"] });
+    },
+    onError: () => {
+      toast.error("Error updating task, please try again later");
+    },
+    mutationFn: async ({
+      workspaceId,
+      projectId,
+      taskId,
+      taskDto,
+    }: {
+      workspaceId: string;
+      projectId: string;
+      taskId: string;
+      taskDto: RequestTask;
+    }) => {
+      const response = await fetch(
+        `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks/${taskId}`,
+        {
+          headers: {
+            accept: "*/*",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          method: "PUT",
+          body: JSON.stringify(taskDto),
+        },
+      );
+      if (!response.ok) {
+        throw new Error("Error updating task");
+      }
+      const data: ResponseTask = await response.json();
+      return data;
+    },
+  });
 };

@@ -8,8 +8,8 @@ import { PageLoader } from "@/components/page-loader";
 import { PageError } from "@/components/page-error";
 import { TaskBreadcrumb } from "@/features/task/components/task-breadcrumbs";
 import { DottedSeparator } from "@/components/dotted-separator";
-import { TaskOverview } from "@/features/task/components/task-overview";
-import { TaskDescription } from "@/features/task/components/task-description";
+import { TaskOverview } from "@/features/task/components/tasks/task-overview";
+import { TaskDescription } from "@/features/task/components/tasks/task-description";
 
 export const TaskIdClient = () => {
   const workspaceId = useWorkspaceId();
@@ -18,7 +18,7 @@ export const TaskIdClient = () => {
   const { data: initialValues, isLoading: isLoadingTask } = fetchTaskById(
     workspaceId,
     projectId,
-    taskId
+    taskId,
   );
   console.log(initialValues);
   if (isLoadingTask) {

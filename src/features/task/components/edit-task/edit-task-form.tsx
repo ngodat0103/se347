@@ -34,6 +34,9 @@ import { createTaskScema } from "../../schemas";
 import { updateTaskService } from "@/services/taskService";
 import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 import { useEditTaskModal } from "../../hooks/use-edit-task-modal";
+import { useProjectId } from "@/features/project/hook/use-project-id";
+import { useUpdateTask } from "@/services/taskService";
+import { useUpdate } from "react-use";
 
 interface EditTaskFormProps {
   onCancel?: () => void;
@@ -48,7 +51,8 @@ export const EditTaskForm = ({
   projectOptions,
   initialValues,
 }: EditTaskFormProps) => {
-  const { mutate, isPending } = updateTaskService();
+  const { mutate :updateTaskMutate, isPending } = useUpdateTask();
+  const currentProjectId = useProjectId();
   const form = useForm<z.infer<typeof createTaskScema>>({
     resolver: zodResolver(createTaskScema.omit({ workspaceId: true })),
     defaultValues: {
@@ -68,10 +72,10 @@ export const EditTaskForm = ({
       console.error(currentTaskId);
       return; // Should Notify the user that the task is not found
     }
-    mutate(
+    updateTaskMutate(
       {
         workspaceId: currentWorkspaceid,
-        projectId: values.projectId,
+        projectId: currentProjectId ,
         taskId: currentTaskId,
         taskDto: values,
       },
@@ -80,7 +84,7 @@ export const EditTaskForm = ({
           form.reset();
           onCancel?.();
         },
-      }
+      },
     );
   };
 

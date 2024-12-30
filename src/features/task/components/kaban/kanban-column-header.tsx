@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { snakeCaseToTitleCase } from "@/lib/utils";
 import { TaskStatus } from "@/types/task";
-import { useCreateTaskModal } from "../hooks/use-create-task-modal";
+import { useCreateTaskModal } from "../../hooks/use-create-task-modal";
 interface KanbanColumnHeaderProps {
   board: TaskStatus;
   taskCount: number;

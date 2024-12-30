@@ -10,8 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 import { ResponseTask } from "@/types/task";
-import { TaskDate } from "./task-date";
-import { TaskActions } from "./task-actions";
+import { TaskDate } from "./tasks/task-date";
+import { TaskActions } from "./tasks/task-actions";
 
 export const columns: ColumnDef<ResponseTask>[] = [
   {
@@ -76,7 +76,7 @@ export const columns: ColumnDef<ResponseTask>[] = [
     },
     cell: ({ row }) => {
       const assignee = row.original.assignee;
-
+      if (!assignee) return null;
       return (
         <div className="flex items-center gap-x-2 text-sm font-medium">
           <MemberAvatar
