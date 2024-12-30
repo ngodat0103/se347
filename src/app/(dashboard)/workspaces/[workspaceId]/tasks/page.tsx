@@ -1,12 +1,11 @@
 "use client"; 
 import { redirect } from "next/navigation";
-import { TaskViewSwticher } from "@/features/task/components/TaskViewSwitcher"; 
-"use ";
+import { TaskViewSwitcher } from "@/features/task/components/TaskViewSwitcher"; 
 const TasksPage = async () => {
 
   return (
     <div className="h-full flex flex-col">
-      <TaskViewSwticher isHideProjectFilter />
+      <TaskViewSwitcher isHideProjectFilter />
     </div>
   );
 };

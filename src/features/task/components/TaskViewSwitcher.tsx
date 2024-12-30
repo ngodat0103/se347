@@ -18,13 +18,8 @@ import { useCallback } from "react";
 import { TaskStatus } from "@/types/task";
 import { updateMultipleTasks } from "@/services/taskService";
 
-interface TaskViewSwticherProps {
-  isHideProjectFilter: boolean;
-}
 
-export const TaskViewSwticher = ({
-  isHideProjectFilter,
-}: TaskViewSwticherProps) => {
+export const TaskViewSwitcher = ({isHideProjectFilter = false}) => {
   const [view, setView] = useQueryState("task-view", { defaultValue: "table" });
   const { open } = useCreateTaskModal();
   const workspaceId = useWorkspaceId();
