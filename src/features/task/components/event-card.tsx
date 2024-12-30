@@ -5,6 +5,7 @@ import { MemberAvatar } from "@/features/member/components/meber-avatar";
 import { ProjectAvatar } from "@/features/project/components/project-avatar";
 import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 import { useRouter } from "next/navigation";
+import { useProjectId } from "@/features/project/hook/use-project-id";
 
 interface EventCardProps {
   title: string;
@@ -29,13 +30,14 @@ export const EventCard = ({
   status,
   id,
 }: EventCardProps) => {
-  const workspaceId = useWorkspaceId();
+
   const router = useRouter();
+  const workspaceId = useWorkspaceId();
 
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     // Correcting string interpolation with backticks
-    router.push(`/workspaces/${workspaceId}/tasks/${id}`);
+    router.push(`/workspaces/${workspaceId}/projects/${project.id}/tasks/${id}`);
   };
 
   return (
