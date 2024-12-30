@@ -16,6 +16,7 @@ import { DataKanban } from "./data-kanban";
 import { useCallback } from "react";
 import { TaskStatus } from "@/types/task";
 import { updateMultipleTasks } from "@/services/taskService";
+
 interface TaskViewSwticherProps {
   isHideProjectFilter?: boolean;
 }
@@ -29,14 +30,14 @@ export const TaskViewSwticher = ({
   const projectId = useProjectId();
   const { data: tasks, isLoading: isLoadingTasks } = fetchTasksService(
     workspaceId,
-    projectId,
+    projectId
   );
-  //console.log(tasks);
+  console.log(tasks);
   const onKanbanChange = useCallback(
     (tasks: { $id: string; status: TaskStatus; position: number }[]) => {
       updateMultipleTasks(workspaceId, projectId, tasks);
     },
-    [],
+    []
   );
 
   return (
@@ -86,7 +87,7 @@ export const TaskViewSwticher = ({
             </TabsContent>
 
             {/* <TabsContent value="calendar" className="mt-0 h-full pb-4">
-              <DataCalendar data={tasks?.documents ?? []} />
+              <DataCalender data={tasks ?? []} />
             </TabsContent> */}
           </>
         )}
