@@ -2,15 +2,17 @@
 
 import React, { useState, useEffect } from "react";
 import { FaEdit } from "react-icons/fa"; // Importing pencil icon
-import { getUsers } from "@/services/userService"; // Importing getUsers function
+import { getUsers, updateUser } from "@/services/userService"; // Importing getUsers function
 
 export const UpdateProfileForm = () => {
   const [userData, setUserData] = useState({
-    name: "",
+    id: "",
+    name: "", // Ensure this starts as an empty string
     email: "",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", // Default image
+    imageUrl: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", // Default image
   });
+
+  const [isEditing, setIsEditing] = useState(false); // State to toggle edit mode
 
   // Fetch user data from API
   useEffect(() => {
@@ -20,12 +22,15 @@ export const UpdateProfileForm = () => {
         console.log("Fetched user data from API:", users); // Log the entire API response
 
         // Check if the response is an object with expected properties
-        if (users && users.nickName && users.email) {
-          // Set default image if imageUrl is null or undefined
+        if (users && users.userId && users.nickName && users.email) {
+          // Set default name if nickName is null
+          const name = users.nickName || "Default Name";  // Provide fallback if nickName is null
+          
           const imageUrl = users.imageUrl || "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80";
 
           setUserData({
-            name: users.nickName,
+            id: users.userId,
+            name: name,  // Ensure name is not null
             email: users.email,
             imageUrl: imageUrl,
           });
@@ -39,6 +44,36 @@ export const UpdateProfileForm = () => {
 
     fetchUserData();
   }, []);
+
+  // Function to handle update button click
+  const handleEditClick = () => {
+    if (isEditing) {
+      console.log("Saving changes", userData);
+
+      // Ensure userData.id is available
+      if (!userData.id) {
+        console.error("User ID is missing");
+        return; // Exit early if ID is missing
+      }
+
+      // Check if name is empty or invalid
+      if (!userData.name) {
+        console.error("Name is empty or invalid");
+        return;
+      }
+
+      // Update user info with the provided user ID and data
+      updateUser(userData.id, userData)
+        .then(() => {
+          console.log("User updated successfully");
+        })
+        .catch((error) => {
+          console.error("Error updating user:", error);
+        });
+    }
+
+    setIsEditing(!isEditing);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -82,6 +117,7 @@ export const UpdateProfileForm = () => {
                 onChange={(e) => setUserData({ ...userData, name: e.target.value })}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter your name"
+                readOnly={!isEditing} // Toggle readonly mode based on edit state
               />
             </div>
 
@@ -101,16 +137,18 @@ export const UpdateProfileForm = () => {
                 onChange={(e) => setUserData({ ...userData, email: e.target.value })}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter your email"
+                readOnly={!isEditing} // Toggle readonly mode based on edit state
               />
             </div>
 
             {/* Update button */}
             <div className="flex justify-center">
               <button
-                type="submit"
+                type="button"
+                onClick={handleEditClick}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
               >
-                Update Profile
+                {isEditing ? "Save" : "Update Profile"}
               </button>
             </div>
           </form>
