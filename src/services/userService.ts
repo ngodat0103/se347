@@ -113,11 +113,8 @@ export async function getUsers(): Promise<any> {
 // Function to update user data
 
 
-export async function updateUser(userId: string, updateData: Partial<RegisterForm>): Promise<void> {
-  const update_json = JSON.stringify(updateData);
-
+export async function updateUser(userId: string, updateData: { nickName: string }): Promise<void> {
   const accessToken = Cookies.get("accessToken");
-
   if (!accessToken) {
     throw new Error("No access token found. Please log in first.");
   }
@@ -128,15 +125,11 @@ export async function updateUser(userId: string, updateData: Partial<RegisterFor
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
-    body: update_json,
+    body: JSON.stringify(updateData),
   });
 
-  if (response.ok) {
-    const data = await response.json();
-    console.log(data);
-  } else {
-    const data = await response.json();
-    console.error(data);
-    throw new Error("Error updating user data.");
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Error updating user data.");
   }
 }

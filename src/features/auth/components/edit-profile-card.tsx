@@ -2,37 +2,30 @@
 
 import React, { useState, useEffect } from "react";
 import { FaEdit } from "react-icons/fa"; // Importing pencil icon
-import { getUsers, updateUser } from "@/services/userService"; // Importing getUsers function
+import { getUsers, updateUser } from "@/services/userService"; // Importing services
 
 export const UpdateProfileForm = () => {
   const [userData, setUserData] = useState({
     id: "",
-    name: "", // Ensure this starts as an empty string
+    name: "",
     email: "",
-    imageUrl: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", // Default image
+    imageUrl:
+      "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80", // Default image
   });
 
-  const [isEditing, setIsEditing] = useState(false); // State to toggle edit mode
+  const [isEditing, setIsEditing] = useState(false);
 
   // Fetch user data from API
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const users = await getUsers(); // Call getUsers function from userService
-        console.log("Fetched user data from API:", users); // Log the entire API response
-
-        // Check if the response is an object with expected properties
-        if (users && users.userId && users.nickName && users.email) {
-          // Set default name if nickName is null
-          const name = users.nickName || "Default Name";  // Provide fallback if nickName is null
-          
-          const imageUrl = users.imageUrl || "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80";
-
+        const users = await getUsers();
+        if (users?.userId && users?.nickName && users?.email) {
           setUserData({
             id: users.userId,
-            name: name,  // Ensure name is not null
+            name: users.nickName || "Default Name",
             email: users.email,
-            imageUrl: imageUrl,
+            imageUrl: users.imageUrl || userData.imageUrl,
           });
         } else {
           console.error("Invalid user data structure:", users);
@@ -45,31 +38,17 @@ export const UpdateProfileForm = () => {
     fetchUserData();
   }, []);
 
-  // Function to handle update button click
+  // Function to handle edit/save button click
   const handleEditClick = () => {
     if (isEditing) {
-      console.log("Saving changes", userData);
-
-      // Ensure userData.id is available
-      if (!userData.id) {
-        console.error("User ID is missing");
-        return; // Exit early if ID is missing
-      }
-
-      // Check if name is empty or invalid
-      if (!userData.name) {
-        console.error("Name is empty or invalid");
+      if (!userData.id || !userData.name) {
+        console.error("Missing user ID or name.");
         return;
       }
 
-      // Update user info with the provided user ID and data
-      updateUser(userData.id, userData)
-        .then(() => {
-          console.log("User updated successfully");
-        })
-        .catch((error) => {
-          console.error("Error updating user:", error);
-        });
+      updateUser(userData.id, { nickName: userData.name }) // Update with only allowed fields
+        .then(() => console.log("User updated successfully"))
+        .catch((error) => console.error("Error updating user:", error));
     }
 
     setIsEditing(!isEditing);
@@ -87,7 +66,7 @@ export const UpdateProfileForm = () => {
             <div className="flex flex-col items-center mb-6">
               <div className="relative w-32 h-32 mb-4">
                 <img
-                  src={userData.imageUrl} // Display image from the database or default
+                  src={userData.imageUrl}
                   alt="Profile"
                   className="w-full h-full rounded-full object-cover border-4 border-gray-200"
                 />
@@ -95,10 +74,9 @@ export const UpdateProfileForm = () => {
                   type="button"
                   className="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full text-white hover:bg-blue-700 transition-colors text-sm"
                 >
-                  <FaEdit /> {/* Using the pencil icon */}
+                  <FaEdit />
                 </button>
               </div>
-              <input type="file" accept="image/*" className="hidden" />
             </div>
 
             {/* Name field */}
@@ -113,15 +91,15 @@ export const UpdateProfileForm = () => {
                 type="text"
                 id="name"
                 name="name"
-                value={userData.name} // Assign state value to input field
+                value={userData.name}
                 onChange={(e) => setUserData({ ...userData, name: e.target.value })}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter your name"
-                readOnly={!isEditing} // Toggle readonly mode based on edit state
+                readOnly={!isEditing}
               />
             </div>
 
-            {/* Email field */}
+            {/* Email field (read-only) */}
             <div>
               <label
                 htmlFor="email"
@@ -133,11 +111,9 @@ export const UpdateProfileForm = () => {
                 type="email"
                 id="email"
                 name="email"
-                value={userData.email} // Assign state value to input field
-                onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+                value={userData.email}
+                readOnly
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Enter your email"
-                readOnly={!isEditing} // Toggle readonly mode based on edit state
               />
             </div>
 
