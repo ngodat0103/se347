@@ -1,9 +1,9 @@
 import { ResponseTask } from "@/types/task";
-import { TaskActions } from "./task-actions";
+import { TaskActions } from "../task-actions";
 import { MoreHorizontal } from "lucide-react";
 import { DottedSeparator } from "@/components/dotted-separator";
 import { MemberAvatar } from "@/features/member/components/meber-avatar";
-import { TaskDate } from "./task-date";
+import { TaskDate } from "../tasks/task-date";
 import { Project } from "@/components/project";
 import { ProjectAvatar } from "@/features/project/components/project-avatar";
 interface KanbanCardProps {
