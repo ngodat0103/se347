@@ -2,6 +2,7 @@ import { ErrorMessage } from "@/types/error";
 import { LoginForm, LoginResponse, RegisterForm, UserResponse } from "@/types/user";
 import Cookies from "js-cookie";
 import { BASE_API_URL, headers } from "./baseApi";
+import { resizeImage } from "@/lib/resizeImage";
 
 export async function login(login_form: LoginForm): Promise<LoginResponse> {
   console.debug(login_form);
@@ -113,12 +114,13 @@ export async function getCurrentUser(): Promise<UserResponse> {
 // Function to update user data
 
 
-export async function updateUser(userId: string, updateData: { nickName: string }): Promise<void> {
+export async function updateCurrentUser(updateData: { nickName: string }, imageFile: File | null): Promise<void> {
   const accessToken = Cookies.get("accessToken");
   if (!accessToken) {
     throw new Error("No access token found. Please log in first.");
   }
 
+  // Update user nickname
   const response = await fetch(`${BASE_API_URL}/users`, {
     method: "PUT",
     headers: {
@@ -131,5 +133,24 @@ export async function updateUser(userId: string, updateData: { nickName: string 
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.message || "Error updating user data.");
+  }
+
+  // Update user image
+  if (imageFile) {
+    // Resize image before uploading
+    const resized_image = await resizeImage(imageFile, 1920, 1920);
+
+    const imageResponse = await fetch(`${BASE_API_URL}/users/avatar`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: resized_image,
+    });
+
+    if (!imageResponse.ok) {
+      const errorData = await imageResponse.json();
+      throw new Error(errorData.message || "Error updating user image.");
+    }
   }
 }
