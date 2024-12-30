@@ -1,6 +1,7 @@
 "use client"; 
 import { redirect } from "next/navigation";
 import { TaskViewSwitcher } from "@/features/task/components/TaskViewSwitcher"; 
+"use ";
 const TasksPage = async () => {
 
   return (
