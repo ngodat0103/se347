@@ -133,4 +133,24 @@ export async function updateUser(userId: string, updateData: { nickName: string 
     throw new Error(errorData.message || "Error updating user data.");
   }
 }
+export async function updateAvatar(formData: FormData): Promise<void> {
+  const accessToken = Cookies.get("accessToken");
+  if (!accessToken) {
+    throw new Error("No access token found. Please log in first.");
+  }
 
+  const response = await fetch(`${BASE_API_URL}/users/avatar`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      // Không thiết lập Content-Type, vì FormData sẽ tự động xử lý
+    },
+    body: formData, // Gửi dữ liệu dạng FormData
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.error(errorData);  // In ra lỗi chi tiết nếu có
+    throw new Error(errorData.message || "Error updating avatar.");
+  }
+}

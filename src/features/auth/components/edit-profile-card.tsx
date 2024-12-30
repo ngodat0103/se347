@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { FaEdit } from "react-icons/fa"; // Importing pencil icon
-import { getUsers, updateUser } from "@/services/userService"; // Importing services
+import { getUsers, updateUser, updateAvatar } from "@/services/userService"; // Importing services
 
 export const UpdateProfileForm = () => {
   const [userData, setUserData] = useState({
@@ -54,6 +54,27 @@ export const UpdateProfileForm = () => {
     setIsEditing(!isEditing);
   };
 
+  // Function to handle avatar update
+  const handleAvatarChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+  
+      const formData = new FormData();
+      formData.append("avatar", file); // 'avatar' có thể là tên trường mà API yêu cầu, bạn cần kiểm tra lại với API
+  
+      try {
+        await updateAvatar(formData);
+        const newImageUrl = URL.createObjectURL(file);
+        setUserData((prevData) => ({ ...prevData, imageUrl: newImageUrl }));
+        alert("Avatar updated successfully!");
+      } catch (error) {
+        console.error("Error updating avatar:", error);
+        alert("Failed to update avatar. Please try again.");
+      }
+    }
+  };
+  
+
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden">
@@ -70,12 +91,19 @@ export const UpdateProfileForm = () => {
                   alt="Profile"
                   className="w-full h-full rounded-full object-cover border-4 border-gray-200"
                 />
-                <button
-                  type="button"
-                  className="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full text-white hover:bg-blue-700 transition-colors text-sm"
+                <label
+                  htmlFor="avatar"
+                  className="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full text-white hover:bg-blue-700 transition-colors text-sm cursor-pointer"
                 >
                   <FaEdit />
-                </button>
+                  <input
+                    type="file"
+                    id="avatar"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleAvatarChange} // Handle avatar update
+                  />
+                </label>
               </div>
             </div>
 
