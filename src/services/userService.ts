@@ -133,3 +133,4 @@ export async function updateUser(userId: string, updateData: { nickName: string 
     throw new Error(errorData.message || "Error updating user data.");
   }
 }
+
