@@ -20,16 +20,12 @@ export const UpdateProfileForm = () => {
     const fetchUserData = async () => {
       try {
         const users = await getCurrentUser();
-        if (users?.userId && users?.nickName && users?.email) {
-          setUserData({
-            id: users.userId,
-            name: users.nickName || "Default Name",
-            email: users.email,
-            imageUrl: users.imageUrl || userData.imageUrl,
-          });
-        } else {
-          console.error("Invalid user data structure:", users);
-        }
+        setUserData({
+          id: users.userId,
+          name: users.nickName,
+          email: users.email,
+          imageUrl: users.imageUrl || userData.imageUrl,
+        });
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -96,24 +92,6 @@ export const UpdateProfileForm = () => {
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter your name"
                 readOnly={!isEditing}
-              />
-            </div>
-
-            {/* Email field (read-only) */}
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={userData.email}
-                readOnly
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
