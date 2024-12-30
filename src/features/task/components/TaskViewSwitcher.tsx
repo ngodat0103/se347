@@ -18,19 +18,50 @@ import { useCallback } from "react";
 import { TaskStatus } from "@/types/task";
 import { useUpdateMultipleTasks } from "@/services/taskService";
 
-
-export const TaskViewSwitcher = ({isHideProjectFilter = false}) => {
+export const TaskViewSwitcher = ({ isHideProjectFilter = false }) => {
   const [view, setView] = useQueryState("task-view", { defaultValue: "table" });
+  const [tasks, setTasks] = useState<ResponseTask[] | null>(null);
   const { open } = useCreateTaskModal();
   const workspaceId = useWorkspaceId();
   const projectId = useProjectId();
-  const { data: tasks, isLoading: isLoadingTasks } = fetchTasksService(
+  const { data: all_tasks, isLoading: isLoadingTasks } = fetchTasksService(
     workspaceId,
     projectId,
     isHideProjectFilter,
   );
 
   const { mutate: updateMultipleTasksMutate } = useUpdateMultipleTasks();
+  const [filters, setFilters] = useTaskFilters();
+  useEffect(() => {
+    if (!all_tasks) {
+      return;
+    }
+    const { assigneeId, dueDate, projectId, status } = filters;
+    const tasks = all_tasks.filter((task) => {
+      if (assigneeId && task.assignee.userId !== assigneeId) {
+        return false;
+      }
+      if (projectId && task.project.id !== projectId) {
+        return false;
+      }
+      if (status && task.status !== status) {
+        return false;
+      }
+      if (dueDate) {
+        const taskDueDate = new Date(task.dueDate);
+        const filterDueDate = new Date(dueDate);
+        if (
+          taskDueDate.getDate() !== filterDueDate.getDate() ||
+          taskDueDate.getMonth() !== filterDueDate.getMonth() ||
+          taskDueDate.getFullYear() !== filterDueDate.getFullYear()
+        ) {
+          return false;
+        }
+      }
+      return true;
+    });
+    setTasks(tasks);
+  }, [filters, all_tasks]);
 
   const onKanbanChange = useCallback(
     (tasks: { $id: string; status: TaskStatus; position: number }[]) => {
