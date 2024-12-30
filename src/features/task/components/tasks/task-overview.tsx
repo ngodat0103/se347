@@ -2,12 +2,12 @@ import { ResponseTask } from "@/types/task";
 import { Button } from "@/components/ui/button";
 import { PencilIcon } from "lucide-react";
 import { DottedSeparator } from "@/components/dotted-separator";
-import { OverviewProperty } from "../components/overview-property";
+import { OverviewProperty } from "../overview-property";
 import { MemberAvatar } from "@/features/member/components/meber-avatar";
 import { TaskDate } from "./task-date";
 import { snakeCaseToTitleCase } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { useEditTaskModal } from "../hooks/use-edit-task-modal";
+import { useEditTaskModal } from "../../hooks/use-edit-task-modal";
 
 interface TaskOverviewProps {
   task: ResponseTask;
