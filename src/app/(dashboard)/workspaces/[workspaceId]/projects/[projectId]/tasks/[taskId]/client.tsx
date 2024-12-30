@@ -18,7 +18,7 @@ export const TaskIdClient = () => {
   const { data: initialValues, isLoading: isLoadingTask } = fetchTaskById(
     workspaceId,
     projectId,
-    taskId
+    taskId,
   );
   console.log(initialValues);
   if (isLoadingTask) {

@@ -5,7 +5,7 @@ import {
   Droppable,
   type DropResult,
 } from "@hello-pangea/dnd";
-import { ResponseTask, TaskStatus } from "../../../types/task";
+import { ResponseTask, TaskStatus } from "@/types/task";
 import { KanbanColumnHeader } from "./kanban-column-header";
 import { KanbanCard } from "./kanban-card";
 import { useQueryClient } from "@tanstack/react-query";

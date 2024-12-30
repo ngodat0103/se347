@@ -12,7 +12,7 @@ import { useState } from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./data-calendar.css";
-import { EventCard } from "./event-card";
+import { EventCard } from "../event-card";
 import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button"; // Assuming you have a Button component
 
@@ -66,7 +66,7 @@ const CustomToolbar = ({ date, onNavigate }: CustomToolbarProps) => {
 
 export const DataCalendar = ({ data }: DataCalendarProps) => {
   const [value, setValue] = useState(
-    data.length > 0 ? new Date(data[0].dueDate) : new Date()
+    data.length > 0 ? new Date(data[0].dueDate) : new Date(),
   );
 
   const events = data.map((task) => ({
@@ -115,7 +115,9 @@ export const DataCalendar = ({ data }: DataCalendarProps) => {
               status={event.status}
             />
           ),
-          toolbar: () => <CustomToolbar date={value} onNavigate={handleNavigate} />,
+          toolbar: () => (
+            <CustomToolbar date={value} onNavigate={handleNavigate} />
+          ),
         }}
       />
     </div>

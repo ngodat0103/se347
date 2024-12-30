@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 // import { useDeleteTask } from "../api/use-delete-task";
-import { useEditTaskModal } from "../hooks/use-edit-task-modal";
+import { useEditTaskModal } from "../../hooks/use-edit-task-modal";
 
 interface TaskActionsProps {
   id: string;

@@ -12,12 +12,15 @@ import { fetchTasksService } from "@/services/taskService";
 import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 import { useProjectId } from "@/features/project/hook/use-project-id";
 import { Loader } from "lucide-react";
-import { DataKanban } from "./data-kanban";
-import { DataCalendar } from "./data-calendar";
-import { useCallback, useEffect, useState } from "react";
-import { ResponseTask, TaskStatus } from "@/types/task";
-import { updateMultipleTasks } from "@/services/taskService";
+import { DataKanban } from "./kaban/data-kanban";
+import { DataCalendar } from "./calendar/data-calendar";
+import { useCallback } from "react";
+import { TaskStatus } from "@/types/task";
+import { useUpdateMultipleTasks } from "@/services/taskService";
+import { useState } from "react";
+import { ResponseTask } from "@/types/task";
 import { useTaskFilters } from "../hooks/use-task-filters";
+import { useEffect } from "react";
 
 export const TaskViewSwitcher = ({ isHideProjectFilter = false }) => {
   const [view, setView] = useQueryState("task-view", { defaultValue: "table" });
@@ -31,6 +34,7 @@ export const TaskViewSwitcher = ({ isHideProjectFilter = false }) => {
     isHideProjectFilter,
   );
 
+  const { mutate: updateMultipleTasksMutate } = useUpdateMultipleTasks();
   const [filters, setFilters] = useTaskFilters();
   useEffect(() => {
     if (!all_tasks) {
@@ -65,7 +69,7 @@ export const TaskViewSwitcher = ({ isHideProjectFilter = false }) => {
 
   const onKanbanChange = useCallback(
     (tasks: { $id: string; status: TaskStatus; position: number }[]) => {
-      updateMultipleTasks(workspaceId, projectId, tasks);
+      updateMultipleTasksMutate({ workspaceId, projectId, tasks });
     },
     [],
   );
