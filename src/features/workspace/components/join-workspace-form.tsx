@@ -55,6 +55,10 @@ const JoinWorkspaceForm = ({ inviteCode }: JoinWorkspaceFormProps) => {
 
       // Nếu thành công, hiển thị thông báo
       setSuccessMessage("User added to workspace successfully!");
+
+      setTimeout(() => {
+        router.push(`/workspaces/${workspace?.id}`);
+      }, 500);
       
     } catch (err: any) {
       setError(
