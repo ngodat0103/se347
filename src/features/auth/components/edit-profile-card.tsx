@@ -43,7 +43,7 @@ export const UpdateProfileForm = () => {
  
   const handleEditClick = async () => {
     if (!userData.id || !userData.name) {
-      console.error("Missing user ID or name.");
+      
       setIsError(true);
       setMessage("Please fill in all required fields.");
       return;
