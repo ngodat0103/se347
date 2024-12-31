@@ -29,26 +29,7 @@ const JoinWorkspaceForm = ({ inviteCode }: JoinWorkspaceFormProps) => {
     isLoading,
     error: fetchError,
   } = fetchWorkspaceByInviteCode(inviteCode);
-  // const onSubmit = async () => {
-  //   setLoading(true);
-  //   setError(null);
-  //   setSuccessMessage(null);
 
-  //   try {
-  //     await joinWorkspaceByInviteCode(inviteCode);
-
-  //     // Nếu thành công, hiển thị thông báo
-  //     setSuccessMessage("User added to workspace successfully!");
-  //   } catch (err: any) {
-  //     // Xử lý lỗi
-  //     setError(
-  //       err.message || "Failed to join workspace. Please try again later.",
-  //     );
-  //     console.error(err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   const { user } = useUser();
   const onSubmit = async () => {
     setLoading(true);
