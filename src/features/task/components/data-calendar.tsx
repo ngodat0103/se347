@@ -115,7 +115,9 @@ export const DataCalendar = ({ data }: DataCalendarProps) => {
               status={event.status}
             />
           ),
-          toolbar: () => <CustomToolbar date={value} onNavigate={handleNavigate} />,
+          toolbar: () => (
+            <CustomToolbar date={value} onNavigate={handleNavigate} />
+          ),
         }}
       />
     </div>

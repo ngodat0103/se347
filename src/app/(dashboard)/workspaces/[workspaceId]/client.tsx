@@ -226,7 +226,7 @@ export const MemberList = ({ members }: MemberListProps) => {
           {members.length > 0 ? (
             members.map((member) => (
               <li key={member.id}>
-                <Card className="shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                <Card className=" shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
                   <CardContent className="p-4 flex flex-col items-center text-center">
                     <MemberAvatar
                       name={member.nickName}
@@ -237,7 +237,7 @@ export const MemberList = ({ members }: MemberListProps) => {
                       <p className="text-lg font-medium line-clamp-1">
                         {member.nickName}
                       </p>
-                      <p className="text-sm text-muted-foreground line-clamp-1">
+                      <p className="text-xs text-muted-foreground line-clamp-1">
                         {member.email}
                       </p>
                     </div>
