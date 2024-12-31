@@ -14,6 +14,7 @@ import {
   joinWorkspaceByInviteCode,
   fetchWorkspaceByInviteCode,
 } from "@/services/workspaceService";
+import useUser from "@/hooks/useUser";
 
 interface JoinWorkspaceFormProps {
   inviteCode: string;
@@ -28,20 +29,46 @@ const JoinWorkspaceForm = ({ inviteCode }: JoinWorkspaceFormProps) => {
     isLoading,
     error: fetchError,
   } = fetchWorkspaceByInviteCode(inviteCode);
+  // const onSubmit = async () => {
+  //   setLoading(true);
+  //   setError(null);
+  //   setSuccessMessage(null);
+
+  //   try {
+  //     await joinWorkspaceByInviteCode(inviteCode);
+
+  //     // Nếu thành công, hiển thị thông báo
+  //     setSuccessMessage("User added to workspace successfully!");
+  //   } catch (err: any) {
+  //     // Xử lý lỗi
+  //     setError(
+  //       err.message || "Failed to join workspace. Please try again later.",
+  //     );
+  //     console.error(err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  const { user } = useUser();
   const onSubmit = async () => {
     setLoading(true);
     setError(null);
     setSuccessMessage(null);
 
     try {
+      // Kiểm tra nếu user đã là owner
+      if (workspace?.ownerId === user?.userId) {
+        setError("You are already the owner of this workspace.");
+        return;
+      }
+
       await joinWorkspaceByInviteCode(inviteCode);
 
       // Nếu thành công, hiển thị thông báo
       setSuccessMessage("User added to workspace successfully!");
     } catch (err: any) {
-      // Xử lý lỗi
       setError(
-        err.message || "Failed to join workspace. Please try again later.",
+        err.message || "Failed to join workspace. Please try again later."
       );
       console.error(err);
     } finally {
