@@ -57,7 +57,7 @@ export const UpdateProfileForm = () => {
         router.push("/dashboard");
       }, 1000);
     } catch (error) {
-      console.error("Error updating user:", error);
+      
       setIsError(true);
       setMessage("Failed to update profile. Please try again.");
     }
