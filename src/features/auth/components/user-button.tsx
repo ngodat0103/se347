@@ -28,11 +28,11 @@ const UserProfile: React.FC = () => {
   };
   const workspaceId = useWorkspaceId();
   const handleEditProfile = () => {
-    if (user && workspaceId) {
+    if (user) {
       router.push(`/edit-profile`);
     } else {
       // Nếu không có workspaceId, bạn có thể xử lý lỗi ở đây, ví dụ:
-      console.error("Workspace id is missing!");
+      console.error("Error missing");
     }
   };
 
