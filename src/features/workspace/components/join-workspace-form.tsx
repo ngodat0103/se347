@@ -15,7 +15,7 @@ import {
   fetchWorkspaceByInviteCode,
 } from "@/services/workspaceService";
 import useUser from "@/hooks/useUser";
-
+import { useRouter } from "next/navigation";
 interface JoinWorkspaceFormProps {
   inviteCode: string;
 }
@@ -31,6 +31,7 @@ const JoinWorkspaceForm = ({ inviteCode }: JoinWorkspaceFormProps) => {
   } = fetchWorkspaceByInviteCode(inviteCode);
 
   const { user } = useUser();
+  const router = useRouter();
   const onSubmit = async () => {
     setLoading(true);
     setError(null);
@@ -42,11 +43,19 @@ const JoinWorkspaceForm = ({ inviteCode }: JoinWorkspaceFormProps) => {
         setError("You are already the owner of this workspace.");
         return;
       }
+      const isAlreadyMember = workspace?.members.hasOwnProperty(user?.userId ?? "");
+
+        if (isAlreadyMember) {
+        setError("You are already a member of this workspace.");
+        return;
+      }
+
 
       await joinWorkspaceByInviteCode(inviteCode);
 
       // Nếu thành công, hiển thị thông báo
       setSuccessMessage("User added to workspace successfully!");
+      
     } catch (err: any) {
       setError(
         err.message || "Failed to join workspace. Please try again later."
