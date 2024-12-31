@@ -48,6 +48,9 @@ const JoinWorkspaceForm = ({ inviteCode }: JoinWorkspaceFormProps) => {
       setLoading(false);
     }
   };
+  
+  
+
   return (
     <Card className="w-full h-full border-none shadow-none">
       <CardHeader className="p-7">
