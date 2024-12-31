@@ -53,6 +53,7 @@ export const EditTaskForm = ({
 }: EditTaskFormProps) => {
   const { mutate :updateTaskMutate, isPending } = useUpdateTask();
   const currentProjectId = useProjectId();
+  console.debug(initialValues);
   const form = useForm<z.infer<typeof createTaskScema>>({
     resolver: zodResolver(createTaskScema.omit({ workspaceId: true })),
     defaultValues: {
@@ -61,6 +62,8 @@ export const EditTaskForm = ({
         ? new Date(initialValues.dueDate)
         : undefined,
       description: initialValues.description ?? "",
+      assigneeId: initialValues.assignee.userId,
+      projectId: initialValues.project.id,
     },
   });
 
