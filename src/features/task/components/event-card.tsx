@@ -56,7 +56,7 @@ export const EventCard = ({
         <div className="flex items-center gap-x-2">
           {" "}
           {/* Increased gap for better spacing */}
-          <MemberAvatar name={assignee?.name} />
+          <MemberAvatar name={assignee.nickName} />
           <div className="size-1 rounded-full bg-neutral-300" />{" "}
           {/* Corrected typo */}
           <ProjectAvatar name={project?.name} image={project?.imageUrl} />
