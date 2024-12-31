@@ -1,8 +1,10 @@
-"use client"; // Ensure this is a client component in Next.js
+
+"use client"; 
 
 import React, { useState, useEffect } from "react";
-import { FaEdit } from "react-icons/fa"; // Importing pencil icon
-import { getCurrentUser, updateCurrentUser } from "@/services/userService"; // Importing services
+import { FaEdit } from "react-icons/fa"; 
+import { getCurrentUser, updateCurrentUser } from "@/services/userService"; 
+import { useRouter } from "next/navigation"; 
 
 const defaultImageUrl = "https://i.pinimg.com/736x/97/bb/06/97bb067e30ff6b89f4fbb7b9141025ca.jpg";
 
@@ -15,6 +17,9 @@ export const UpdateProfileForm = () => {
   });
 
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [message, setMessage] = useState<string | null>(null); 
+  const [isError, setIsError] = useState(false); // Error state
+  const router = useRouter(); 
 
   // Fetch user data from API
   useEffect(() => {
@@ -35,20 +40,30 @@ export const UpdateProfileForm = () => {
     fetchUserData();
   }, []);
 
-  // Function to handle edit/save button click
-  const handleEditClick = () => {
+ 
+  const handleEditClick = async () => {
     if (!userData.id || !userData.name) {
-      console.error("Missing user ID or name.");
+      
+      setIsError(true);
+      setMessage("Please fill in all required fields.");
       return;
     }
 
-    updateCurrentUser({ nickName: userData.name}, imageFile) // Update with only allowed fields
-      .then(() => console.log("User updated successfully"))
-      .catch((error) => console.error("Error updating user:", error));
+    try {
+      await updateCurrentUser({ nickName: userData.name }, imageFile); 
+      setIsError(false);
+      setMessage("Profile updated successfully!");
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1000);
+    } catch (error) {
+      
+      setIsError(true);
+      setMessage("Failed to update profile. Please try again.");
+    }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.debug(e);
     const file = e.target.files?.[0];
     if (!file) {
       return;
@@ -64,6 +79,18 @@ export const UpdateProfileForm = () => {
           <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">
             Update Profile
           </h2>
+
+          {/* Notification */}
+          {message && (
+            <div
+              className={`mb-6 p-4 text-sm rounded ${
+                isError ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
+              }`}
+            >
+              {message}
+            </div>
+          )}
+
           <form className="space-y-6">
             {/* Profile image */}
             <div className="flex flex-col items-center mb-6">
@@ -73,7 +100,13 @@ export const UpdateProfileForm = () => {
                   alt="Profile"
                   className="w-full h-full rounded-full object-cover border-4 border-gray-200"
                 />
-                <input type="file" id="imgupload" className="invisible" hidden onChange={handleImageUpload} />
+                <input
+                  type="file"
+                  id="imgupload"
+                  className="invisible"
+                  hidden
+                  onChange={handleImageUpload}
+                />
                 <button
                   type="button"
                   className="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full text-white hover:bg-blue-700 transition-colors text-sm"
@@ -97,7 +130,9 @@ export const UpdateProfileForm = () => {
                 id="name"
                 name="name"
                 value={userData.name}
-                onChange={(e) => setUserData({ ...userData, name: e.target.value })}
+                onChange={(e) =>
+                  setUserData({ ...userData, name: e.target.value })
+                }
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter your name"
               />
@@ -119,3 +154,4 @@ export const UpdateProfileForm = () => {
     </div>
   );
 };
+

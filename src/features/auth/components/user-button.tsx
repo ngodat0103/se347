@@ -28,11 +28,11 @@ const UserProfile: React.FC = () => {
   };
   const workspaceId = useWorkspaceId();
   const handleEditProfile = () => {
-    if (user && workspaceId) {
+    if (user) {
       router.push(`/edit-profile`);
     } else {
       // Nếu không có workspaceId, bạn có thể xử lý lỗi ở đây, ví dụ:
-      console.error("Workspace id is missing!");
+      console.error("Error missing");
     }
   };
 
@@ -79,9 +79,9 @@ const UserProfile: React.FC = () => {
               {/* Edit Profile button next to the avatar in the dropdown */}
               <DropdownMenuItem
                 onClick={handleEditProfile}
-                className="h-10 flex items-center justify-start gap-2 text-blue-600 font-medium cursor-pointer"
+                className="h-10 flex items-center justify-center gap-2 text-blue-600 font-medium cursor-pointer"
               >
-                <Edit className="size-4 mr-2" />
+                <Edit className="size-4" />
                 Edit Profile
               </DropdownMenuItem>
 
