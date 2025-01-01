@@ -60,7 +60,7 @@ export const fetchTasksService = (
     queryKey: ["tasks", workspaceId, projectId],
     queryFn: async () => {
       const ENDPOINT = myTasks
-        ? `${BASE_API_URL}/tasks/my-tasks`
+        ? `${BASE_API_URL}/workspaces/${workspaceId}/my-tasks`
         : `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks`;
 
       const response = await fetch(`${ENDPOINT}`, {
