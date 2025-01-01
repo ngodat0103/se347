@@ -10,6 +10,8 @@ import { updateWorkspaceForm } from "@/types/workspace";
 import router from "next/router";
 import { BASE_API_URL, headers } from "./baseApi";
 import { useQuery } from "@tanstack/react-query";
+import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
+
 
 export const fetchWorkspaces = async () => {
   try {
@@ -435,10 +437,12 @@ export const fetchWorkspaceAnalytics = (workspaceId: string) => {
   return query;
 };
 
+
 export const fetchWorkspaceTasks = (workspaceId: string) => {
+  const workspaceIds = useWorkspaceId();
   const token = Cookies.get("accessToken");
   const query = useQuery({
-    queryKey: ["tasks"],
+    queryKey: ["tasks", workspaceIds],
     queryFn: async () => {
       if (!token) {
         throw new Error("Token không tồn tại trong cookie");
