@@ -37,7 +37,7 @@ export const EventCard = ({
     e.stopPropagation();
     // Correcting string interpolation with backticks
     router.push(
-      `/workspaces/${workspaceId}/projects/${project.id}/tasks/${id}`,
+      `/workspaces/${workspaceId}/projects/${project.id}/tasks/${id}`
     );
   };
 
@@ -48,7 +48,7 @@ export const EventCard = ({
         className={cn(
           "p-1.5 text-xs bg-white text-primary border rounded-md border-l-4 flex flex-col gap-y-1.5 cursor-pointer",
           "hover:opacity-75 transition",
-          statusColorMap[status],
+          statusColorMap[status]
         )}
       >
         <p className={cn(statusColorMap[status])}>{title}</p>

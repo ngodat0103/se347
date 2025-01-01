@@ -406,3 +406,60 @@ export const fetchWorkspaceByInviteCode = (inviteCode: string) => {
   });
   return query;
 };
+export const fetchWorkspaceAnalytics = (workspaceId: string) => {
+  const token = Cookies.get("accessToken");
+  const query = useQuery({
+    queryKey: ["workspaceAnalytics", workspaceId],
+    queryFn: async () => {
+      if (!token) {
+        throw new Error("Token không tồn tại trong cookie");
+      }
+      const response = await fetch(
+        `${BASE_API_URL}/workspaces/${workspaceId}/analytics`,
+        {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Lỗi khi lấy dữ liệu phân tích của workspace");
+      }
+      const data = await response.json();
+      return data; // Trả về dữ liệu phân tích
+    },
+  });
+  return query;
+};
+
+export const fetchWorkspaceTasks = (workspaceId: string) => {
+  const token = Cookies.get("accessToken");
+  const query = useQuery({
+    queryKey: ["tasks"],
+    queryFn: async () => {
+      if (!token) {
+        throw new Error("Token không tồn tại trong cookie");
+      }
+      const response = await fetch(
+        `${BASE_API_URL}/workspaces/${workspaceId}/my-tasks`,
+        {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Lỗi khi lấy danh sách nhiệm vụ của workspace");
+      }
+      const data = await response.json();
+      return data; // Trả về danh sách nhiệm vụ
+    },
+  });
+  return query;
+};
