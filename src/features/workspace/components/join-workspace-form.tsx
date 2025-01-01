@@ -26,27 +26,47 @@ const JoinWorkspaceForm = ({ inviteCode }: JoinWorkspaceFormProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [workspace, setWorkspace] = useState<any>(null);
 
   const { user } = useUser();
   const router = useRouter();
 
-  // Sử dụng useEffect để gọi API chỉ khi component được render lần đầu tiên
+  const {
+    data: workspace,
+    isLoading,
+    error: fetchError,
+  } = fetchWorkspaceByInviteCode(inviteCode);
   useEffect(() => {
-    const fetchWorkspaceData = async () => {
-      try {
-        const data = await fetchJoinWorkspace(inviteCode);
-        if (data) {
-          setWorkspace(data);
-        }
-      } catch (err) {
-        setError("Invite code không hợp lệ hoặc không tồn tại.");
-      }
-    };
+    if (fetchError) {
+      setError("Invite code không hợp lệ hoặc không tồn tại.");
+    }
+  }, [fetchError]);
 
-    fetchWorkspaceData();
-  }, [inviteCode]); // Chỉ gọi lại khi inviteCode thay đổi
+  // Nếu đang tải dữ liệu, chỉ hiển thị thông báo "Checking invite code..."
+  if (isLoading) {
+    return (
+      <div className="p-7">
+        <p className="text-neutral-500">Checking invite code...</p>
+      </div>
+    );
+  }
 
+  // Nếu có lỗi, hiển thị thông báo lỗi
+  if (error) {
+    return (
+      <div className="p-7">
+        <p className="text-red-500 mt-2">{error}</p>
+      </div>
+    );
+  }
+  console.log("workspace", workspace);
+  console.log("error", fetchError);
+  if (fetchError) {
+    return (
+      <div className="p-7">
+        <p className="text-red-500 mt-2">{error}</p>
+      </div>
+    );
+  }
   const onSubmit = async () => {
     setLoading(true);
     setError(null);
@@ -87,15 +107,6 @@ const JoinWorkspaceForm = ({ inviteCode }: JoinWorkspaceFormProps) => {
       setLoading(false);
     }
   };
-
-  // Nếu có lỗi, chỉ hiển thị lỗi và không hiển thị phần UI còn lại
-  if (error) {
-    return (
-      <div className="p-7">
-        <p className="text-red-500 mt-2">{error}</p>
-      </div>
-    );
-  }
 
   return (
     <Card className="w-full h-full border-none shadow-none">
