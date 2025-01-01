@@ -434,7 +434,7 @@ export const fetchWorkspaceAnalytics = (workspaceId: string) => {
 export const fetchWorkspaceTasks = (workspaceId: string) => {
   const token = Cookies.get("accessToken");
   const query = useQuery({
-    queryKey: ["workspaceTasks", workspaceId],
+    queryKey: ["tasks"],
     queryFn: async () => {
       if (!token) {
         throw new Error("Token không tồn tại trong cookie");
