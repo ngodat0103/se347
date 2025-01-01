@@ -1,12 +1,12 @@
-"use client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+ "use client";
+ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DottedSeparator } from "@/components/dotted-separator";
+ import { DottedSeparator } from "@/components/dotted-separator";
 import { Loader, LogOut, Edit } from "lucide-react"; // Add the Edit icon from lucide-react
 import useUser from "@/hooks/useUser";
 import React, { useEffect, useState } from "react";
@@ -17,6 +17,7 @@ import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 
 const UserProfile: React.FC = () => {
   const { user } = useUser();
+  const [avatarUrl, setAvatarUrl] = useState(user?.imageUrl || "default-avatar-url");
   const router = useRouter();
 
   const handleLogout = () => {
@@ -35,6 +36,11 @@ const UserProfile: React.FC = () => {
       console.error("Error missing");
     }
   };
+  useEffect(() => {
+    if (user?.imageUrl) {
+      setAvatarUrl(user.imageUrl);
+    }
+  }, [user]);
 
   return (
     <div className="relative flex items-center">

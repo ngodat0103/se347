@@ -287,6 +287,7 @@ export async function joinWorkspaceByInviteCode(
 
 
 
+
 export const fetchWorkspaceMembers = (workspaceId: string) => {
   const token = Cookies.get("accessToken");
   const query = useQuery({
@@ -386,6 +387,7 @@ export const fetchWorkspaceByInviteCode = (inviteCode: string) => {
       }
       const response = await fetch(
         `${BASE_API_URL}/workspaces/join?inviteCode=${encodeURIComponent(inviteCode)}`,
+        
         {
           method: "GET",
           headers: {
