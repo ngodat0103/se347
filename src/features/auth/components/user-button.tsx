@@ -51,6 +51,7 @@ const UserProfile: React.FC = () => {
               <Avatar className="size-10 hover:opacity-75 transition border border-neutral-300">
                 <AvatarImage
                   src={
+                    
                     user.imageUrl ||
                     "https://i.pinimg.com/736x/97/bb/06/97bb067e30ff6b89f4fbb7b9141025ca.jpg"
                   }

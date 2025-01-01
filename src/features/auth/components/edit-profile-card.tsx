@@ -41,27 +41,34 @@ export const UpdateProfileForm = () => {
   }, []);
 
  
+
   const handleEditClick = async () => {
     if (!userData.id || !userData.name) {
-      
       setIsError(true);
       setMessage("Please fill in all required fields.");
       return;
     }
-
+  
     try {
-      await updateCurrentUser({ nickName: userData.name }, imageFile); 
+      await updateCurrentUser({ nickName: userData.name }, imageFile);
       setIsError(false);
       setMessage("Profile updated successfully!");
+  
+      // Tải lại trang và chuyển hướng đến /dashboard ngay sau đó
       setTimeout(() => {
-        router.push("/dashboard");
+        window.location.reload(); // Tải lại trang sau 1 giây
+        setTimeout(() => {
+          window.location.href = "/dashboard"; // Chuyển hướng đến dashboard sau khi trang được tải lại
+        }, 0);
       }, 1000);
     } catch (error) {
-      
       setIsError(true);
       setMessage("Failed to update profile. Please try again.");
     }
   };
+  
+  
+  
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
