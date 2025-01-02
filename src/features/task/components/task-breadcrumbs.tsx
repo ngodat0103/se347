@@ -30,7 +30,6 @@ export const TaskBreadcrumb = ({ project, task,currentMember }: TaskBreadcrumbPr
   
     const ok = await confirm();
     if (!ok) return;
-  
     deleteTaskMutate(
       {
         workspaceId: task.workspaceId,
