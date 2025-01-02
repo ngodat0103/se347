@@ -29,15 +29,18 @@ import { useUpdateProject } from "@/services/projectService";
 import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 import { useProjectId } from "../hook/use-project-id";
 import { useDeleteProject } from "@/services/projectService";
-
+import { WorkspaceMember } from "@/types/workspace";
+import { toast } from "sonner";
 interface EditProjectFormProps {
   onCancel?: () => void;
   initialValues: ProjectResponse;
+  currentMember : WorkspaceMember;
 }
 
 export const EditProjectForm = ({
   onCancel,
   initialValues,
+  currentMember,
 }: EditProjectFormProps) => {
   const router = useRouter();
   const { mutate: updateProjectMutate, isPending: isUpdateProjectPending } =
@@ -50,13 +53,17 @@ export const EditProjectForm = ({
   //   const { mutate: deleteProject, isPending: isDeletingProject } =
   //     useDeleteProject();
 
-  const [DeleteDialog, confirmDelete] = useConfirm(
+  const [DeleteDialog, confirmDelete,] = useConfirm(
     "Delete Project",
     "This action cannot be undone.",
     "destructive",
   );
-
+  
   const handleDelete = async () => {
+    if (!currentMember || (currentMember.role !== "OWNER" && currentMember.role !== "ADMINISTRATOR")) {
+      toast.error("You do not have permission to delete this project.");
+      return;
+    }
     const ok = await confirmDelete();
 
     if (!ok) return;
