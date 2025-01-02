@@ -24,6 +24,7 @@ export const TaskDescription = ({ task,currentMember }: TaskDescriptionProps) =>
           backgroundColor: "red", 
           color: "white", 
         }
+        
       });
       return;
     }
