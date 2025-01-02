@@ -9,6 +9,7 @@ import { useConfirm } from "@/components/confirm";
 import { deleteTaskService } from "@/services/taskService";
 import { useRouter } from "next/navigation";
 import { WorkspaceMember } from "@/types/workspace";
+import { toast } from "sonner";
 interface TaskBreadcrumbProps {
   project: ProjectResponse;
   task: ResponseTask;
@@ -25,7 +26,8 @@ export const TaskBreadcrumb = ({ project, task,currentMember }: TaskBreadcrumbPr
   const onDelete = async () => {
     if (!currentMember || currentMember.role !== "OWNER") {
       
-      return alert("You do not have permission to delete this task.");
+    toast.error("You do not have permission to delete this task."); // Sử dụng toast cho thông báo lỗi quyền.
+    return;
     }
     const ok = await confirm();
     if (!ok) return;
@@ -47,7 +49,8 @@ export const TaskBreadcrumb = ({ project, task,currentMember }: TaskBreadcrumbPr
       }
     );
   };
-
+  
+  
   console.log(task.workspaceId, project.id, task.id);
   return (
     <div className="flex items-center gap-x-2">
@@ -57,7 +60,6 @@ export const TaskBreadcrumb = ({ project, task,currentMember }: TaskBreadcrumbPr
         image={project.imageUrl}
         className="size-6 lg:size-8"
       />
-      
       <Link href={`/workspaces/${task.workspaceId}/projects/${project.id}`}>
         <p className="text-sm lg:text-lg font-semibold text-muted-foreground hover:opacity-75 transition">
           {project.name}
@@ -77,5 +79,3 @@ export const TaskBreadcrumb = ({ project, task,currentMember }: TaskBreadcrumbPr
     </div>
   );
 };
-
-
