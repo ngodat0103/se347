@@ -253,6 +253,7 @@ export const useUpdateMultipleTasks = () => {
           position: task.position,
           dueDate: new Date(),
           assigneeId: taskDetails.assignee.userId || "user",
+          projectId: projectId,
         };
 
         const url = `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks/${task.$id}`;
