@@ -22,8 +22,6 @@ export const TaskBreadcrumb = ({ project, task,currentMember }: TaskBreadcrumbPr
   );
   const { mutate: deleteTaskMutate, isPending } = deleteTaskService();
   const router = useRouter();
-
-
   const onDelete = async () => {
     if (!currentMember || currentMember.role !== "OWNER") {
       
