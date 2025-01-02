@@ -32,7 +32,7 @@ export const TaskBreadcrumb = ({ project, task }: TaskBreadcrumbProps) => {
       },
       {
         onSuccess: () => {
-          // Chuyển hướng sau khi xóa thành công
+         
           router.push(`/workspaces/${task.workspaceId}/projects/${project.id}`);
         },
         onError: (error) => {

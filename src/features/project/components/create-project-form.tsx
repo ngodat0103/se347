@@ -39,24 +39,36 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
   const router = useRouter();
   const workspaceId = useWorkspaceId();
 
+  
   const { mutate: createProjectMutation } = useCreateProjectMutation();
   const form = useForm<z.infer<typeof createProjectSchema>>({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
+      
       name: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof createProjectSchema>) => {
     createProjectMutation({
+      
       workspaceId,
       projectForm: {
+        
         name: values.name,
         image: values.image,
       },
+    },
+    {
+      onSuccess: (data) => {
+        setTimeout(() => {
+          router.push(`/workspaces/${workspaceId}/projects/${data?.id}`);
+        }, 500);
+      }
     });
-    router.back();
   };
+  
+  
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
