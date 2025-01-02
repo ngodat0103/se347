@@ -58,10 +58,14 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
         name: values.name,
         image: values.image,
       },
+    },
+    {
+      onSuccess: (data) => {
+        setTimeout(() => {
+          router.push(`/workspaces/${workspaceId}/projects/${data?.id}`);
+        }, 500);
+      }
     });
-    
-    router.back();
-    router.push(`/workspaces/${workspaceId}`)
   };
   
   
