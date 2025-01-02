@@ -49,7 +49,6 @@ export const EditProjectForm = ({
 
   const currentProjectId = useProjectId();
   const currentWorkspaceId = useWorkspaceId();
-
   const [DeleteDialog, confirmDelete,] = useConfirm(
     "Delete Project",
     "This action cannot be undone.",
