@@ -9,7 +9,7 @@ import { useProjectId } from "@/features/project/hook/use-project-id";
 
 interface EventCardProps {
   title: string;
-  assignee: any; // Assuming assignee is an object with a name property
+  assignee: any; 
   project: ProjectResponse;
   status: TaskStatus;
   id: string;
@@ -35,7 +35,7 @@ export const EventCard = ({
 
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    // Correcting string interpolation with backticks
+    
     router.push(
       `/workspaces/${workspaceId}/projects/${project.id}/tasks/${id}`
     );
@@ -55,10 +55,10 @@ export const EventCard = ({
         <span className="text-muted">{project?.name}</span>
         <div className="flex items-center gap-x-2">
           {" "}
-          {/* Increased gap for better spacing */}
+          
           <MemberAvatar name={assignee.nickName} />
           <div className="size-1 rounded-full bg-neutral-300" />{" "}
-          {/* Corrected typo */}
+          
           <ProjectAvatar name={project?.name} image={project?.imageUrl} />
         </div>
       </div>
