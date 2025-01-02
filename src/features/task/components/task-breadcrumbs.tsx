@@ -47,7 +47,7 @@ export const TaskBreadcrumb = ({ project, task,currentMember }: TaskBreadcrumbPr
       }
     );
   };
-  
+
   console.log(task.workspaceId, project.id, task.id);
   return (
     <div className="flex items-center gap-x-2">
@@ -57,6 +57,7 @@ export const TaskBreadcrumb = ({ project, task,currentMember }: TaskBreadcrumbPr
         image={project.imageUrl}
         className="size-6 lg:size-8"
       />
+      
       <Link href={`/workspaces/${task.workspaceId}/projects/${project.id}`}>
         <p className="text-sm lg:text-lg font-semibold text-muted-foreground hover:opacity-75 transition">
           {project.name}
