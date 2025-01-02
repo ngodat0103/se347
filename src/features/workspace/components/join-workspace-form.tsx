@@ -38,6 +38,9 @@ const JoinWorkspaceForm = ({ inviteCode }: JoinWorkspaceFormProps) => {
   useEffect(() => {
     if (fetchError) {
       setError("Invite code không hợp lệ hoặc không tồn tại.");
+      setTimeout(() => {
+        router.push("/");
+      }, 1000);
     }
   }, [fetchError]);
 
