@@ -102,7 +102,6 @@ const createProjectAPI = async ({
 
 export function useCreateProjectMutation() {
   const queryClient = useQueryClient();
-  const router = useRouter()
   return useMutation({
     mutationFn: createProjectAPI,
     onSuccess: (data) => {
@@ -110,10 +109,7 @@ export function useCreateProjectMutation() {
       // Invalidate and refetch queries to update the UI
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       // Optionally redirect or perform other success actions
-     
-
       toast.success("Project created successfully");
-      
     },
     onError: (error) => {
       console.error("Error creating project:", error);

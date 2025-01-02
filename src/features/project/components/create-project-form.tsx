@@ -44,39 +44,26 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
   const form = useForm<z.infer<typeof createProjectSchema>>({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
+      
       name: "",
     },
   });
 
-  // const onSubmit = async (values: z.infer<typeof createProjectSchema>) => {
-  //   createProjectMutation({
-  //     workspaceId,
-  //     projectForm: {
-  //       name: values.name,
-  //       image: values.image,
-  //     },
-  //   });
-    
-  //   router.back();
-  // };
   const onSubmit = async (values: z.infer<typeof createProjectSchema>) => {
-    try {
-      // Gọi API để tạo project
-      const response = await createProjectMutation({
-        workspaceId,
-        projectForm: {
-          name: values.name,
-          image: values.image,
-        },
-      });
-  
-      // Sau khi tạo thành công, lấy ID của project và chuyển hướng đến trang chi tiết của project đó
-      router.push(`/projects/${response?.id}`)
+    createProjectMutation({
       
-    } catch (error) {
-      console.error("Error creating project:", error);
-    }
+      workspaceId,
+      projectForm: {
+        
+        name: values.name,
+        image: values.image,
+      },
+    });
+    
+    router.back();
+    router.push(`/workspaces/${workspaceId}`)
   };
+  
   
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
