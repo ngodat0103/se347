@@ -50,7 +50,7 @@ const data = [
     src: "/images/landingpage/deve.jpg",
     content: (
       <DummyContent
-        text="Plan, track, release and support world-class software. Jira is the single source of truth for your entire development lifecycle."
+        text="Plan, track, release and support world-class software. Navi is the single source of truth for your entire development lifecycle."
         imageSrc="/images/landingpage/soft_list.png"
       />
     ),
@@ -83,7 +83,7 @@ const data = [
     src: "/images/landingpage/design.jpg",
     content: (
       <DummyContent
-        text="Collaborate on, organize, and deliver creative requests with ease. Give real-time visibility into designs with Jira’s Figma integration and accelerate approvals."
+        text="Collaborate on, organize, and deliver creative requests with ease. Give real-time visibility into designs with Navi’s Figma integration and accelerate approvals."
         imageSrc="/images/landingpage/design_list.png"
       />
     ),
@@ -94,7 +94,7 @@ const data = [
     src: "/images/landingpage/ope.jpg",
     content: (
       <DummyContent
-        text="Manage procurement, office, and new vendor requests, craft new operational processes, monitor operational risks and more. Keep your company running at maximum efficiency with Jira."
+        text="Manage procurement, office, and new vendor requests, craft new operational processes, monitor operational risks and more. Keep your company running at maximum efficiency with Navi."
         imageSrc="/images/landingpage/ope_list.png"
       />
     ),
