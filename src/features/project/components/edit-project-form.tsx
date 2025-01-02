@@ -49,8 +49,7 @@ export const EditProjectForm = ({
 
   const currentProjectId = useProjectId();
   const currentWorkspaceId = useWorkspaceId();
-  //   const { mutate: deleteProject, isPending: isDeletingProject } =
-  //     useDeleteProject();
+ 
 
   const [DeleteDialog, confirmDelete,] = useConfirm(
     "Delete Project",
