@@ -24,10 +24,15 @@ export const TaskBreadcrumb = ({ project, task,currentMember }: TaskBreadcrumbPr
   const { mutate: deleteTaskMutate, isPending } = deleteTaskService();
   const router = useRouter();
   const onDelete = async () => {
-    if (!currentMember || currentMember.role !== "OWNER") {
+    if (!currentMember || (currentMember.role !== "OWNER" && currentMember.role !== "ADMINISTRATOR")) {
+      toast.error("You do not have permission to delete this project.", {
+        style: {
+          backgroundColor: "red", // Màu nền đỏ
+          color: "white", // Màu chữ trắng
+        }
+      });
       
-    toast.error("You do not have permission to delete this task."); 
-    return;
+      return;
     }
     const ok = await confirm();
     if (!ok) return;
