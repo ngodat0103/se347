@@ -22,7 +22,7 @@ export const TaskDescription = ({ task,currentMember }: TaskDescriptionProps) =>
       toast.error("You do not have permission to delete this task.", {
         style: {
           backgroundColor: "red", 
-          color: "white", // Màu chữ trắng
+          color: "white", 
         }
       });
       
