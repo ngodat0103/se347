@@ -405,6 +405,7 @@ export const fetchWorkspaceByInviteCode = (inviteCode: string) => {
       const data: WorkspaceResponse = await response.json();
       return data; // Trả về thông tin workspace
     },
+    retryDelay: 200,
   });
   return query;
 };
@@ -465,5 +466,36 @@ export const fetchWorkspaceTasks = (workspaceId: string) => {
       return data; // Trả về danh sách nhiệm vụ
     },
   });
+  return query;
+};
+export const fetchJoinWorkspace = (inviteCode: string) => {
+  const token = Cookies.get("accessToken");
+  const query = useQuery({
+    queryKey: ["workspace", inviteCode], 
+    queryFn: async () => {
+      if (!token) {
+        throw new Error("Token không tồn tại trong cookie");
+      }
+      
+      const response = await fetch(
+        `${BASE_API_URL}/workspaces/join?inviteCode=${inviteCode}`, 
+        {
+          method: "GET",
+          headers: {
+            accept: "application/json", 
+            Authorization: `Bearer ${token}`, 
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Lỗi khi lấy thông tin workspace theo inviteCode");
+      }
+
+      const data = await response.json();
+      return data; 
+    },
+  });
+
   return query;
 };
