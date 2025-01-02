@@ -22,7 +22,6 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-
 import { ProjectResponse } from "@/types/project";
 import { updateProjectSchema } from "../schema";
 import { useUpdateProject } from "@/services/projectService";
