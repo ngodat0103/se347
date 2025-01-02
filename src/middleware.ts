@@ -30,6 +30,8 @@ export async function middleware(request: NextRequest) {
 
   // Check if user is logged in
   if (!token_valid) {
+    // Save the current URL to cookies for redirecting after login
+    login_redirect.cookies.set("redirectUrlAfterLogin", request.nextUrl.pathname);
     return login_redirect;
   }
 

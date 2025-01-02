@@ -10,6 +10,8 @@ import { updateWorkspaceForm } from "@/types/workspace";
 import router from "next/router";
 import { BASE_API_URL, headers } from "./baseApi";
 import { useQuery } from "@tanstack/react-query";
+import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
+
 
 export const fetchWorkspaces = async () => {
   try {
@@ -403,6 +405,97 @@ export const fetchWorkspaceByInviteCode = (inviteCode: string) => {
       const data: WorkspaceResponse = await response.json();
       return data; // Trả về thông tin workspace
     },
+    retryDelay: 200,
   });
+  return query;
+};
+export const fetchWorkspaceAnalytics = (workspaceId: string) => {
+  const token = Cookies.get("accessToken");
+  const query = useQuery({
+    queryKey: ["workspaceAnalytics", workspaceId],
+    queryFn: async () => {
+      if (!token) {
+        throw new Error("Token không tồn tại trong cookie");
+      }
+      const response = await fetch(
+        `${BASE_API_URL}/workspaces/${workspaceId}/analytics`,
+        {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Lỗi khi lấy dữ liệu phân tích của workspace");
+      }
+      const data = await response.json();
+      return data; // Trả về dữ liệu phân tích
+    },
+  });
+  return query;
+};
+
+
+export const fetchWorkspaceTasks = (workspaceId: string) => {
+  const workspaceIds = useWorkspaceId();
+  const token = Cookies.get("accessToken");
+  const query = useQuery({
+    queryKey: ["tasks", workspaceIds],
+    queryFn: async () => {
+      if (!token) {
+        throw new Error("Token không tồn tại trong cookie");
+      }
+      const response = await fetch(
+        `${BASE_API_URL}/workspaces/${workspaceId}/my-tasks`,
+        {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Lỗi khi lấy danh sách nhiệm vụ của workspace");
+      }
+      const data = await response.json();
+      return data; // Trả về danh sách nhiệm vụ
+    },
+  });
+  return query;
+};
+export const fetchJoinWorkspace = (inviteCode: string) => {
+  const token = Cookies.get("accessToken");
+  const query = useQuery({
+    queryKey: ["workspace", inviteCode], 
+    queryFn: async () => {
+      if (!token) {
+        throw new Error("Token không tồn tại trong cookie");
+      }
+      
+      const response = await fetch(
+        `${BASE_API_URL}/workspaces/join?inviteCode=${inviteCode}`, 
+        {
+          method: "GET",
+          headers: {
+            accept: "application/json", 
+            Authorization: `Bearer ${token}`, 
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Lỗi khi lấy thông tin workspace theo inviteCode");
+      }
+
+      const data = await response.json();
+      return data; 
+    },
+  });
+
   return query;
 };

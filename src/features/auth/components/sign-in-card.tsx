@@ -58,8 +58,18 @@ export const SignInCard = () => {
       setErrorMessage(null);
       setSuccessMessage("Login successfully");
       console.log("Token:", token);
-      //Redirect to dashboard
-      router.push("/dashboard");
+
+      // Check if there is a redirect URL after login
+      const redirectUrl = Cookies.get("redirectUrlAfterLogin");
+      if (redirectUrl) {
+        // Remove the redirect URL from cookies
+        Cookies.remove("redirectUrlAfterLogin");
+        // Redirect to the saved URL
+        router.push(redirectUrl);
+      } else {
+        //Redirect to dashboard
+        router.push("/dashboard");
+      }
     } catch (err: unknown) {
       //Dang nhap that bai
       let error_msg = "Login failed. Please try again.";

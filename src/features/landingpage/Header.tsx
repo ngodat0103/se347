@@ -27,7 +27,7 @@ export function Header() {
               alt="Logo"
               className="w-8 h-8 mr-2"
             />
-            Jira
+            Navi
           </a>
         </div>
 

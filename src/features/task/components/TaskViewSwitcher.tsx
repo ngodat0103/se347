@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 import { useQueryState } from "nuqs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -31,7 +31,7 @@ export const TaskViewSwitcher = ({ isHideProjectFilter = false }) => {
   const { data: all_tasks, isLoading: isLoadingTasks } = fetchTasksService(
     workspaceId,
     projectId,
-    isHideProjectFilter,
+    isHideProjectFilter
   );
 
   const { mutate: updateMultipleTasksMutate } = useUpdateMultipleTasks();
@@ -71,7 +71,7 @@ export const TaskViewSwitcher = ({ isHideProjectFilter = false }) => {
     (tasks: { $id: string; status: TaskStatus; position: number }[]) => {
       updateMultipleTasksMutate({ workspaceId, projectId, tasks });
     },
-    [],
+    []
   );
 
   return (
@@ -121,7 +121,7 @@ export const TaskViewSwitcher = ({ isHideProjectFilter = false }) => {
             </TabsContent>
 
             <TabsContent value="calendar" className="mt-0 h-full pb-4">
-            <DataCalendar data={tasks ?? []} />
+              <DataCalendar data={tasks ?? []} />
             </TabsContent>
           </>
         )}
