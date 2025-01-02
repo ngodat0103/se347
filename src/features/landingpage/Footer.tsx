@@ -9,7 +9,7 @@ export function Footer() {
             <h2 className="text-black">Navi brings you convenience.</h2>
             <div>
               <h2 className="my-4 text-sm">
-                Join millions of teams that trust Jira to manage their workflows
+                Join millions of teams that trust Navi to manage their workflows
                 and deliver results. <br className="hidden lg:inline-block" />{" "}
                 Want to learn more? Explore our features and see how Navi can
                 boost your productivity.
