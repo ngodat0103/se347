@@ -105,7 +105,7 @@ export function useCreateProjectMutation() {
   return useMutation({
     mutationFn: createProjectAPI,
     onSuccess: (data) => {
-      console.debug("Workspace created:", data);
+      console.debug("Project created:", data);
       // Invalidate and refetch queries to update the UI
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       // Optionally redirect or perform other success actions
