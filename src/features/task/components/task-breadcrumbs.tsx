@@ -27,7 +27,6 @@ export const TaskBreadcrumb = ({ project, task,currentMember }: TaskBreadcrumbPr
       
       return alert("You do not have permission to delete this task.");
     }
-
     const ok = await confirm();
     if (!ok) return;
     deleteTaskMutate(
