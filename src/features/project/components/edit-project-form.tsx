@@ -57,7 +57,13 @@ export const EditProjectForm = ({
   
   const handleDelete = async () => {
     if (!currentMember || (currentMember.role !== "OWNER" && currentMember.role !== "ADMINISTRATOR")) {
-      toast.error("You do not have permission to delete this project.");
+      toast.error("You do not have permission to delete this project.", {
+        style: {
+          backgroundColor: "red", // Màu nền đỏ
+          color: "white", // Màu chữ trắng
+        }
+      });
+      
       return;
     }
     const ok = await confirmDelete();
@@ -259,3 +265,4 @@ export const EditProjectForm = ({
     </div>
   );
 };
+
