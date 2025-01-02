@@ -48,7 +48,6 @@ export const TaskBreadcrumb = ({ project, task,currentMember }: TaskBreadcrumbPr
       }
     );
   };
-  
   console.log(task.workspaceId, project.id, task.id);
   return (
     <div className="flex items-center gap-x-2">
