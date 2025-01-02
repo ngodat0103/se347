@@ -21,7 +21,7 @@ export const TaskDescription = ({ task,currentMember }: TaskDescriptionProps) =>
     if (!currentMember || (currentMember.role !== "OWNER" && currentMember.role !== "ADMINISTRATOR")) {
       toast.error("You do not have permission to delete this task.", {
         style: {
-          backgroundColor: "red", // Màu nền đỏ
+          backgroundColor: "red", 
           color: "white", // Màu chữ trắng
         }
       });
