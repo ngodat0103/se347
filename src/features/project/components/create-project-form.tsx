@@ -29,12 +29,15 @@ import { useEffect } from "react";
 import { useCreateProjectMutation } from "@/services/projectService";
 
 // import { useCreateProject } from "../api/use-create-project";
+import { WorkspaceMember } from "@/types/workspace";
+import { toast } from "sonner";
 
 interface CreateProjectFormProps {
   onCancel?: () => void;
+  currentMember: WorkspaceMember;
 }
 
-export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
+export const CreateProjectForm = ({ onCancel,currentMember }: CreateProjectFormProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const router = useRouter();
   const workspaceId = useWorkspaceId();
@@ -50,6 +53,16 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
   });
 
   const onSubmit = async (values: z.infer<typeof createProjectSchema>) => {
+    if (!currentMember || (currentMember.role !== "OWNER" && currentMember.role !== "ADMINISTRATOR")) {
+      toast.error("You do not have permission to create project.", {
+        style: {
+          backgroundColor: "red", // Màu nền đỏ
+          color: "white", // Màu chữ trắng
+        }
+      });
+      
+      return;
+    }
     createProjectMutation({
       
       workspaceId,
