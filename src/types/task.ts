@@ -14,6 +14,7 @@ export interface RequestTask {
   position: number;
   dueDate: Date;
   assigneeId: string;
+  projectId: string;
   description?: string;
 }
 export interface ResponseTask {

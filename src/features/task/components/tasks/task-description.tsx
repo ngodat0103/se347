@@ -27,6 +27,7 @@ export const TaskDescription = ({ task }: TaskDescriptionProps) => {
           status: task.status,
           position: task.position,
           assigneeId: task.assignee.userId,
+          projectId: task.project.id,
           dueDate: new Date(task.dueDate),
           description: description || "",
         },
