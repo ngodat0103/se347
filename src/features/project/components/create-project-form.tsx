@@ -39,6 +39,7 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
   const router = useRouter();
   const workspaceId = useWorkspaceId();
 
+  //const { mutate: createProjectMutation } = useCreateProjectMutation<ProjectResponse>();
   const { mutate: createProjectMutation } = useCreateProjectMutation();
   const form = useForm<z.infer<typeof createProjectSchema>>({
     resolver: zodResolver(createProjectSchema),
@@ -47,16 +48,36 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
     },
   });
 
+  // const onSubmit = async (values: z.infer<typeof createProjectSchema>) => {
+  //   createProjectMutation({
+  //     workspaceId,
+  //     projectForm: {
+  //       name: values.name,
+  //       image: values.image,
+  //     },
+  //   });
+    
+  //   router.back();
+  // };
   const onSubmit = async (values: z.infer<typeof createProjectSchema>) => {
-    createProjectMutation({
-      workspaceId,
-      projectForm: {
-        name: values.name,
-        image: values.image,
-      },
-    });
-    router.back();
+    try {
+      // Gọi API để tạo project
+      const response = await createProjectMutation({
+        workspaceId,
+        projectForm: {
+          name: values.name,
+          image: values.image,
+        },
+      });
+  
+      // Sau khi tạo thành công, lấy ID của project và chuyển hướng đến trang chi tiết của project đó
+      router.push(`/projects/${response?.id}`)
+      
+    } catch (error) {
+      console.error("Error creating project:", error);
+    }
   };
+  
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
