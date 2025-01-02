@@ -405,6 +405,7 @@ export const fetchWorkspaceByInviteCode = (inviteCode: string) => {
       const data: WorkspaceResponse = await response.json();
       return data; // Trả về thông tin workspace
     },
+    retryDelay: 200,
   });
   return query;
 };
