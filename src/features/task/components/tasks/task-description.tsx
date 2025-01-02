@@ -11,7 +11,6 @@ interface TaskDescriptionProps {
   task: ResponseTask;
   currentMember: WorkspaceMember;
 }
-
 export const TaskDescription = ({ task,currentMember }: TaskDescriptionProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [description, setDescription] = useState(task.description || ""); // Khởi tạo với chuỗi rỗng nếu task.description không tồn tại
