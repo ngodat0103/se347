@@ -9,7 +9,6 @@ import { updateTaskService } from "@/services/taskService";
 interface TaskDescriptionProps {
   task: ResponseTask;
 }
-
 export const TaskDescription = ({ task }: TaskDescriptionProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [description, setDescription] = useState(task.description || ""); // Khởi tạo với chuỗi rỗng nếu task.description không tồn tại
