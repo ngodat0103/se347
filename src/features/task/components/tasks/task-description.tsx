@@ -5,7 +5,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { DottedSeparator } from "@/components/dotted-separator";
 import { useState } from "react";
 import { updateTaskService } from "@/services/taskService";
-import { WorkspaceMember } from "@/types/workspace";
+import { fetchWorkspaceMembers } from "@/services/workspaceService";
+import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
+import useUser from "@/hooks/useUser";
 import { toast } from "sonner";
 interface TaskDescriptionProps {
   task: ResponseTask;
@@ -16,8 +18,26 @@ export const TaskDescription = ({ task }: TaskDescriptionProps) => {
   const [description, setDescription] = useState(task.description || ""); // Khởi tạo với chuỗi rỗng nếu task.description không tồn tại
 
   const { mutate, isPending } = updateTaskService();
-
+  const workspaceId = useWorkspaceId();
+  const { user } = useUser();
+  const currentUserEmail = user?.email;
+  const { data: members, isLoading: isLoadingMembers } =
+    fetchWorkspaceMembers(workspaceId);
   const handleSave = () => {
+    const currentUserRole = members?.find(
+      (member: any) => member.email === currentUserEmail,
+    )?.role;
+    //console.log(currentUserRole);
+    if (currentUserRole !== "OWNER") {
+      toast.error("You do not have permission to edit decription.", {
+        style: {
+          backgroundColor: "red", // Màu nền đỏ
+          color: "white", // Màu chữ trắng
+        }
+      });
+      
+      return;
+    }
     mutate(
       {
         workspaceId: task.workspaceId,
