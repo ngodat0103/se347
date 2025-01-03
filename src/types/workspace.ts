@@ -26,3 +26,4 @@ export interface updateWorkspaceForm {
   name: string;
   imageUrl?: File | string;
 }
+

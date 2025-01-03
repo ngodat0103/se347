@@ -10,11 +10,13 @@ import { TaskBreadcrumb } from "@/features/task/components/task-breadcrumbs";
 import { DottedSeparator } from "@/components/dotted-separator";
 import { TaskOverview } from "@/features/task/components/tasks/task-overview";
 import { TaskDescription } from "@/features/task/components/tasks/task-description";
+import useUser from "@/hooks/useUser";
 
 export const TaskIdClient = () => {
   const workspaceId = useWorkspaceId();
   const projectId = useProjectId();
   const taskId = useTaskId();
+  const currentMember = useUser()
   const { data: initialValues, isLoading: isLoadingTask } = fetchTaskById(
     workspaceId,
     projectId,
@@ -29,7 +31,7 @@ export const TaskIdClient = () => {
   }
   return (
     <div className="flex flex-col">
-      <TaskBreadcrumb project={initialValues.project} task={initialValues} />
+      <TaskBreadcrumb project={initialValues.project} task={initialValues}  />
       <DottedSeparator className="my-6" />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <TaskOverview task={initialValues} />

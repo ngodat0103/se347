@@ -9,25 +9,15 @@ import { WorkspaceMember } from "@/types/workspace";
 import { toast } from "sonner";
 interface TaskDescriptionProps {
   task: ResponseTask;
-  currentMember: WorkspaceMember;
+  
 }
-export const TaskDescription = ({ task,currentMember }: TaskDescriptionProps) => {
+export const TaskDescription = ({ task }: TaskDescriptionProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [description, setDescription] = useState(task.description || ""); // Khởi tạo với chuỗi rỗng nếu task.description không tồn tại
 
   const { mutate, isPending } = updateTaskService();
 
   const handleSave = () => {
-    if (!currentMember || (currentMember.role !== "OWNER" && currentMember.role !== "ADMINISTRATOR")) {
-      toast.error("You do not have permission to delete this task.", {
-        style: {
-          backgroundColor: "red", 
-          color: "white", 
-        }
-        
-      });
-      return;
-    }
     mutate(
       {
         workspaceId: task.workspaceId,

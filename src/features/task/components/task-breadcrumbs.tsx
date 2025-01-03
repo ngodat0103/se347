@@ -8,23 +8,36 @@ import { Button } from "@/components/ui/button";
 import { useConfirm } from "@/components/confirm";
 import { deleteTaskService } from "@/services/taskService";
 import { useRouter } from "next/navigation";
-import { WorkspaceMember } from "@/types/workspace";
+import { fetchWorkspaceMembers } from "@/services/workspaceService";
+import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
+import useUser from "@/hooks/useUser";
 import { toast } from "sonner";
 interface TaskBreadcrumbProps {
   project: ProjectResponse;
   task: ResponseTask;
-  currentMember: WorkspaceMember;
+ 
 }
-export const TaskBreadcrumb = ({ project, task,currentMember }: TaskBreadcrumbProps) => {
+export const TaskBreadcrumb = ({ project, task }: TaskBreadcrumbProps) => {
   const [ConfirmDialog, confirm] = useConfirm(
     "Delete task",
     "This action cannot be undone.",
     "destructive",
   );
+  
   const { mutate: deleteTaskMutate, isPending } = deleteTaskService();
   const router = useRouter();
+  const workspaceId = useWorkspaceId();
+  const { user } = useUser();
+  const currentUserEmail = user?.email;
+  const { data: members, isLoading: isLoadingMembers } =
+    fetchWorkspaceMembers(workspaceId);
   const onDelete = async () => {
-    if (!currentMember || (currentMember.role !== "OWNER" && currentMember.role !== "ADMINISTRATOR")) {
+    //kiểm tra role user
+    const currentUserRole = members?.find(
+      (member: any) => member.email === currentUserEmail,
+    )?.role;
+    //console.log(currentUserRole);
+    if (currentUserRole !== "OWNER") {
       toast.error("You do not have permission to delete this task.", {
         style: {
           backgroundColor: "red", // Màu nền đỏ

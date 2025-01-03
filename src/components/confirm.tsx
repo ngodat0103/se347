@@ -8,6 +8,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { ResponsiveModal } from "@/components/responsive-modal";
+import { WorkspaceMember } from "@/types/workspace";
 
 export const useConfirm = (
   title: string,
