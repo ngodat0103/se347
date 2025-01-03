@@ -7,9 +7,9 @@ import Cookies from "js-cookie";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { TaskStatus } from "@/types/task";
-const token = Cookies.get("accessToken");
 
 export const createTaskService = () => {
+  const token = Cookies.get("accessToken");
   const queryClient = useQueryClient();
   const mutate = useMutation({
     mutationFn: async ({
@@ -56,6 +56,7 @@ export const fetchTasksService = (
   projectId: string,
   myTasks: boolean,
 ) => {
+  const token = Cookies.get("accessToken");
   const query = useQuery({
     queryKey: ["tasks", workspaceId, projectId],
     queryFn: async () => {
@@ -83,6 +84,7 @@ export const fetchTasksService = (
 
 
 export const deleteTaskService = () => {
+  const token = Cookies.get("accessToken");
   const queryClient = useQueryClient();
   const mutate = useMutation({
     mutationFn: async ({
@@ -123,6 +125,7 @@ export const deleteTaskService = () => {
 };
 
 export const updateTaskService = () => {
+  const token = Cookies.get("accessToken");
   const queryClient = useQueryClient();
 
   const mutate = useMutation({
@@ -171,6 +174,7 @@ export const fetchTaskById = (
   projectId: string,
   taskId: string,
 ) => {
+  const token = Cookies.get("accessToken");
   const query = useQuery({
     queryKey: ["tasks", workspaceId, projectId, taskId],
     queryFn: async () => {
@@ -200,6 +204,7 @@ export const fetchTaskByIdAPI = async (
   projectId: string,
   taskId: string,
 ): Promise<ResponseTask> => {
+  const token = Cookies.get("accessToken");
   const response = await fetch(
     `${BASE_API_URL}/workspaces/${workspaceId}/projects/${projectId}/tasks/${taskId}`,
     {
@@ -220,6 +225,7 @@ export const fetchTaskByIdAPI = async (
 };
 
 export const useUpdateMultipleTasks = () => {
+  const token = Cookies.get("accessToken");
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -271,6 +277,7 @@ export const useUpdateMultipleTasks = () => {
   });
 };
 export const useUpdateTask = () => {
+  const token = Cookies.get("accessToken");
   const queryClient = useQueryClient();
 
   return useMutation({
