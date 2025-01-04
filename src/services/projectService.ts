@@ -6,7 +6,6 @@ import {
   ProjectResponse,
 } from "@/types/project";
 import Cookies from "js-cookie";
-import { useRouter } from "next/router";
 import { ErrorMessage } from "@/types/error";
 import { useQuery } from "@tanstack/react-query";
 import { resizeImage } from "@/lib/resizeImage";
@@ -81,6 +80,10 @@ const createProjectAPI = async ({
     },
   );
 
+  if (response.status === 403 || response.status === 401) {
+    const errorMessage: ErrorMessage = await response.json();
+    throw new Error(errorMessage.detail);
+  }
   if (!response.ok) {
     const errorResponse: ErrorMessage = await response.json();
     throw new Error(errorResponse.detail || "Failed to create workspace.");
@@ -112,7 +115,7 @@ export function useCreateProjectMutation() {
       toast.success("Project created successfully");
     },
     onError: (error) => {
-      console.error("Error creating project:", error);
+      toast.error(error.message);
     },
   });
 }
@@ -172,6 +175,12 @@ export const deleteProjectAPI = async ({
       },
     },
   );
+
+  if (response.status === 403 || response.status === 401) {
+    const errorMessage: ErrorMessage = await response.json();
+    throw new Error(errorMessage.detail);
+  }
+
   if (!response.ok) {
     const errorResponse: ErrorMessage = await response.json();
     throw new Error(errorResponse.detail || "Failed to delete project.");
@@ -185,6 +194,9 @@ export const useDeleteProject = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       toast.success("Project deleted successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 };
@@ -211,6 +223,11 @@ const updateProjectAPI = async ({
       body: JSON.stringify({ name: projectForm.name }),
     },
   );
+
+  if (response.status === 403 || response.status === 401) {
+    const errorMessage: ErrorMessage = await response.json();
+    throw new Error(errorMessage.detail);
+  }
 
   if (!response.ok) {
     const errorResponse = await response.json();
@@ -248,11 +265,9 @@ export const useUpdateProject = () => {
       toast.success(
         "Project updated successfully. For image changes, it may take a few seconds to reflect.",
       );
-      // router.push(`/workspaces/${data.workspaceId}/projects/${data.id}`);
     },
     onError: (error) => {
-      console.error("Error updating project:", error.message);
-      toast.error("Error updating project, please try again later");
+      toast.error(error.message);
     },
   });
 };

@@ -1,5 +1,5 @@
 {
-  "name": "jira-clone",
+  "name": "navi-clone",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -37,7 +37,7 @@
     "cookie": "^1.0.2",
     "date-fns": "^3.6.0",
     "framer-motion": "^11.11.13",
-    "jira-clone": "file:",
+    "navi-clone": "file:",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.454.0",
     "next": "^15.1.3",

@@ -6,29 +6,22 @@ import Link from "next/link";
 import { ChevronRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useConfirm } from "@/components/confirm";
-import { deleteTaskService } from "@/services/taskService";
+import { useDeleteTask } from "@/services/taskService";
 import { useRouter } from "next/navigation";
-import { WorkspaceMember } from "@/types/workspace";
-import { toast } from "sonner";
 interface TaskBreadcrumbProps {
   project: ProjectResponse;
   task: ResponseTask;
-  currentMember: WorkspaceMember;
 }
-export const TaskBreadcrumb = ({ project, task,currentMember }: TaskBreadcrumbProps) => {
+export const TaskBreadcrumb = ({ project, task }: TaskBreadcrumbProps) => {
   const [ConfirmDialog, confirm] = useConfirm(
     "Delete task",
     "This action cannot be undone.",
     "destructive",
   );
-  const { mutate: deleteTaskMutate, isPending } = deleteTaskService();
+  const { mutate: deleteTaskMutate, isPending } = useDeleteTask();
   const router = useRouter();
+
   const onDelete = async () => {
-    if (!currentMember || currentMember.role !== "OWNER") {
-      
-    toast.error("You do not have permission to delete this task."); 
-    return;
-    }
     const ok = await confirm();
     if (!ok) return;
     deleteTaskMutate(
@@ -36,21 +29,9 @@ export const TaskBreadcrumb = ({ project, task,currentMember }: TaskBreadcrumbPr
         workspaceId: task.workspaceId,
         projectId: project.id,
         taskId: task.id,
-      },
-      {
-        onSuccess: () => {
-          router.push(
-            `/workspaces/${task.workspaceId}/projects/${project.id}`
-          );
-        },
-        onError: (error) => {
-          console.error("Failed to delete task:", error);
-        },
       }
     );
   };
-  
-  
   console.log(task.workspaceId, project.id, task.id);
   return (
     <div className="flex items-center gap-x-2">

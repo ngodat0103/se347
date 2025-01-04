@@ -1,12 +1,12 @@
-
-"use client"; 
+"use client";
 
 import React, { useState, useEffect } from "react";
-import { FaEdit } from "react-icons/fa"; 
-import { getCurrentUser, updateCurrentUser } from "@/services/userService"; 
-import { useRouter } from "next/navigation"; 
+import { FaEdit } from "react-icons/fa";
+import { getCurrentUser, updateCurrentUser } from "@/services/userService";
+import { useRouter } from "next/navigation";
 
-const defaultImageUrl = "https://i.pinimg.com/736x/97/bb/06/97bb067e30ff6b89f4fbb7b9141025ca.jpg";
+const defaultImageUrl =
+  "https://i.pinimg.com/736x/97/bb/06/97bb067e30ff6b89f4fbb7b9141025ca.jpg";
 
 export const UpdateProfileForm = () => {
   const [userData, setUserData] = useState({
@@ -17,9 +17,9 @@ export const UpdateProfileForm = () => {
   });
 
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [message, setMessage] = useState<string | null>(null); 
+  const [message, setMessage] = useState<string | null>(null);
   const [isError, setIsError] = useState(false); // Error state
-  const router = useRouter(); 
+  const router = useRouter();
 
   // Fetch user data from API
   useEffect(() => {
@@ -40,20 +40,18 @@ export const UpdateProfileForm = () => {
     fetchUserData();
   }, []);
 
- 
-
   const handleEditClick = async () => {
     if (!userData.id || !userData.name) {
       setIsError(true);
       setMessage("Please fill in all required fields.");
       return;
     }
-  
+
     try {
       await updateCurrentUser({ nickName: userData.name }, imageFile);
       setIsError(false);
       setMessage("Profile updated successfully!");
-  
+
       // Tải lại trang và chuyển hướng đến /dashboard ngay sau đó
       setTimeout(() => {
         window.location.reload(); // Tải lại trang sau 1 giây
@@ -66,23 +64,16 @@ export const UpdateProfileForm = () => {
       setMessage("Failed to update profile. Please try again.");
     }
   };
-  
-  
-  
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) {
       return;
     }
-    
+
     setUserData({ ...userData, imageUrl: URL.createObjectURL(file) });
     setImageFile(file);
-    
-
   };
-
-  
 
   return (
     <div className="h-full bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -96,7 +87,9 @@ export const UpdateProfileForm = () => {
           {message && (
             <div
               className={`mb-6 p-4 text-sm rounded ${
-                isError ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
+                isError
+                  ? "bg-red-100 text-red-700"
+                  : "bg-green-100 text-green-700"
               }`}
             >
               {message}
@@ -166,4 +159,3 @@ export const UpdateProfileForm = () => {
     </div>
   );
 };
-

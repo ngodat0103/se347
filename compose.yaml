@@ -8,7 +8,7 @@ x-minio-credential: &minio-credential
 services:
   se347-frontend:
     ports:
-    - "4200:4200"
+      - "4200:4200"
     build:
       context: .
       dockerfile: Dockerfile
@@ -17,7 +17,7 @@ services:
     restart: always
     hostname: minio-svc
     healthcheck:
-      test: [ "CMD","curl","-f","http://127.0.0.1:9000/minio/health/live" ]
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:9000/minio/health/live"]
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -62,7 +62,7 @@ services:
       SPRING_DATA_REDIS_HOST: redis
       <<: *minio-credential
     healthcheck:
-      test: [ "CMD","curl","http://localhost:5000/actuator/health/liveness" ]
+      test: ["CMD", "curl", "http://localhost:5000/actuator/health/liveness"]
       interval: 3s
       timeout: 3s
       retries: 3

@@ -1,5 +1,10 @@
 import { ErrorMessage } from "@/types/error";
-import { LoginForm, LoginResponse, RegisterForm, UserResponse } from "@/types/user";
+import {
+  LoginForm,
+  LoginResponse,
+  RegisterForm,
+  UserResponse,
+} from "@/types/user";
 import Cookies from "js-cookie";
 import { BASE_API_URL, headers } from "./baseApi";
 import { resizeImage } from "@/lib/resizeImage";
@@ -113,8 +118,10 @@ export async function getCurrentUser(): Promise<UserResponse> {
 
 // Function to update user data
 
-
-export async function updateCurrentUser(updateData: { nickName: string }, imageFile: File | null): Promise<void> {
+export async function updateCurrentUser(
+  updateData: { nickName: string },
+  imageFile: File | null,
+): Promise<void> {
   const accessToken = Cookies.get("accessToken");
   if (!accessToken) {
     throw new Error("No access token found. Please log in first.");

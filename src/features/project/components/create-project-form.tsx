@@ -24,8 +24,6 @@ import {
 } from "@/components/ui/form";
 
 import { createProjectSchema } from "../schema";
-import { useState } from "react";
-import { useEffect } from "react";
 import { useCreateProjectMutation } from "@/services/projectService";
 
 // import { useCreateProject } from "../api/use-create-project";
@@ -39,36 +37,30 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
   const router = useRouter();
   const workspaceId = useWorkspaceId();
 
-  
   const { mutate: createProjectMutation } = useCreateProjectMutation();
   const form = useForm<z.infer<typeof createProjectSchema>>({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
-      
       name: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof createProjectSchema>) => {
-    createProjectMutation({
-      
-      workspaceId,
-      projectForm: {
-        
-        name: values.name,
-        image: values.image,
+    createProjectMutation(
+      {
+        workspaceId,
+        projectForm: {
+          name: values.name,
+          image: values.image,
+        },
       },
-    },
-    {
-      onSuccess: (data) => {
-        setTimeout(() => {
+      {
+        onSuccess: (data) => {
           router.push(`/workspaces/${workspaceId}/projects/${data?.id}`);
-        }, 500);
-      }
-    });
+        },
+      },
+    );
   };
-  
-  
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

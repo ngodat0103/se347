@@ -1,5 +1,4 @@
-import TaskIdClient from "./client";
-
+import { TaskIdClient } from "./client";
 const TaskIdPage = async () => {
   return (
     <div>

@@ -5,7 +5,7 @@ export function Body() {
   return (
     <div className="grotesk max-w-8xl mx-auto">
       <h2 className=" flex justify-center items-center lg:text-[4.2em] text-3xl font-bold leading-none text-black mb-12 pt-14">
-        Great outcomes start with Jira
+        Great outcomes start with Navi
       </h2>
       <HeroParallaxPage />
       <div className="flex justify-center items-center">
@@ -18,7 +18,7 @@ export function Body() {
           Connect with our 4.5M+ community members Ask questions, give product
           feedback, and connect with our team and other users to learn best
           practices. From events and forums, to curated learning paths,
-          you&apos;re never alone when you are an Atlassian customer.
+          you&apos;re never alone when you are an Navi customer.
         </p>
         <ThreeDCardDemo />
       </div>

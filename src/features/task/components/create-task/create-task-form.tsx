@@ -34,7 +34,7 @@ import { TaskStatus } from "../../types";
 import { createTaskScema } from "../../schemas";
 import { useCreateTaskModal } from "../../hooks/use-create-task-modal";
 import { MemberAvatar } from "@/features/member/components/meber-avatar";
-import { createTaskService } from "@/services/taskService";
+import { useCreateTask } from "@/services/taskService";
 import { useProjectId } from "@/features/project/hook/use-project-id";
 interface CreateTaskFormProps {
   onCancel?: () => void;
@@ -49,7 +49,7 @@ export const CreateTaskForm = ({
 }: CreateTaskFormProps) => {
   const workspaceId = useWorkspaceId();
   const defaultProjectId = useProjectId();
-  const { mutate, isPending } = createTaskService();
+  const { mutate, isPending } = useCreateTask();
   const { status } = useCreateTaskModal();
 
   const form = useForm<z.infer<typeof createTaskScema>>({
@@ -68,12 +68,6 @@ export const CreateTaskForm = ({
         workspaceId: workspaceId,
         projectId: values.projectId,
         taskDto: values,
-      },
-      {
-        onSuccess: () => {
-          form.reset();
-          onCancel?.();
-        },
       },
     );
   };
@@ -235,7 +229,7 @@ export const CreateTaskForm = ({
               <Button
                 type="submit"
                 size="lg"
-                // disabled={isPending}
+              // disabled={isPending}
               >
                 Create Task
               </Button>

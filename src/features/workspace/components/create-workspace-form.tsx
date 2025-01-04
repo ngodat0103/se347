@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Avatar } from "@/components/ui/avatar";
-import { createWorkspace } from "@/services/workspaceService";
+import { createWorkspaceAPI } from "@/services/workspaceService";
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import { ImageIcon } from "lucide-react";
 import clsx from "clsx";
@@ -68,8 +68,7 @@ export const CreateWorkspaceForm = ({
     try {
       console.log(value);
       // Gửi yêu cầu tạo workspace
-      const response = await createWorkspace(value);
-
+      const response = await createWorkspaceAPI(value);
       // Nếu tạo thành công
       setSuccessMessage("Workspace created successfully");
       // form.reset();

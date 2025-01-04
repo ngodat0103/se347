@@ -12,7 +12,6 @@ import { BASE_API_URL, headers } from "./baseApi";
 import { useQuery } from "@tanstack/react-query";
 import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 
-
 export const fetchWorkspaces = async () => {
   try {
     const token = Cookies.get("accessToken");
@@ -85,7 +84,7 @@ export const fetchWorkspaceDetails = async (workspaceId: string) => {
   }
 };
 
-export async function createWorkspace(
+export async function createWorkspaceAPI(
   workspaceForm: CreateWorkspaceForm,
 ): Promise<WorkspaceResponse> {
   console.debug(workspaceForm);
@@ -104,6 +103,11 @@ export async function createWorkspace(
     },
     body: JSON.stringify({ name: workspaceForm.name }),
   });
+
+  if (response.status === 403) {
+    const errorMessage: ErrorMessage = await response.json();
+    throw new Error(errorMessage.detail);
+  }
 
   if (!response.ok) {
     const errorResponse: ErrorMessage = await response.json();
@@ -223,7 +227,6 @@ export async function deleteWorkspace(workspaceId: string): Promise<void> {
     const errorResponse: ErrorMessage = await response.json();
     throw new Error(errorResponse.detail || "Failed to delete workspace.");
   }
-  console.debug(`Workspace with ID ${workspaceId} deleted successfully.`);
 }
 
 export async function resetInviteCode(workspaceId: string): Promise<void> {
@@ -286,9 +289,6 @@ export async function joinWorkspaceByInviteCode(
     throw err; // Ném lại lỗi để phía trên có thể xử lý
   }
 }
-
-
-
 
 export const fetchWorkspaceMembers = (workspaceId: string) => {
   const token = Cookies.get("accessToken");
@@ -389,7 +389,7 @@ export const fetchWorkspaceByInviteCode = (inviteCode: string) => {
       }
       const response = await fetch(
         `${BASE_API_URL}/workspaces/join?inviteCode=${encodeURIComponent(inviteCode)}`,
-        
+
         {
           method: "GET",
           headers: {
@@ -425,7 +425,7 @@ export const fetchWorkspaceAnalytics = (workspaceId: string) => {
             accept: "application/json",
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       if (!response.ok) {
@@ -437,7 +437,6 @@ export const fetchWorkspaceAnalytics = (workspaceId: string) => {
   });
   return query;
 };
-
 
 export const fetchWorkspaceTasks = (workspaceId: string) => {
   const workspaceIds = useWorkspaceId();
@@ -456,7 +455,7 @@ export const fetchWorkspaceTasks = (workspaceId: string) => {
             accept: "application/json",
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       if (!response.ok) {
@@ -471,21 +470,21 @@ export const fetchWorkspaceTasks = (workspaceId: string) => {
 export const fetchJoinWorkspace = (inviteCode: string) => {
   const token = Cookies.get("accessToken");
   const query = useQuery({
-    queryKey: ["workspace", inviteCode], 
+    queryKey: ["workspace", inviteCode],
     queryFn: async () => {
       if (!token) {
         throw new Error("Token không tồn tại trong cookie");
       }
-      
+
       const response = await fetch(
-        `${BASE_API_URL}/workspaces/join?inviteCode=${inviteCode}`, 
+        `${BASE_API_URL}/workspaces/join?inviteCode=${inviteCode}`,
         {
           method: "GET",
           headers: {
-            accept: "application/json", 
-            Authorization: `Bearer ${token}`, 
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       if (!response.ok) {
@@ -493,7 +492,7 @@ export const fetchJoinWorkspace = (inviteCode: string) => {
       }
 
       const data = await response.json();
-      return data; 
+      return data;
     },
   });
 

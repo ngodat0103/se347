@@ -88,7 +88,7 @@ const JoinWorkspaceForm = ({ inviteCode }: JoinWorkspaceFormProps) => {
       }
 
       const isAlreadyMember = workspace?.members.hasOwnProperty(
-        user?.userId ?? ""
+        user?.userId ?? "",
       );
       if (isAlreadyMember) {
         setError("You are already a member of this workspace.");
@@ -103,7 +103,7 @@ const JoinWorkspaceForm = ({ inviteCode }: JoinWorkspaceFormProps) => {
       }, 500);
     } catch (err: any) {
       setError(
-        err.message || "Failed to join workspace. Please try again later."
+        err.message || "Failed to join workspace. Please try again later.",
       );
       console.error(err);
     } finally {

@@ -51,7 +51,7 @@ export const EditTaskForm = ({
   projectOptions,
   initialValues,
 }: EditTaskFormProps) => {
-  const { mutate :updateTaskMutate, isPending } = useUpdateTask();
+  const { mutate: updateTaskMutate, isPending } = useUpdateTask();
   const currentProjectId = useProjectId();
   console.debug(initialValues);
   const form = useForm<z.infer<typeof createTaskScema>>({
@@ -78,7 +78,7 @@ export const EditTaskForm = ({
     updateTaskMutate(
       {
         workspaceId: currentWorkspaceid,
-        projectId: currentProjectId ,
+        projectId: currentProjectId,
         taskId: currentTaskId,
         taskDto: values,
       },

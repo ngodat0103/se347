@@ -9,7 +9,7 @@ import { useProjectId } from "@/features/project/hook/use-project-id";
 
 interface EventCardProps {
   title: string;
-  assignee: any; 
+  assignee: any;
   project: ProjectResponse;
   status: TaskStatus;
   id: string;
@@ -35,9 +35,9 @@ export const EventCard = ({
 
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    
+
     router.push(
-      `/workspaces/${workspaceId}/projects/${project.id}/tasks/${id}`
+      `/workspaces/${workspaceId}/projects/${project.id}/tasks/${id}`,
     );
   };
 
@@ -48,17 +48,15 @@ export const EventCard = ({
         className={cn(
           "p-1.5 text-xs bg-white text-primary border rounded-md border-l-4 flex flex-col gap-y-1.5 cursor-pointer",
           "hover:opacity-75 transition",
-          statusColorMap[status]
+          statusColorMap[status],
         )}
       >
         <p className={cn(statusColorMap[status])}>{title}</p>
         <span className="text-muted">{project?.name}</span>
         <div className="flex items-center gap-x-2">
           {" "}
-          
           <MemberAvatar name={assignee.nickName} />
           <div className="size-1 rounded-full bg-neutral-300" />{" "}
-          
           <ProjectAvatar name={project?.name} image={project?.imageUrl} />
         </div>
       </div>

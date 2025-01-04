@@ -75,12 +75,12 @@ export const UpdateWorkspaceForm = ({
 
     try {
       await deleteWorkspace(workspaceId);
-      console.log("Workspace deleted successfully");
-
       // Chuyển người dùng về trang dashboard
       router.push("/dashboard");
     } catch (error) {
-      console.error("Failed to delete workspace:", error);
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
     }
   };
   const handleResetInviteCode = async () => {
@@ -136,7 +136,6 @@ export const UpdateWorkspaceForm = ({
       setSuccessMessage(null);
     }
   };
-
 
   const fullInviteLink = `${window.location.origin}/workspaces/join/${initialValues.inviteCode}`;
   const handleCopyInviteLink = () => {
