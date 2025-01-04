@@ -88,7 +88,7 @@ export const fetchTasksService = (
   return query;
 };
 
-export const deleteTaskService = () => {
+export const useDeleteTask = () => {
   const token = Cookies.get("accessToken");
   const queryClient = useQueryClient();
   const mutate = useMutation({
@@ -112,6 +112,10 @@ export const deleteTaskService = () => {
           },
         },
       );
+      if (response.status === 403 || response.status === 401) {
+        const errorMessage: ErrorMessage = await response.json();
+        throw new Error(errorMessage.detail);
+      }
 
       if (!response.ok) {
         throw new Error("Error deleting task");
@@ -122,8 +126,8 @@ export const deleteTaskService = () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["projectAnalytics"] });
     },
-    onError: () => {
-      toast.error("Error deleting task, please try again later");
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
   return mutate;
@@ -139,8 +143,8 @@ export const updateTaskService = () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["projectAnalytics"] });
     },
-    onError: () => {
-      toast.error("Error updating task, please try again later");
+    onError: (error) => {
+      toast.error(error.message);
     },
     mutationFn: async ({
       workspaceId,
@@ -165,6 +169,10 @@ export const updateTaskService = () => {
           body: JSON.stringify(taskDto),
         },
       );
+      if (response.status === 403 || response.status === 401) {
+        const errorMessage: ErrorMessage = await response.json();
+        throw new Error(errorMessage.detail);
+      }
       if (!response.ok) {
         throw new Error("Error updating task");
       }
@@ -291,8 +299,8 @@ export const useUpdateTask = () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["projectAnalytics"] });
     },
-    onError: () => {
-      toast.error("Error updating task, please try again later");
+    onError: (error) => {
+      toast.error(error.message);
     },
     mutationFn: async ({
       workspaceId,
@@ -317,6 +325,10 @@ export const useUpdateTask = () => {
           body: JSON.stringify(taskDto),
         },
       );
+      if (response.status === 403 || response.status === 401) {
+        const errorMessage: ErrorMessage = await response.json();
+        throw new Error(errorMessage.detail);
+      }
       if (!response.ok) {
         throw new Error("Error updating task");
       }

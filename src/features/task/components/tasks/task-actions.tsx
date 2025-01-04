@@ -3,7 +3,7 @@ import { ExternalLinkIcon, PencilIcon, TrashIcon } from "lucide-react";
 
 import { useConfirm } from "@/components/confirm";
 import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
-import { deleteTaskService } from "@/services/taskService";
+import { useDeleteTask } from "@/services/taskService";
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -30,7 +30,7 @@ export const TaskActions = ({ children, id, projectId }: TaskActionsProps) => {
     "This action cannot be undone.",
     "destructive",
   );
-  const { mutate: deleteTaskMutate, isPending } = deleteTaskService();
+  const { mutate: deleteTaskMutate, isPending } = useDeleteTask();
 
   const onDelete = async () => {
     const ok = await confirm();
