@@ -6,7 +6,6 @@ import {
   ProjectResponse,
 } from "@/types/project";
 import Cookies from "js-cookie";
-import { useRouter } from "next/router";
 import { ErrorMessage } from "@/types/error";
 import { useQuery } from "@tanstack/react-query";
 import { resizeImage } from "@/lib/resizeImage";
@@ -81,10 +80,9 @@ const createProjectAPI = async ({
     },
   );
 
-  if (response.status === 403) {
-    throw new Error(
-      "You do not have permission to create a project in this workspace.",
-    );
+  if (response.status === 403 || response.status === 401) {
+    const errorMessage: ErrorMessage = await response.json();
+    throw new Error(errorMessage.detail);
   }
   if (!response.ok) {
     const errorResponse: ErrorMessage = await response.json();
@@ -178,10 +176,9 @@ export const deleteProjectAPI = async ({
     },
   );
 
-  if (response.status === 403) {
-    throw new Error(
-      "You do not have permission to delete this project in this workspace.",
-    );
+  if (response.status === 403 || response.status === 401) {
+    const errorMessage: ErrorMessage = await response.json();
+    throw new Error(errorMessage.detail);
   }
 
   if (!response.ok) {
@@ -227,9 +224,9 @@ const updateProjectAPI = async ({
     },
   );
 
-  if (response.status === 403) {
+  if (response.status === 403 || response.status === 401) {
     const errorMessage: ErrorMessage = await response.json();
-    throw new Error(errorMessage.detail || "You do not have permission to update this project.");
+    throw new Error(errorMessage.detail);
   }
 
   if (!response.ok) {
