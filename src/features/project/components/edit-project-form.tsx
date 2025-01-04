@@ -62,11 +62,6 @@ export const EditProjectForm = ({
         workspaceId: currentWorkspaceId,
         projectId: currentProjectId,
       },
-      {
-        onSuccess: () => {
-          router.push(`/workspaces/${initialValues.workspaceId}`);
-        },
-      },
     );
   };
 
@@ -104,9 +99,9 @@ export const EditProjectForm = ({
               onCancel
                 ? onCancel
                 : () =>
-                    router.push(
-                      `/workspaces/${initialValues.workspaceId}/projects/${initialValues.id}`,
-                    )
+                  router.push(
+                    `/workspaces/${initialValues.workspaceId}/projects/${initialValues.id}`,
+                  )
             }
           >
             <ArrowLeftIcon className="size-4 mr-2" />
@@ -149,8 +144,8 @@ export const EditProjectForm = ({
                                 field.value instanceof File
                                   ? URL.createObjectURL(field.value) // Nếu là tệp mới được chọn
                                   : field.value ||
-                                    initialValues.imageUrl ||
-                                    "/path/to/default-image.jpg" // Nếu không có ảnh, hiển thị ảnh mặc định
+                                  initialValues.imageUrl ||
+                                  "/path/to/default-image.jpg" // Nếu không có ảnh, hiển thị ảnh mặc định
                               }
                               alt="Logo"
                               fill
@@ -224,7 +219,7 @@ export const EditProjectForm = ({
                 <Button
                   type="submit"
                   size="lg"
-                  // disabled={isPending}
+                // disabled={isPending}
                 >
                   Save Changes
                 </Button>

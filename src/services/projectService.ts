@@ -227,6 +227,11 @@ const updateProjectAPI = async ({
     },
   );
 
+  if (response.status === 403) {
+    const errorMessage: ErrorMessage = await response.json();
+    throw new Error(errorMessage.detail || "You do not have permission to update this project.");
+  }
+
   if (!response.ok) {
     const errorResponse = await response.json();
     throw new Error(errorResponse.detail || "Failed to update project.");
@@ -263,11 +268,9 @@ export const useUpdateProject = () => {
       toast.success(
         "Project updated successfully. For image changes, it may take a few seconds to reflect.",
       );
-      // router.push(`/workspaces/${data.workspaceId}/projects/${data.id}`);
     },
     onError: (error) => {
-      console.error("Error updating project:", error.message);
-      toast.error("Error updating project, please try again later");
+      toast.error(error.message);
     },
   });
 };
