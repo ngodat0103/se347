@@ -7,8 +7,9 @@ import Cookies from "js-cookie";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { TaskStatus } from "@/types/task";
+import { ErrorMessage } from "@/types/error";
 
-export const createTaskService = () => {
+export const useCreateTask = () => {
   const token = Cookies.get("accessToken");
   const queryClient = useQueryClient();
   const mutate = useMutation({
@@ -34,6 +35,11 @@ export const createTaskService = () => {
         },
       );
 
+      if (response.status === 403 || response.status === 401) {
+        const errorMessage: ErrorMessage = await response.json();
+        throw new Error(errorMessage.detail);
+      }
+
       if (!response.ok) {
         throw new Error("Error creating task");
       }
@@ -45,8 +51,8 @@ export const createTaskService = () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["projectAnalytics"] });
     },
-    onError: () => {
-      toast.error("Error creating task, please try again later");
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
   return mutate;
