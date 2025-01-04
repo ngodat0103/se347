@@ -84,7 +84,7 @@ export const fetchWorkspaceDetails = async (workspaceId: string) => {
   }
 };
 
-export async function createWorkspace(
+export async function createWorkspaceAPI(
   workspaceForm: CreateWorkspaceForm,
 ): Promise<WorkspaceResponse> {
   console.debug(workspaceForm);
@@ -103,6 +103,11 @@ export async function createWorkspace(
     },
     body: JSON.stringify({ name: workspaceForm.name }),
   });
+
+  if (response.status === 403) {
+    const errorMessage: ErrorMessage = await response.json();
+    throw new Error(errorMessage.detail);
+  }
 
   if (!response.ok) {
     const errorResponse: ErrorMessage = await response.json();
@@ -222,7 +227,6 @@ export async function deleteWorkspace(workspaceId: string): Promise<void> {
     const errorResponse: ErrorMessage = await response.json();
     throw new Error(errorResponse.detail || "Failed to delete workspace.");
   }
-  console.debug(`Workspace with ID ${workspaceId} deleted successfully.`);
 }
 
 export async function resetInviteCode(workspaceId: string): Promise<void> {
