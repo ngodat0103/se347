@@ -23,7 +23,7 @@ export function Header() {
             className="inline-flex items-center text-3xl font-bold text-black"
           >
             <img
-              src="/images/atlassian_jira.png"
+              src="/images/atlassian_navi.png"
               alt="Logo"
               className="w-8 h-8 mr-2"
             />

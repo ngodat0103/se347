@@ -47,9 +47,6 @@ export const EditProjectForm = ({
 
   const currentProjectId = useProjectId();
   const currentWorkspaceId = useWorkspaceId();
-  //   const { mutate: deleteProject, isPending: isDeletingProject } =
-  //     useDeleteProject();
-
   const [DeleteDialog, confirmDelete] = useConfirm(
     "Delete Project",
     "This action cannot be undone.",
@@ -60,11 +57,17 @@ export const EditProjectForm = ({
     const ok = await confirmDelete();
 
     if (!ok) return;
-    deleteProjectMutate({
-      workspaceId: currentWorkspaceId,
-      projectId: currentProjectId,
-    });
-    await router.push(`/workspaces/${initialValues.workspaceId}`);
+    deleteProjectMutate(
+      {
+        workspaceId: currentWorkspaceId,
+        projectId: currentProjectId,
+      },
+      {
+        onSuccess: () => {
+          router.push(`/workspaces/${initialValues.workspaceId}`);
+        },
+      },
+    );
   };
 
   const inputRef = useRef<HTMLInputElement>(null);

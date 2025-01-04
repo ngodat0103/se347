@@ -81,6 +81,11 @@ const createProjectAPI = async ({
     },
   );
 
+  if (response.status === 403) {
+    throw new Error(
+      "You do not have permission to create a project in this workspace.",
+    );
+  }
   if (!response.ok) {
     const errorResponse: ErrorMessage = await response.json();
     throw new Error(errorResponse.detail || "Failed to create workspace.");
@@ -112,7 +117,7 @@ export function useCreateProjectMutation() {
       toast.success("Project created successfully");
     },
     onError: (error) => {
-      console.error("Error creating project:", error);
+      toast.error(error.message);
     },
   });
 }
@@ -172,6 +177,13 @@ export const deleteProjectAPI = async ({
       },
     },
   );
+
+  if (response.status === 403) {
+    throw new Error(
+      "You do not have permission to delete this project in this workspace.",
+    );
+  }
+
   if (!response.ok) {
     const errorResponse: ErrorMessage = await response.json();
     throw new Error(errorResponse.detail || "Failed to delete project.");
@@ -185,6 +197,9 @@ export const useDeleteProject = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       toast.success("Project deleted successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 };

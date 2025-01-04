@@ -31,7 +31,7 @@ export const TaskViewSwitcher = ({ isHideProjectFilter = false }) => {
   const { data: all_tasks, isLoading: isLoadingTasks } = fetchTasksService(
     workspaceId,
     projectId,
-    isHideProjectFilter
+    isHideProjectFilter,
   );
 
   const { mutate: updateMultipleTasksMutate } = useUpdateMultipleTasks();
@@ -71,7 +71,7 @@ export const TaskViewSwitcher = ({ isHideProjectFilter = false }) => {
     (tasks: { $id: string; status: TaskStatus; position: number }[]) => {
       updateMultipleTasksMutate({ workspaceId, projectId, tasks });
     },
-    []
+    [],
   );
 
   return (

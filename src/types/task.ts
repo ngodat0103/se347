@@ -29,5 +29,4 @@ export interface ResponseTask {
   createAt: Date;
   lastUpdatedAt: Date;
   position: number;
-  
 }

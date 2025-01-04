@@ -82,7 +82,6 @@ export const fetchTasksService = (
   return query;
 };
 
-
 export const deleteTaskService = () => {
   const token = Cookies.get("accessToken");
   const queryClient = useQueryClient();

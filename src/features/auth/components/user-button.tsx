@@ -1,12 +1,12 @@
- "use client";
- import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+"use client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
- import { DottedSeparator } from "@/components/dotted-separator";
+import { DottedSeparator } from "@/components/dotted-separator";
 import { Loader, LogOut, Edit } from "lucide-react"; // Add the Edit icon from lucide-react
 import useUser from "@/hooks/useUser";
 import React, { useEffect, useState } from "react";
@@ -17,7 +17,9 @@ import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
 
 const UserProfile: React.FC = () => {
   const { user } = useUser();
-  const [avatarUrl, setAvatarUrl] = useState(user?.imageUrl || "default-avatar-url");
+  const [avatarUrl, setAvatarUrl] = useState(
+    user?.imageUrl || "default-avatar-url",
+  );
   const router = useRouter();
 
   const handleLogout = () => {
@@ -51,7 +53,6 @@ const UserProfile: React.FC = () => {
               <Avatar className="size-10 hover:opacity-75 transition border border-neutral-300">
                 <AvatarImage
                   src={
-                    
                     user.imageUrl ||
                     "https://i.pinimg.com/736x/97/bb/06/97bb067e30ff6b89f4fbb7b9141025ca.jpg"
                   }

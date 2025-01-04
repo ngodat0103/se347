@@ -15,7 +15,11 @@ interface TaskBreadcrumbProps {
   task: ResponseTask;
   currentMember: WorkspaceMember;
 }
-export const TaskBreadcrumb = ({ project, task,currentMember }: TaskBreadcrumbProps) => {
+export const TaskBreadcrumb = ({
+  project,
+  task,
+  currentMember,
+}: TaskBreadcrumbProps) => {
   const [ConfirmDialog, confirm] = useConfirm(
     "Delete task",
     "This action cannot be undone.",
@@ -25,9 +29,8 @@ export const TaskBreadcrumb = ({ project, task,currentMember }: TaskBreadcrumbPr
   const router = useRouter();
   const onDelete = async () => {
     if (!currentMember || currentMember.role !== "OWNER") {
-      
-    toast.error("You do not have permission to delete this task."); 
-    return;
+      toast.error("You do not have permission to delete this task.");
+      return;
     }
     const ok = await confirm();
     if (!ok) return;
@@ -39,18 +42,15 @@ export const TaskBreadcrumb = ({ project, task,currentMember }: TaskBreadcrumbPr
       },
       {
         onSuccess: () => {
-          router.push(
-            `/workspaces/${task.workspaceId}/projects/${project.id}`
-          );
+          router.push(`/workspaces/${task.workspaceId}/projects/${project.id}`);
         },
         onError: (error) => {
           console.error("Failed to delete task:", error);
         },
-      }
+      },
     );
   };
-  
-  
+
   console.log(task.workspaceId, project.id, task.id);
   return (
     <div className="flex items-center gap-x-2">

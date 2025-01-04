@@ -137,7 +137,6 @@ export const UpdateWorkspaceForm = ({
     }
   };
 
-
   const fullInviteLink = `${window.location.origin}/workspaces/join/${initialValues.inviteCode}`;
   const handleCopyInviteLink = () => {
     navigator.clipboard

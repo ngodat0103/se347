@@ -1,41 +1,71 @@
-"use client";
-
-import { useWorkspaceId } from "@/features/workspace/hook/use-workspace-id";
-import { useProjectId } from "@/features/project/hook/use-project-id";
-import { useTaskId } from "@/features//task/hooks/use-task-id";
-import { fetchTaskById } from "@/services/taskService";
-import { PageLoader } from "@/components/page-loader";
-import { PageError } from "@/components/page-error";
-import { TaskBreadcrumb } from "@/features/task/components/task-breadcrumbs";
-import { DottedSeparator } from "@/components/dotted-separator";
-import { TaskOverview } from "@/features/task/components/tasks/task-overview";
-import { TaskDescription } from "@/features/task/components/tasks/task-description";
-
-export const TaskIdClient = () => {
-  const workspaceId = useWorkspaceId();
-  const projectId = useProjectId();
-  const taskId = useTaskId();
-  const { data: initialValues, isLoading: isLoadingTask } = fetchTaskById(
-    workspaceId,
-    projectId,
-    taskId,
+import { ProjectAvatar } from "@/features/project/components/project-avatar";
+import { ProjectResponse } from "@/types/project";
+import { ResponseTask } from "@/types/task";
+import { TrashIcon } from "lucide-react";
+import Link from "next/link";
+import { ChevronRightIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useConfirm } from "@/components/confirm";
+import { deleteTaskService } from "@/services/taskService";
+import { useRouter } from "next/navigation";
+interface TaskBreadcrumbProps {
+  project: ProjectResponse;
+  task: ResponseTask;
+}
+export const TaskBreadcrumb = ({ project, task }: TaskBreadcrumbProps) => {
+  const [ConfirmDialog, confirm] = useConfirm(
+    "Delete task",
+    "This action cannot be undone.",
+    "destructive",
   );
-  console.log(initialValues);
-  if (isLoadingTask) {
-    return <PageLoader />;
-  }
-  if (!initialValues) {
-    return <PageError message="Task not found" />;
-  }
+  const { mutate: deleteTaskMutate, isPending } = deleteTaskService();
+  const router = useRouter();
+
+  const onDelete = async () => {
+    const ok = await confirm();
+    if (!ok) return;
+    deleteTaskMutate(
+      {
+        workspaceId: task.workspaceId,
+        projectId: project.id,
+        taskId: task.id,
+      },
+      {
+        onSuccess: () => {
+          // Chuyển hướng sau khi xóa thành công
+          router.push(`/workspaces/${task.workspaceId}/projects/${project.id}`);
+        },
+        onError: (error) => {
+          console.error("Failed to delete task:", error);
+        },
+      },
+    );
+  };
+  console.log(task.workspaceId, project.id, task.id);
   return (
-    <div className="flex flex-col">
-      <TaskBreadcrumb project={initialValues.project} task={initialValues} />
-      <DottedSeparator className="my-6" />
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <TaskOverview task={initialValues} />
-        <TaskDescription task={initialValues} />
-      </div>
+    <div className="flex items-center gap-x-2">
+      <ConfirmDialog />
+      <ProjectAvatar
+        name={project.name}
+        image={project.imageUrl}
+        className="size-6 lg:size-8"
+      />
+      <Link href={`/workspaces/${task.workspaceId}/projects/${project.id}`}>
+        <p className="text-sm lg:text-lg font-semibold text-muted-foreground hover:opacity-75 transition">
+          {project.name}
+        </p>
+      </Link>
+      <ChevronRightIcon className="size-4 lg:size-5 text-muted-foreground" />
+      <p className="text-sm lg:text-lg font-semibold">{task.name}</p>
+      <Button
+        className="ml-auto"
+        variant="destructive"
+        size="sm"
+        onClick={onDelete}
+      >
+        <TrashIcon className="size-4 lg:mr-2" />
+        <span className="hidden lg:block">Delete Task</span>
+      </Button>
     </div>
   );
 };
-export default TaskIdClient;
